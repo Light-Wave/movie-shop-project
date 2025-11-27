@@ -1,3 +1,16 @@
+// Landing page
+// o Top 5 most purchased movie
+// o Top 5 most recent movies
+// o Top 5 Oldest Movies
+// o Top 5 cheapest Movie
+// Optional Implement a simple recommendation system based on user purchase
+// history, favorite genres, directors, or actors
+
+// Add movies to cart (stored in cookies)
+// Optional Enable users to add movies to a wishlist for future purchase
+// Optinal Add functionality to link and display movie trailers (embedded YouTube videos)
+// Optinal Add buttons to share movie links on social media platforms
+
 import Image from "next/image";
 
 export default function Home() {
