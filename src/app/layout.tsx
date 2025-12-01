@@ -19,13 +19,17 @@ export const metadata: Metadata = {
 };
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Nav />
-      <main className="flex-1 container py-8">{children}</main>
+    <html>
+      <body>
+        <div className="min-h-screen flex flex-col">
+          <Nav />
+          <main className="flex-1 container py-8">{children}</main>
 
-      <footer className="border-t py-4 text-center text-sm text-muted-foreground">
-        © 2025 Delta super-special elite coding Inc. All rights reserved.
-      </footer>
-    </div>
+          <footer className="border-t py-4 text-center text-sm text-muted-foreground">
+            © 2025 Delta super-special elite coding Inc. All rights reserved.
+          </footer>
+        </div>
+      </body>
+    </html>
   );
 }
