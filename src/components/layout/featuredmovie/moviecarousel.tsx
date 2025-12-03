@@ -11,43 +11,21 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
-import nosferatu from "./nosferatu.jpg";
-import superman from "./superman.jpg";
 import Image from "next/image";
-import minecraft from "./minecraft.jpg";
 
-interface MovieSample {
-  title: string;
-  imgLink: any;
-  youtube?: string;
-  desc: string;
-}
+// Temporary Interface for test data
+import { MovieSample } from "@/app/page";
 
-const testData: MovieSample[] = [
-  {
-    title: "Nosferatu",
-    imgLink: nosferatu,
-    desc: "A classic horror movie about a vampire.",
-  },
-  {
-    title: "Superman",
-    imgLink: superman,
-    desc: "The iconic superhero film.",
-  },
-  {
-    title: "Minecraft",
-    imgLink: minecraft,
-    desc: "A movie adaptation of the popular video game.",
-  },
-];
-
-export function FeaturedCarousel() {
+export default function FeaturedCarousel({
+  movieData,
+}: {
+  movieData: MovieSample[];
+}) {
   return (
     <div className="mx-auto max-w-4xl shadow-2xl rounded-xl sm:shadow-none">
       <Carousel className="w-full">
         <CarouselContent>
-          {testData.map((movie, index) => (
+          {movieData.map((movie, index) => (
             <CarouselItem
               key={index}
               className="flex flex-col h-[700px] sm:flex-row sm:h-[500px] justify-between p-4 sm:p-8 bg-white rounded-xl"

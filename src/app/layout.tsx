@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: LayoutProps) {
   return (
     <html>
-      <body>
+      <body className="w-9/10 m-auto font-sans bg-zinc-50 dark:bg-black dark:text-white">
         <div className="min-h-screen flex flex-col">
           <Nav />
           <main className="flex-1 container py-8">{children}</main>
