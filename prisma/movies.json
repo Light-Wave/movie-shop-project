@@ -1,0 +1,519 @@
+
+[
+  {
+    "title": "Edge of Night",
+    "description": "An action-packed thriller set in a neon-lit city.",
+    "price": "12.99",
+    "releaseDate": "2023-08-01",
+    "stock": 10,
+    "runtime": 120,
+    "genres": ["Action", "Thriller"],
+    "artists": [
+      { "name": "Alex", "role": "ACTOR" },
+      { "name": "Dana", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Quiet Portrait",
+    "description": "A moving drama about love and loss.",
+    "price": "9.99",
+    "releaseDate": "2022-04-15",
+    "stock": 5,
+    "runtime": 105,
+    "genres": ["Drama"],
+    "artists": [
+      { "name": "Lily", "role": "ACTOR" },
+      { "name": "Charlotte Bloom", "role": "ACTOR" },
+      { "name": "Dana", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Galactic Odyssey",
+    "description": "An epic sci-fi adventure across distant galaxies.",
+    "price": "14.99",
+    "releaseDate": "2024-03-10",
+    "stock": 8,
+    "runtime": 140,
+    "genres": ["Sci-Fi", "Adventure"],
+    "artists": [
+      { "name": "Ethan Blaze", "role": "ACTOR" },
+      { "name": "Jordan", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Mystic Realms",
+    "description": "A fantasy tale of magic, destiny, and courage.",
+    "price": "13.49",
+    "releaseDate": "2023-11-20",
+    "stock": 12,
+    "runtime": 130,
+    "genres": ["Fantasy", "Adventure"],
+    "artists": [
+      { "name": "Isabella Frost", "role": "ACTOR" },
+      { "name": "Maya", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Laugh Riot",
+    "description": "Comedy that will leave you in stitches.",
+    "price": "8.99",
+    "releaseDate": "2021-07-05",
+    "stock": 15,
+    "runtime": 95,
+    "genres": ["Comedy"],
+    "artists": [
+      { "name": "Chris", "role": "ACTOR" },
+      { "name": "Emma Bright", "role": "ACTOR" },
+      { "name": "Dana", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Haunted Shadows",
+    "description": "A chilling horror experience in an abandoned mansion.",
+    "price": "10.99",
+    "releaseDate": "2022-10-31",
+    "stock": 6,
+    "runtime": 110,
+    "genres": ["Horror", "Thriller"],
+    "artists": [
+      { "name": "Victor", "role": "ACTOR" },
+      { "name": "Leo Phantom", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Love in Paris",
+    "description": "Romantic drama set in the heart of Paris.",
+    "price": "11.99",
+    "releaseDate": "2023-02-14",
+    "stock": 9,
+    "runtime": 115,
+    "genres": ["Romance", "Drama"],
+    "artists": [
+      { "name": "Sophia Dawn", "role": "ACTOR" },
+      { "name": "Olivia Grace", "role": "ACTOR" },
+      { "name": "Dana", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Crime Alley",
+    "description": "A dark crime thriller about justice and revenge.",
+    "price": "12.49",
+    "releaseDate": "2022-09-18",
+    "stock": 7,
+    "runtime": 125,
+    "genres": ["Crime", "Thriller"],
+    "artists": [
+      { "name": "James Noir", "role": "ACTOR" },
+      { "name": "Henry Bold", "role": "ACTOR" },
+      { "name": "Daniel Steel", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Warfront",
+    "description": "An intense war drama depicting courage and sacrifice.",
+    "price": "14.99",
+    "releaseDate": "2021-12-01",
+    "stock": 10,
+    "runtime": 135,
+    "genres": ["War", "Drama"],
+    "artists": [
+      { "name": "Lucas Storm", "role": "ACTOR" },
+      { "name": "Dana", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Western Horizon",
+    "description": "Classic western adventure on the rugged frontier.",
+    "price": "9.49",
+    "releaseDate": "2020-06-20",
+    "stock": 4,
+    "runtime": 125,
+    "genres": ["Western", "Adventure"],
+    "artists": [
+      { "name": "Noah Chase", "role": "ACTOR" },
+      { "name": "Daniel Steel", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Frozen Dreams",
+    "description": "A heartwarming family story set in snowy landscapes.",
+    "price": "10.49",
+    "releaseDate": "2021-12-24",
+    "stock": 12,
+    "runtime": 100,
+    "genres": ["Family", "Drama"],
+    "artists": [
+      { "name": "Ella Sparks", "role": "ACTOR" },
+      { "name": "Charlotte Bloom", "role": "ACTOR" },
+      { "name": "Dana", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Neon Streets",
+    "description": "High-speed chases and neon lights in a cyberpunk city.",
+    "price": "13.99",
+    "releaseDate": "2023-05-12",
+    "stock": 8,
+    "runtime": 118,
+    "genres": ["Action", "Sci-Fi"],
+    "artists": [
+      { "name": "Alex", "role": "ACTOR" },
+      { "name": "Jordan", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Echoes of Silence",
+    "description": "A gripping mystery that unfolds in a quiet town.",
+    "price": "11.49",
+    "releaseDate": "2022-08-08",
+    "stock": 6,
+    "runtime": 112,
+    "genres": ["Mystery", "Thriller"],
+    "artists": [
+      { "name": "Henry Bold", "role": "ACTOR" },
+      { "name": "Leo Phantom", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Beyond the Stars",
+    "description": "A sci-fi epic exploring the limits of humanity.",
+    "price": "15.99",
+    "releaseDate": "2024-01-20",
+    "stock": 10,
+    "runtime": 145,
+    "genres": ["Sci-Fi"],
+    "artists": [
+      { "name": "Ethan Blaze", "role": "ACTOR" },
+      { "name": "Jordan", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Melody of Life",
+    "description": "A musical journey through love and heartbreak.",
+    "price": "9.99",
+    "releaseDate": "2021-03-15",
+    "stock": 7,
+    "runtime": 108,
+    "genres": ["Musical", "Romance"],
+    "artists": [
+      { "name": "Sophia", "role": "ACTOR" },
+      { "name": "Grace Melody", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Savage Trails",
+    "description": "A gritty western with unforgettable characters.",
+    "price": "10.99",
+    "releaseDate": "2020-09-10",
+    "stock": 5,
+    "runtime": 120,
+    "genres": ["Western"],
+    "artists": [
+      { "name": "Noah Chase", "role": "ACTOR" },
+      { "name": "Daniel Steel", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Undercover Truth",
+    "description": "A crime drama about secrets and betrayal.",
+    "price": "12.99",
+    "releaseDate": "2022-11-05",
+    "stock": 8,
+    "runtime": 122,
+    "genres": ["Crime", "Drama"],
+    "artists": [
+      { "name": "James Noir", "role": "ACTOR" },
+      { "name": "Dana", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Phantom Lights",
+    "description": "A horror mystery set in a haunted lighthouse.",
+    "price": "11.49",
+    "releaseDate": "2023-10-13",
+    "stock": 6,
+    "runtime": 108,
+    "genres": ["Horror", "Mystery"],
+    "artists": [
+      { "name": "Victor", "role": "ACTOR" },
+      { "name": "Leo Phantom", "role": "DIRECTOR" }
+    ]
+  },
+  {
+    "title": "Rise of Legends",
+    "description": "An epic fantasy adventure of heroes and villains.",
+    "price": "14.49",
+    "releaseDate": "2024-04-18",
+    "stock": 9,
+    "runtime": 138,
+    "genres": ["Fantasy", "Adventure"],
+    "artists": [
+      { "name": "Isabella Frost", "role": "ACTOR" },
+      { "name": "Maya", "role": "DIRECTOR" }
+    ]
+  },
+  
+{
+  "title": "Shattered Truth",
+  "description": "A gripping crime thriller about betrayal and justice.",
+  "price": "12.49",
+  "releaseDate": "2022-07-22",
+  "stock": 8,
+  "runtime": 118,
+  "genres": ["Crime", "Thriller"],
+  "artists": [
+    { "name": "James Noir", "role": "ACTOR" },
+    { "name": "Henry Bold", "role": "ACTOR" },
+    { "name": "Daniel Steel", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Celestial Voyage",
+  "description": "A breathtaking sci-fi journey beyond the stars.",
+  "price": "15.49",
+  "releaseDate": "2024-05-09",
+  "stock": 10,
+  "runtime": 142,
+  "genres": ["Sci-Fi", "Adventure"],
+  "artists": [
+    { "name": "Ethan Blaze", "role": "ACTOR" },
+    { "name": "Jordan", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Whispers in the Dark",
+  "description": "A haunting horror story set in a remote village.",
+  "price": "11.29",
+  "releaseDate": "2023-10-28",
+  "stock": 6,
+  "runtime": 106,
+  "genres": ["Horror", "Mystery"],
+  "artists": [
+    { "name": "Victor", "role": "ACTOR" },
+    { "name": "Leo Phantom", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Golden Strings",
+  "description": "A musical drama about love and ambition.",
+  "price": "9.99",
+  "releaseDate": "2021-04-12",
+  "stock": 7,
+  "runtime": 112,
+  "genres": ["Musical", "Drama"],
+  "artists": [
+    { "name": "Sophia", "role": "ACTOR" },
+    { "name": "Grace Melody", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Storm Riders",
+  "description": "An action-packed adventure through raging storms.",
+  "price": "13.49",
+  "releaseDate": "2023-06-18",
+  "stock": 9,
+  "runtime": 124,
+  "genres": ["Action", "Adventure"],
+  "artists": [
+    { "name": "Alex", "role": "ACTOR" },
+    { "name": "Daniel Steel", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Broken Melody",
+  "description": "A romantic musical about heartbreak and hope.",
+  "price": "10.99",
+  "releaseDate": "2022-02-20",
+  "stock": 8,
+  "runtime": 110,
+  "genres": ["Musical", "Romance"],
+  "artists": [
+    { "name": "Sophia", "role": "ACTOR" },
+    { "name": "Grace Melody", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Inferno Code",
+  "description": "A tech thriller about hacking and survival.",
+  "price": "12.99",
+  "releaseDate": "2023-09-14",
+  "stock": 10,
+  "runtime": 119,
+  "genres": ["Thriller", "Sci-Fi"],
+  "artists": [
+    { "name": "Henry Bold", "role": "ACTOR" },
+    { "name": "Jordan", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Echo Valley",
+  "description": "A mystery drama set in a quiet countryside.",
+  "price": "11.49",
+  "releaseDate": "2021-08-05",
+  "stock": 6,
+  "runtime": 108,
+  "genres": ["Mystery", "Drama"],
+  "artists": [
+    { "name": "Charlotte Bloom", "role": "ACTOR" },
+    { "name": "Dana", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Blood Horizon",
+  "description": "A western tale of revenge and redemption.",
+  "price": "10.49",
+  "releaseDate": "2020-11-11",
+  "stock": 5,
+  "runtime": 122,
+  "genres": ["Western", "Action"],
+  "artists": [
+    { "name": "Noah Chase", "role": "ACTOR" },
+    { "name": "Daniel Steel", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Silent Echoes",
+  "description": "A psychological thriller that keeps you guessing.",
+  "price": "12.29",
+  "releaseDate": "2022-03-30",
+  "stock": 7,
+  "runtime": 116,
+  "genres": ["Thriller", "Mystery"],
+  "artists": [
+    { "name": "Henry Bold", "role": "ACTOR" },
+    { "name": "Leo Phantom", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Dreamcatcher",
+  "description": "A fantasy adventure through magical realms.",
+  "price": "13.99",
+  "releaseDate": "2024-07-21",
+  "stock": 9,
+  "runtime": 135,
+  "genres": ["Fantasy", "Adventure"],
+  "artists": [
+    { "name": "Isabella Frost", "role": "ACTOR" },
+    { "name": "Maya", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Crimson Tide",
+  "description": "A war drama about courage under fire.",
+  "price": "14.49",
+  "releaseDate": "2021-05-17",
+  "stock": 10,
+  "runtime": 130,
+  "genres": ["War", "Drama"],
+  "artists": [
+    { "name": "Lucas Storm", "role": "ACTOR" },
+    { "name": "Dana", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Neon Mirage",
+  "description": "A sci-fi thriller in a futuristic desert city.",
+  "price": "15.29",
+  "releaseDate": "2023-12-02",
+  "stock": 8,
+  "runtime": 140,
+  "genres": ["Sci-Fi", "Thriller"],
+  "artists": [
+    { "name": "Ethan Blaze", "role": "ACTOR" },
+    { "name": "Jordan", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Velvet Skies",
+  "description": "A romantic drama set against stunning landscapes.",
+  "price": "11.99",
+  "releaseDate": "2022-06-14",
+  "stock": 7,
+  "runtime": 114,
+  "genres": ["Romance", "Drama"],
+  "artists": [
+    { "name": "Sophia Dawn", "role": "ACTOR" },
+    { "name": "Olivia Grace", "role": "ACTOR" },
+    { "name": "Dana", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Shadow Hunt",
+  "description": "An action thriller about a covert mission.",
+  "price": "13.49",
+  "releaseDate": "2023-04-09",
+  "stock": 9,
+  "runtime": 121,
+  "genres": ["Action", "Thriller"],
+  "artists": [
+    { "name": "Alex", "role": "ACTOR" },
+    { "name": "Daniel Steel", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Lost Horizon",
+  "description": "An adventure drama in the Himalayan wilderness.",
+  "price": "12.99",
+  "releaseDate": "2021-09-25",
+  "stock": 8,
+  "runtime": 128,
+  "genres": ["Adventure", "Drama"],
+  "artists": [
+    { "name": "Charlotte Bloom", "role": "ACTOR" },
+    { "name": "Dana", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Midnight Serenade",
+  "description": "A musical romance under city lights.",
+  "price": "10.49",
+  "releaseDate": "2022-11-30",
+  "stock": 6,
+  "runtime": 109,
+  "genres": ["Musical", "Romance"],
+  "artists": [
+    { "name": "Sophia", "role": "ACTOR" },
+    { "name": "Grace Melody", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Steel Shadows",
+  "description": "A crime thriller in the industrial underworld.",
+  "price": "12.79",
+  "releaseDate": "2023-08-19",
+  "stock": 7,
+  "runtime": 117,
+  "genres": ["Crime", "Thriller"],
+  "artists": [
+    { "name": "James Noir", "role": "ACTOR" },
+    { "name": "Daniel Steel", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Frozen Horizon",
+  "description": "A survival drama in the Arctic wilderness.",
+  "price": "11.99",
+  "releaseDate": "2021-01-15",
+  "stock": 5,
+  "runtime": 113,
+  "genres": ["Drama", "Adventure"],
+  "artists": [
+    { "name": "Ella Sparks", "role": "ACTOR" },
+    { "name": "Dana", "role": "DIRECTOR" }
+  ]
+},
+{
+  "title": "Golden Horizon",
+  "description": "An inspiring sports drama about chasing dreams.",
+  "price": "10.99",
+  "releaseDate": "2022-09-09",
+  "stock": 8,
+  "runtime": 118,
+  "genres": ["Sport", "Drama"],
+  "artists": [
+    { "name": "Lucas Storm", "role": "ACTOR" },
+    { "name": "Dana", "role": "DIRECTOR" }
+  ]
+}
+
+]

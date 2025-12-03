@@ -1,0 +1,28 @@
+
+[
+  { "name": "Alex", "bio": "A versatile actor known for action movies." },
+  { "name": "Dana", "bio": "Directs visually striking stories." },
+  { "name": "Sam", "bio": "Experienced in blockbuster productions." },
+  { "name": "Lily", "bio": "Award-winning actress with a flair for drama." },
+  { "name": "Chris", "bio": "Brings humor to every role." },
+  { "name": "Jordan", "bio": "Sci-fi director with a futuristic vision." },
+  { "name": "Maya", "bio": "Fantasy storyteller extraordinaire." },
+  { "name": "Victor", "bio": "Known for intense villain roles." },
+  { "name": "Sophia", "bio": "Musical performer turned actor." },
+  { "name": "Ethan Edge", "bio": "Action hero with daring stunts." },
+  { "name": "Olivia Grace", "bio": "Romantic lead with charm and elegance." },
+  { "name": "Henry Bold", "bio": "Thriller specialist with gripping performances." },
+  { "name": "Emma Bright", "bio": "Comedy queen with impeccable timing." },
+  { "name": "Lucas Storm", "bio": "War drama expert with emotional depth." },
+  { "name": "Isabella Frost", "bio": "Fantasy actress with ethereal presence." },
+  { "name": "Noah Chase", "bio": "Western hero with rugged charisma." },
+  { "name": "Ava Harmony", "bio": "Musical star with a golden voice." },
+  { "name": "James Noir", "bio": "Crime drama actor with intensity." },
+  { "name": "Ella Sparks", "bio": "Family movie favorite with warmth." },
+  { "name": "Daniel Steel", "bio": "Action director with explosive style." },
+  { "name": "Grace Melody", "bio": "Musical director with passion for rhythm." },
+  { "name": "Leo Phantom", "bio": "Horror maestro with chilling vision." },
+  { "name": "Charlotte Bloom", "bio": "Drama actress with emotional range." },
+  { "name": "Ethan Blaze", "bio": "Sci-fi actor with futuristic appeal." },
+  { "name": "Sophia Dawn", "bio": "Romantic drama star with elegance." }
+]
