@@ -116,7 +116,7 @@ model Movie {
   id          String        @id @default(uuid())
   title       String
   description String?
-  price       Decimal       @db.Decimal(10, 2)
+  price       Int
   releaseDate DateTime?
   imageUrl    String?
   stock       Int           @default(0)
