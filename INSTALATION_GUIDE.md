@@ -12,6 +12,7 @@ Then maybe do some of this stuff???
 npx prisma migrate dev
 npx prisma generate
 npx prisma migrate deploy
+npm run db:seed
 npx prisma studio
 ```
 

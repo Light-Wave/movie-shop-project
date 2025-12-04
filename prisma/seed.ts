@@ -64,7 +64,7 @@ async function ensureMovie(movie: (typeof moviesData)[0]) {
     data: {
       title: movie.title,
       description: movie.description,
-      price: new Prisma.Decimal(movie.price),
+      price: Math.round(parseFloat(movie.price) * 100),
       releaseDate: relDate,
       stock: movie.stock ?? 0,
       runtime: movie.runtime,
