@@ -14,17 +14,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  orders        Order[]
-  createdMovies Movie[]
+  id             String    @id
+  name           String
+  email          String
+  emailVerified  Boolean   @default(false)
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sessions       Session[]
+  accounts       Account[]
+  orders         Order[]
+  createdMovies  Movie[]
+  createdArtists Artist[]
+  genres         Genre[]
 
   @@unique([email])
   @@map("user")
@@ -108,6 +110,8 @@ model Genre {
   movies      Movie[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id])
 
   @@unique([name])
   @@map("genre")
@@ -166,13 +170,15 @@ model OrderItem {
 }
 
 model Artist {
-  id         String        @id @default(uuid())
-  name       String
-  bio        String?
-  imageUrl   String?
-  movieLinks MovieArtist[]
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  id          String        @id @default(uuid())
+  name        String
+  bio         String?
+  imageUrl    String?
+  movieLinks  MovieArtist[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdById String?
+  createdBy   User?         @relation(fields: [createdById], references: [id])
 
   @@map("artist")
 }
