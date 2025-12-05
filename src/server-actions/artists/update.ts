@@ -1,6 +1,3 @@
-// Use Zod for server-side data validation within server actions
-// Utilize Better Auth for user-related actions (registration, login, profile updates)
-
 "use server";
 
 import { prisma } from "@/lib/prisma";
@@ -19,19 +16,13 @@ export async function updateArtist(formData: FormData) {
       field: issue.path.join("."),
       message: issue.message,
     }));
-    return { success: false, errors };
+    return { error: errors };
   }
 
-  const data = parsed.data;
-
-  const existing = await prisma.artist.findUnique({
-    where: { id: data.id },
-  });
-
-  if (!existing) return { error: "Artist not found." };
+  const { id, ...data } = parsed.data;
 
   const artist = await prisma.artist.update({
-    where: { id: data.id },
+    where: { id },
     data,
   });
 
