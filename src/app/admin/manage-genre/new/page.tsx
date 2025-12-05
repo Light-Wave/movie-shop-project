@@ -24,17 +24,19 @@ export default function GenreCreateForm() {
   }
 
   return (
-    <form action={handleSubmit} className="space-y-4 max-w-sm">
-      <div>
-        <Label htmlFor="name">Name</Label>
-        <Input id="name" name="name" required />
-      </div>
+    <div className="flex justify-center items-center h-full ">
+      <form action={handleSubmit} className="space-y-4  w-full max-w-lg">
+        <div>
+          <Label htmlFor="name">Name</Label>
+          <Input id="name" name="name" required />
+        </div>
 
-      <Button type="submit" disabled={loading}>
-        {loading ? "Creating..." : "Create Genre"}
-      </Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Creating..." : "Create Genre"}
+        </Button>
 
-      {result && <p className="text-sm pt-2">{result}</p>}
-    </form>
+        {result && <p className="text-sm pt-2">{result}</p>}
+      </form>
+    </div>
   );
 }

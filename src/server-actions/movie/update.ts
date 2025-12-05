@@ -7,7 +7,7 @@
 import { prisma } from "@/lib/prisma";
 import { updateMovieSchema } from "@/zod/movie";
 import { auth } from "@/lib/auth";
-import { Prisma } from "@/generated/prisma/client";
+import { ArtistRole, Prisma } from "@/generated/prisma/client";
 import { z } from "zod";
 
 const updateSchema = updateMovieSchema;
@@ -27,22 +27,35 @@ export async function updateMovie(formData: FormData) {
     return { success: false, errors };
   }
 
-  const data = parsed.data;
+  const { id, genres, artists, ...data } = parsed.data;
 
   const existing = await prisma.movie.findUnique({
-    where: { id: data.id },
+    where: { id: id },
   });
 
   if (!existing) return { error: "Movie not found." };
 
+  await prisma.movieArtist.deleteMany({ where: { movieId: id } });
+
   const movie = await prisma.movie.update({
-    where: { id: data.id },
+    where: { id: id },
     data: {
       ...data,
       price:
         typeof data.price === "number"
           ? new Prisma.Decimal(data.price)
           : undefined,
+      genres: {
+        set: genres ? genres.map((genreId: string) => ({ id: genreId })) : [],
+      },
+      movieArtists: {
+        create: artists
+          ? artists.map((artist: { artistId: string; role: string }) => ({
+              artist: { connect: { id: artist.artistId } },
+              role: artist.role as ArtistRole,
+            }))
+          : [],
+      },
     },
   });
 
