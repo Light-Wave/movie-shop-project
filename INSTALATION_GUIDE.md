@@ -17,3 +17,4 @@ npx prisma studio
 ```
 
 And check out this page to see if better auth is working: http://localhost:3000/api/auth/get-session
+If it works, the page should say 'null'
