@@ -7,7 +7,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { movieSchema } from "@/zod/movie";
+import { createMovieSchema } from "@/zod/movie";
 import { auth } from "@/lib/auth";
 import { Prisma } from "@/generated/prisma/client";
 
@@ -18,7 +18,7 @@ export async function createMovie(formData: FormData) {
 
   const rawData = Object.fromEntries(formData.entries());
 
-  const parsed = movieSchema.safeParse(rawData);
+  const parsed = createMovieSchema.safeParse(rawData);
 
   if (!parsed.success) {
     const errors = parsed.error.issues.map((issue) => ({
