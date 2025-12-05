@@ -9,7 +9,7 @@
 import { prisma } from "@/lib/prisma";
 import { createMovieSchema } from "@/zod/movie";
 import { auth } from "@/lib/auth";
-import { Prisma } from "@/generated/prisma/client";
+import { ArtistRole, Prisma } from "@/generated/prisma/client";
 
 export async function createMovie(formData: FormData) {
   const session = await auth.api.getSession();
@@ -29,13 +29,22 @@ export async function createMovie(formData: FormData) {
     return { error: errors };
   }
 
-  const data = parsed.data;
+  const { genres, artists, ...data } = parsed.data;
 
   const movie = await prisma.movie.create({
     data: {
       ...data,
       price: new Prisma.Decimal(data.price),
       createdBy: { connect: { id: userId } },
+      genres: {
+        connect: genres.map((id: string) => ({ id })),
+      },
+      movieArtists: {
+        create: artists.map((artist: { artistId: string; role: string }) => ({
+          artist: { connect: { id: artist.artistId } },
+          role: artist.role as ArtistRole,
+        })),
+      },
     },
   });
 
