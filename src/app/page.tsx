@@ -32,7 +32,7 @@ const testData: MovieSample[] = [
   {
     title: "Superman",
     imgLink: superman,
-    desc: "The iconic superhero film.",
+    desc: "The iconic superhero film. featuring the adventures of Superman.",
   },
   {
     title: "Minecraft",
