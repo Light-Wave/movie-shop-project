@@ -74,7 +74,7 @@ export default function MovieDisplay({
                       {movie.title}
                     </CardTitle>
                     <p className="text-center font-bold flex justify-center rounded-full">
-                      {PriceDisplay(movie)}
+                      <PriceDisplay price={movie.price} />
                     </p>
                     <CardDescription className="flex items-end line-clamp-2 text-center bg-amber-50">
                       {movie.desc}
