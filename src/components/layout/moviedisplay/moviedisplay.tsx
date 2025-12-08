@@ -23,6 +23,7 @@ const fillerMovie: MovieSample = {
   title: "Filler Movie",
   imgLink: nosferatu,
   desc: "This is a filler movie used for testing the movie display component.",
+  price: 1.99,
 };
 
 //dataHandler to ensure at least 10 movies are displayed
@@ -66,10 +67,14 @@ export default function MovieDisplay({
                     height={300}
                     className="m-auto "
                   />
+
                   <div className="flex flex-col gap-2 mt-2 ">
                     <CardTitle className="flex align-bottom justify-center items-end truncate">
                       {movie.title}
                     </CardTitle>
+                    <p className="text-center font-bold flex justify-center rounded-full">
+                      ${movie.price}
+                    </p>
                     <CardDescription className="flex items-end line-clamp-2 text-center bg-amber-50">
                       {movie.desc}
                     </CardDescription>
