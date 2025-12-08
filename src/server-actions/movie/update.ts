@@ -9,13 +9,14 @@ import { updateMovieSchema } from "@/zod/movie";
 import { auth } from "@/lib/auth";
 import { ArtistRole, Prisma } from "@/generated/prisma/client";
 import { z } from "zod";
+import { headers } from "next/headers";
 
 const updateSchema = updateMovieSchema;
 
 export async function updateMovie(formData: FormData) {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { error: "You must be logged in to update a movie." };
-
+  //TODO: Verify user is admin
   const rawData = Object.fromEntries(formData.entries());
   const parsed = updateSchema.safeParse(rawData);
 
@@ -43,7 +44,7 @@ export async function updateMovie(formData: FormData) {
       ...data,
       price:
         typeof data.price === "number"
-          ? new Prisma.Decimal(data.price)
+          ? Math.round(data.price * 100)
           : undefined,
       genres: {
         set: genres ? genres.map((genreId: string) => ({ id: genreId })) : [],

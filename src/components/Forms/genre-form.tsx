@@ -34,7 +34,6 @@ export function GenreUpdateForm({ genre }: { genre: any }) {
       </div>
 
       <div>
-        
         <Textarea
           id="description"
           name="description"

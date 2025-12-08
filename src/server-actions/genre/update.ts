@@ -6,11 +6,12 @@
 import { prisma } from "@/lib/prisma";
 import { updateGenreSchema } from "@/zod/genres";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function updateGenre(formData: FormData) {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { error: "You must be logged in to update a genre." };
-
+  //TODO: Verify user is admin
   const rawData = Object.fromEntries(formData.entries());
   const parsed = updateGenreSchema.safeParse(rawData);
 

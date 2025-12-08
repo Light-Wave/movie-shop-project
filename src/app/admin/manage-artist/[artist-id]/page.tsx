@@ -1,12 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import { UpdateArtistForm } from "../page";
+import { UpdateArtistForm } from "../../../../components/Forms/artist-form";
 import { notFound } from "next/navigation";
 
-export default async function EditArtistPage({
-  params,
-}: {
-  params: { "artist-id": string };
-}) {
+export default async function EditArtistPage(
+  props: PageProps<"/admin/manage-artist/[artist-id]">
+) {
+  const params = await props.params;
   const artist = await prisma.artist.findUnique({
     where: { id: params["artist-id"] },
   });

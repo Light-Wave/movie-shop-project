@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { createMovie } from "@/server-actions/movie/create";
 import { getGenres } from "@/server-actions/genre/get";
-import { getArtists } from "@/server-actions/artists/get";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,

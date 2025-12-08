@@ -6,12 +6,14 @@
 import { prisma } from "@/lib/prisma";
 import { createGenreSchema } from "@/zod/genres";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function createGenre(formData: FormData) {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { error: "You must be logged in to create a genre." };
-  const userId = session.user.id;
 
+  const userId = session.user.id;
+  //TODO: Verify user is admin
   const rawData = Object.fromEntries(formData.entries());
   const parsed = createGenreSchema.safeParse(rawData);
 

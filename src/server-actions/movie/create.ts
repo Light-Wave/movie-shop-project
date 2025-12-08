@@ -10,11 +10,13 @@ import { prisma } from "@/lib/prisma";
 import { createMovieSchema } from "@/zod/movie";
 import { auth } from "@/lib/auth";
 import { ArtistRole, Prisma } from "@/generated/prisma/client";
+import { headers } from "next/headers";
 
 export async function createMovie(formData: FormData) {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { error: "You must be logged in to create a movie." };
   const userId = session.user.id;
+  //TODO: Verify user is admin
 
   const rawData = Object.fromEntries(formData.entries());
 
@@ -34,7 +36,7 @@ export async function createMovie(formData: FormData) {
   const movie = await prisma.movie.create({
     data: {
       ...data,
-      price: new Prisma.Decimal(data.price),
+      price: Math.round(data.price * 100),
       createdBy: { connect: { id: userId } },
       genres: {
         connect: genres.map((id: string) => ({ id })),

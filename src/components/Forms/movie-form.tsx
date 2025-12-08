@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { updateMovie } from "@/server-actions/movie/update";
 
-export function MovieUpdateForm({ movie }: { movie: any }) {
+export function MovieUpdateForm({ movie }: { movie?: any }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
 
