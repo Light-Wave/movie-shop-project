@@ -26,7 +26,7 @@ model User {
   orders         Order[]
   createdMovies  Movie[]
   createdArtists Artist[]
-  genres         Genre[]
+  createGenres         Genre[]
 
   @@unique([email])
   @@map("user")

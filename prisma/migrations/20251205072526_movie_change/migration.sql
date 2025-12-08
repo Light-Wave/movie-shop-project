@@ -10,8 +10,8 @@ ALTER TABLE "artist" ADD COLUMN     "createdById" TEXT;
 -- AlterTable
 ALTER TABLE "genre" ADD COLUMN     "createdById" TEXT;
 
--- AlterTable
-ALTER TABLE "movie" ALTER COLUMN "createdById" DROP NOT NULL;
+
+
 
 -- AddForeignKey
 ALTER TABLE "genre" ADD CONSTRAINT "genre_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
