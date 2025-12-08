@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import PriceDisplay from "@/components/prise-display";
+import { Button } from "@/components/ui/button";
 
 //Temporary filler for list and temp interface
 import nosferatu from "../../layout/featuredmovie/nosferatu.jpg";
