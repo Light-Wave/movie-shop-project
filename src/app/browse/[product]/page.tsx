@@ -67,14 +67,5 @@ export default async function DetailPage({
 
       <div className="row-span-4 col-start-5">5</div>
     </div>
-    // <div className="w-9/10 m-auto border-2 p-4 rounded-lg grid-cols-2 gap-4">
-    //   <div>
-    //     <h1>{matched.title}</h1>
-    //     {matched.desc && <p>{matched.desc}</p>}
-    //     <p>
-    //       <strong>Price:</strong> {String(matched.price ?? "—")}
-    //     </p>
-    //   </div>
-    // </div>
   );
 }
