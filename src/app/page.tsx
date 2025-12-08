@@ -24,7 +24,7 @@ export interface MovieSample {
   price: number;
 }
 // Temporary test data
-const testData: MovieSample[] = [
+export const testData: MovieSample[] = [
   {
     title: "Nosferatu",
     imgLink: nosferatu,
