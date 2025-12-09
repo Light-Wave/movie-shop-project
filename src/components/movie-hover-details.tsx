@@ -12,9 +12,11 @@ import { Genre, Movie } from "@/generated/prisma/client";
 import PriceDisplay from "./prise-display";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "./ui/badge";
-import { MovieWithGenres } from "./types/movie";
+import { MovieWithDetails } from "./types/movie";
+import { GenreBadge } from "./genre-badge";
+import { ArtistBadge } from "./artist-badge";
 
-type Params = { movie: MovieWithGenres; children: ReactNode };
+type Params = { movie: MovieWithDetails; children: ReactNode };
 
 export function HoverCardMovie({ movie, children }: Params) {
   return (
@@ -34,7 +36,12 @@ export function HoverCardMovie({ movie, children }: Params) {
             <p className="text-sm">{movie.description}</p>
             <div className="space-x-1">
               {movie.genres.map((genre) => (
-                <Badge key={genre.id}>{genre.name}</Badge>
+                <GenreBadge key={genre.id} genre={genre} />
+              ))}
+            </div>
+            <div className="space-x-1">
+              {movie.movieLinks.map((movieLink) => (
+                <ArtistBadge key={movieLink.artist.id} movieLink={movieLink} />
               ))}
             </div>
             <div className="text-muted-foreground text-xs">

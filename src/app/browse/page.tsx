@@ -18,8 +18,9 @@ Optinal:
 o Implement full-text search for movies using PostgreSQL's full-text search
 capabilities
 o Include search by director, actor, and genre*/
+import { ArtistBadge } from "@/components/artist-badge";
+import { GenreBadge } from "@/components/genre-badge";
 import { MovieTable } from "@/components/movie-browser";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Collapsible,
@@ -29,30 +30,86 @@ import {
 import { prisma } from "@/lib/prisma";
 import { ChevronsUpDown } from "lucide-react";
 
-export default async function Dashboard() {
-  const moviePromise = prisma.movie.findMany({ include: { genres: true } });
-  const genrePromise = prisma.genre.findMany();
-  const [movies, genres] = await Promise.all([moviePromise, genrePromise]);
-  return (
-    <div className=" bg-zinc-50 font-sans dark:bg-black">
-      <main className="w-9/10 m-auto">
-        <Collapsible>
-          <Button variant="outline" className="mb-4 mt-4" asChild>
-            <CollapsibleTrigger>
-              Genres <ChevronsUpDown />
-            </CollapsibleTrigger>
-          </Button>
-          <CollapsibleContent>
-            <div className="space-x-1">
-              {genres.map((genre) => (
-                <Badge key={genre.id}>{genre.name}</Badge>
-              ))}
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
+export default async function Dashboard({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const genresSearch = (await searchParams)?.genre;
+  const artistSearch = (await searchParams)?.artist;
+  const moviePromise = prisma.movie.findMany({
+    include: {
+      genres: { select: { id: true, name: true } },
+      movieLinks: {
+        select: {
+          role: true,
+          artist: true,
+        },
+      },
+    },
+    where: {
+      ...(genresSearch && {
+        genres: {
+          some: { name: genresSearch as string },
+        },
+      }),
+      ...(artistSearch && {
+        movieLinks: {
+          some: {
+            artist: {
+              name: artistSearch as string,
+            },
+          },
+        },
+      }),
+    },
+  });
+  const genrePromise = prisma.genre.findMany({
+    select: { _count: { select: { movies: true } }, id: true, name: true },
 
-        <MovieTable data={movies} />
-      </main>
+    orderBy: { movies: { _count: "desc" } },
+  });
+  const artistPromise = prisma.artist.findMany({
+    select: { _count: { select: { movieLinks: true } }, id: true, name: true },
+    orderBy: { movieLinks: { _count: "desc" } },
+  });
+  const [movies, genres, artists] = await Promise.all([
+    moviePromise,
+    genrePromise,
+    artistPromise,
+  ]);
+  return (
+    <div>
+      <Collapsible>
+        <Button variant="outline" className="mb-4 mt-4" asChild>
+          <CollapsibleTrigger>
+            Genres <ChevronsUpDown />
+          </CollapsibleTrigger>
+        </Button>
+        <CollapsibleContent>
+          <div className="space-x-1">
+            {genres.map((genre) => (
+              <GenreBadge key={genre.id} genre={genre} />
+            ))}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+      <Collapsible>
+        <Button variant="outline" className="mb-4 mt-4" asChild>
+          <CollapsibleTrigger>
+            Artists <ChevronsUpDown />
+          </CollapsibleTrigger>
+        </Button>
+        <CollapsibleContent>
+          <div className="space-x-1">
+            {artists.map((artist) => (
+              <ArtistBadge key={artist.id} artist={artist} />
+            ))}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+
+      <MovieTable data={movies} />
     </div>
   );
 }
