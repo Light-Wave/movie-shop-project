@@ -22,6 +22,7 @@ export interface MovieSample {
   youtube?: string;
   desc: string;
   price: number;
+  genres?: string[];
 }
 // Temporary test data
 export const testData: MovieSample[] = [

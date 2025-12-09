@@ -7,6 +7,8 @@
 import { testData, MovieSample } from "@/app/page";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import PriceDisplay from "@/components/prise-display";
 
 function normalizeForMatch(s: string | undefined) {
   if (!s) return "";
@@ -47,7 +49,7 @@ export default async function DetailPage({
   }
 
   return (
-    <div className="grid grid-cols-5 grid-rows-5 gap-4">
+    <div className="grid grid-cols-5 grid-rows-5 gap-4 p-4 border-2 border-grey-800 rounded-lg">
       <div className="row-span-4">
         <Image src={matched.imgLink} alt={matched.title} />
         {matched.youtube ? (
@@ -55,6 +57,7 @@ export default async function DetailPage({
             href={String(matched.youtube)}
             target="_blank"
             rel="noopener noreferrer"
+            className="hover:underline"
           >
             Watch Trailer
           </Link>
@@ -65,7 +68,21 @@ export default async function DetailPage({
         <p>{matched.desc}</p>
       </div>
 
-      <div className="row-span-4 col-start-5">5</div>
+      <div className="row-span-4 col-start-5">
+        <div className="flex flex-col gap-1 bg-gray-200 p-1 rounded-lg h-full">
+          {matched.genres?.map((mn, index) => (
+            <p
+              key={index}
+              className="bg-black text-white p-1 text-center rounded-2xl"
+            >
+              {mn}{" "}
+            </p>
+          ))}
+          <Button className="mt-auto w-full justify-center">
+            Add to Cart - <PriceDisplay price={matched.price} />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
