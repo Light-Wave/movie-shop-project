@@ -1,11 +1,10 @@
 "use server";
 //Delete movies
-
 // Utilize Better Auth for user-related actions (registration, login, profile updates)
-
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 type DeleteResult = { success: true } | { success: false; error: string };
 
@@ -13,9 +12,10 @@ export async function deleteMovieAction(
   formData: FormData
 ): Promise<DeleteResult> {
   try {
-    // Auth: ensure caller is admin
-    const headers = await import("next/headers").then((m) => m.headers());
-    const session = await auth.api.getSession({ headers });
+    //Auth: ensure caller is admin
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
     if (!session) {
       return { success: false, error: "Unauthorized: admin required" };
@@ -31,10 +31,16 @@ export async function deleteMovieAction(
 
     // Prevent deleting movies that have order history (onDelete: Restrict)
     const orderCount = await prisma.orderItem.count({ where: { movieId } });
+
     if (orderCount > 0) {
+      // Soft-disable: mark as unavailable and set deletedAt
+      await prisma.movie.update({
+        where: { id: movieId },
+        data: { isAvailable: false, deletedAt: new Date() }, // deletedAt optional..
+      });
+
       return {
-        success: false,
-        error: `Cannot delete movie with ${orderCount} order(s). Consider marking it unavailable instead.`,
+        success: true,
       };
     }
 

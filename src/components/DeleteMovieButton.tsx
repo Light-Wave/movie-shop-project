@@ -19,8 +19,6 @@ export function DeleteMovieButton({ movieId, movieTitle }: { movieId: string; mo
   const [isPending, setIsPending] = useState(false);
 
   const handleDelete = async () => {
-   // if (!confirm(`Delete "${movieTitle ?? movieId}"? This cannot be undone.`)) return;
-
     setIsPending(true);
     const formData = new FormData();
     formData.append("movieId", movieId);
