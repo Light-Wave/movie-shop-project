@@ -9,6 +9,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import PriceDisplay from "@/components/prise-display";
+<<<<<<< HEAD
+import { Badge } from "@/components/ui/badge";
+import MovieDetailPage from "@/components/layout/moviedetail/singlemoviepage";
+=======
+>>>>>>> c2ec78e8f60476a9ac5b15ec02dfaa7f17ffec3b
 
 function normalizeForMatch(s: string | undefined) {
   if (!s) return "";
@@ -49,9 +54,15 @@ export default async function DetailPage({
   }
 
   return (
+<<<<<<< HEAD
+    <div className="grid grid-cols-5 grid-rows-4 gap-4 p-4 border-2 border-grey-800 rounded-lg">
+      <div className="row-span-4">
+        <Image src={matched.imgURL} alt={matched.title} />
+=======
     <div className="grid grid-cols-5 grid-rows-5 gap-4 p-4 border-2 border-grey-800 rounded-lg">
       <div className="row-span-4">
         <Image src={matched.imgLink} alt={matched.title} />
+>>>>>>> c2ec78e8f60476a9ac5b15ec02dfaa7f17ffec3b
         {matched.youtube ? (
           <Link
             href={String(matched.youtube)}
@@ -70,6 +81,22 @@ export default async function DetailPage({
 
       <div className="row-span-4 col-start-5">
         <div className="flex flex-col gap-1 bg-gray-200 p-1 rounded-lg h-full">
+<<<<<<< HEAD
+          {matched.genres?.map((mg, index) => (
+            <Badge key={index} className="mx-auto px-5">
+              {mg}{" "}
+            </Badge>
+          ))}
+          <p className="text-center">
+            Release date:
+            {matched.releasedate
+              ? matched.releasedate instanceof Date
+                ? matched.releasedate.toLocaleDateString()
+                : String(matched.releasedate)
+              : ""}
+          </p>
+
+=======
           {matched.genres?.map((mn, index) => (
             <p
               key={index}
@@ -78,11 +105,16 @@ export default async function DetailPage({
               {mn}{" "}
             </p>
           ))}
+>>>>>>> c2ec78e8f60476a9ac5b15ec02dfaa7f17ffec3b
           <Button className="mt-auto w-full justify-center">
             Add to Cart - <PriceDisplay price={matched.price} />
           </Button>
         </div>
       </div>
+<<<<<<< HEAD
+      <div>{/* <MovieDetailPage params={{ id: "tt0120737" }} /> */}</div>
+=======
+>>>>>>> c2ec78e8f60476a9ac5b15ec02dfaa7f17ffec3b
     </div>
   );
 }

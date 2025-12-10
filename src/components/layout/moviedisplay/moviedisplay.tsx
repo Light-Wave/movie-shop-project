@@ -21,8 +21,9 @@ import nosferatu from "../../layout/featuredmovie/nosferatu.jpg";
 import { MovieSample } from "@/app/page";
 
 const fillerMovie: MovieSample = {
+  id: "xxx",
   title: "Filler Movie",
-  imgLink: nosferatu,
+  imgURL: nosferatu,
   desc: "This is a filler movie used for testing the movie display component.",
   price: 199,
 };
@@ -62,7 +63,7 @@ export default function MovieDisplay({
               <Card className="min-h-95 p-0">
                 <CardContent className="p-1 grow flex flex-col">
                   <Image
-                    src={movie.imgLink}
+                    src={movie.imgURL}
                     alt={`${movie.title} poster`}
                     width={200}
                     height={300}

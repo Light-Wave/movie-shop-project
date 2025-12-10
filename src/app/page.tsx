@@ -17,8 +17,17 @@ import minecraft from "../components/layout/featuredmovie/minecraft.jpg";
 
 // Temporary Interface for test data
 export interface MovieSample {
+  id: string;
+  releasedate?: Date;
+  stock?: number;
+  runtime?: number;
+  isAvailable?: boolean;
+  deletedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  movieLinks?: string;
   title: string;
-  imgLink: any;
+  imgURL: any;
   youtube?: string;
   desc: string;
   price: number;
@@ -27,22 +36,52 @@ export interface MovieSample {
 // Temporary test data
 export const testData: MovieSample[] = [
   {
+    id: "1",
     title: "Nosferatu",
-    imgLink: nosferatu,
-    desc: "A classic horror movie about a vampire.",
+    imgURL: nosferatu,
+    desc: "A classic silent horror about the mysterious Count Nosferatu invading a small town.",
     price: 999,
+    releasedate: new Date("1922-03-04"),
+    stock: 5,
+    runtime: 94,
+    isAvailable: true,
+    createdAt: new Date("2020-01-10T08:30:00Z"),
+    updatedAt: new Date("2024-06-01T12:00:00Z"),
+    movieLinks: "https://example.com/movies/nosferatu",
+    youtube: "https://www.youtube.com/watch?v=wl9r4jr82sI",
+    genres: ["Horror", "Silent", "Classic"],
   },
   {
+    id: "2",
     title: "Superman",
-    imgLink: superman,
-    desc: "The iconic superhero film, featuring the adventures of Superman.",
+    imgURL: superman,
+    desc: "The iconic superhero film that introduced Superman to the silver screen.",
     price: 1499,
+    releasedate: new Date("1978-12-15"),
+    stock: 12,
+    runtime: 143,
+    isAvailable: true,
+    createdAt: new Date("2021-05-22T09:15:00Z"),
+    updatedAt: new Date("2024-05-20T14:45:00Z"),
+    movieLinks: "https://example.com/movies/superman",
+    youtube: "https://www.youtube.com/watch?v=uhUht6vAsMY",
+    genres: ["Action", "Adventure", "Superhero"],
   },
   {
-    title: "Minecraft",
-    imgLink: minecraft,
-    desc: "A movie adaptation of the popular video game.",
+    id: "3",
+    title: "Minecraft: The Movie",
+    imgURL: minecraft,
+    desc: "An imaginative blocky world brought to life in a family-friendly adventure.",
     price: 1999,
+    releasedate: new Date("2024-07-01"),
+    stock: 0,
+    runtime: 105,
+    isAvailable: false,
+    createdAt: new Date("2024-02-12T11:00:00Z"),
+    updatedAt: new Date("2024-09-01T10:00:00Z"),
+    movieLinks: "https://example.com/movies/minecraft",
+    youtube: "https://www.youtube.com/watch?v=wJO_vIDZn-I",
+    genres: ["Family", "Adventure", "Fantasy"],
   },
 ];
 
