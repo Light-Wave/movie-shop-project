@@ -60,7 +60,7 @@ export default function MovieDisplay({
         {movies.map((movie, index) => (
           <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/5">
             <div>
-              <Card className="min-h-95 p-0">
+              <Card className="min-h-100 p-0">
                 <CardContent className="p-1 grow flex flex-col">
                   <Image
                     src={movie.imgURL}

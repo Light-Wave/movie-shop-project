@@ -48,7 +48,7 @@ export const testData: MovieSample[] = [
     createdAt: new Date("2020-01-10T08:30:00Z"),
     updatedAt: new Date("2024-06-01T12:00:00Z"),
     movieLinks: "https://example.com/movies/nosferatu",
-    youtube: "https://www.youtube.com/watch?v=wl9r4jr82sI",
+    youtube: "https://www.youtube.com/embed/nulvWqYUM8k?si=PvkV0mi0xJGm5DWK",
     genres: ["Horror", "Silent", "Classic"],
   },
   {
@@ -64,12 +64,12 @@ export const testData: MovieSample[] = [
     createdAt: new Date("2021-05-22T09:15:00Z"),
     updatedAt: new Date("2024-05-20T14:45:00Z"),
     movieLinks: "https://example.com/movies/superman",
-    youtube: "https://www.youtube.com/watch?v=uhUht6vAsMY",
+    youtube: "https://www.youtube.com/embed/Ox8ZLF6cGM0?si=gURfrdWW-I7gCJvh",
     genres: ["Action", "Adventure", "Superhero"],
   },
   {
     id: "3",
-    title: "Minecraft: The Movie",
+    title: "Minecraft",
     imgURL: minecraft,
     desc: "An imaginative blocky world brought to life in a family-friendly adventure.",
     price: 1999,
@@ -80,11 +80,10 @@ export const testData: MovieSample[] = [
     createdAt: new Date("2024-02-12T11:00:00Z"),
     updatedAt: new Date("2024-09-01T10:00:00Z"),
     movieLinks: "https://example.com/movies/minecraft",
-    youtube: "https://www.youtube.com/watch?v=wJO_vIDZn-I",
+    youtube: "https://www.youtube.com/embed/wJO_vIDZn-I?si=n343Ixvb6AcfsAZx",
     genres: ["Family", "Adventure", "Fantasy"],
   },
 ];
-
 //Imports for final landingpage
 import FeaturedCarousel from "@/components/layout/featuredmovie/moviecarousel";
 import GenreList from "@/components/layout/genrelist/genrelist";
