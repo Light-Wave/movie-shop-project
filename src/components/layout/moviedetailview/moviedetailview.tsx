@@ -1,5 +1,4 @@
 "use client";
-import { FC } from "react";
 import Image from "next/image";
 import {
   Card,
@@ -28,7 +27,7 @@ interface MovieDetailPageProps {
 
 export default function MovieDetailPage({ params }: MovieDetailPageProps) {
   const movie: MovieSample = (() => {
-    const found = testData.find((m) => m.title === params.id);
+    const found = testData.find((m) => m.title === params.title);
     if (found) return found;
     // Fallback to the first test item or a minimal default
     return (

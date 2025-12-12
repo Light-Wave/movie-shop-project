@@ -11,7 +11,6 @@ import MovieDetailPage from "@/components/layout/moviedetailview/moviedetailview
 function normalizeForMatch(s: string | undefined) {
   if (!s) return "";
   return s
-    .toString()
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
