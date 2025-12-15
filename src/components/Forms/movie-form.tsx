@@ -16,15 +16,13 @@ import {
 
 import { updateMovie } from "@/server-actions/movie/update";
 
-export function MovieUpdateForm({ movie }: { movie?: any }) {
+export function MovieUpdateForm({ movie }: { movie: any }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [movieArtists, setMovieArtists] = useState<
     { artistId: string; role: string }[]
   >([]);
-
-
 
   const handleGenreChange = (genreId: string) => {
     setSelectedGenres((prev) =>
@@ -90,7 +88,7 @@ export function MovieUpdateForm({ movie }: { movie?: any }) {
           name="price"
           type="number"
           step="0.01"
-          defaultValue={movie.price / 100 ?? ""}
+          defaultValue={movie.price / 100}
         />
       </div>
 
@@ -110,11 +108,7 @@ export function MovieUpdateForm({ movie }: { movie?: any }) {
 
       <div>
         <Label htmlFor="imageUrl">Image URL</Label>
-        <Input
-          id="imageUrl"
-          name="imageUrl"
-          defaultValue={movie.imageUrl ?? ""}
-        />
+        <Input id="imageUrl" name="imageUrl" defaultValue={movie.imageUrl} />
       </div>
 
       <div>
@@ -123,7 +117,7 @@ export function MovieUpdateForm({ movie }: { movie?: any }) {
           id="stock"
           name="stock"
           type="number"
-          defaultValue={movie.stock ?? ""}
+          defaultValue={movie.stock}
         />
       </div>
 
@@ -133,13 +127,9 @@ export function MovieUpdateForm({ movie }: { movie?: any }) {
           id="runtime"
           name="runtime"
           type="number"
-          defaultValue={movie.runtime ?? ""}
+          defaultValue={movie.runtime}
         />
       </div>
-
-
-
-
 
       <Button type="submit" disabled={loading}>
         {loading ? "Updating..." : "Update Movie"}
