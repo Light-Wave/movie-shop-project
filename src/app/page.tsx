@@ -1,8 +1,8 @@
-// Landing page
-// o Top 5 most purchased movie
-// o Top 5 most recent movies
-// o Top 5 Oldest Movies
-// o Top 5 cheapest Movie
+//✅ Landing page
+//✅ o Top 5 most purchased movie - Partially done, needs data integration
+//✅ o Top 5 most recent movies - Partially done, needs data integration
+//✅ o Top 5 Oldest Movies - Partially done, needs data integration
+//✅ o Top 5 cheapest Movie - Partially done, needs data integration
 // Optional Implement a simple recommendation system based on user purchase
 // history, favorite genres, directors, or actors
 // Add movies to cart (stored in cookies)
@@ -17,30 +17,73 @@ import minecraft from "../components/layout/featuredmovie/minecraft.jpg";
 
 // Temporary Interface for test data
 export interface MovieSample {
+  id: string;
+  releasedate?: Date;
+  stock?: number;
+  runtime?: number;
+  isAvailable?: boolean;
+  deletedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  movieLinks?: string;
   title: string;
-  imgLink: any;
+  imgURL: any;
   youtube?: string;
   desc: string;
+  price: number;
+  genres?: string[];
 }
 // Temporary test data
-const testData: MovieSample[] = [
+export const testData: MovieSample[] = [
   {
+    id: "1",
     title: "Nosferatu",
-    imgLink: nosferatu,
-    desc: "A classic horror movie about a vampire.",
+    imgURL: nosferatu,
+    desc: "A classic silent horror about the mysterious Count Nosferatu invading a small town.",
+    price: 999,
+    releasedate: new Date("1922-03-04"),
+    stock: 5,
+    runtime: 94,
+    isAvailable: true,
+    createdAt: new Date("2020-01-10T08:30:00Z"),
+    updatedAt: new Date("2024-06-01T12:00:00Z"),
+    movieLinks: "https://example.com/movies/nosferatu",
+    youtube: "https://www.youtube.com/embed/nulvWqYUM8k?si=PvkV0mi0xJGm5DWK",
+    genres: ["Horror", "Silent", "Classic"],
   },
   {
+    id: "2",
     title: "Superman",
-    imgLink: superman,
-    desc: "The iconic superhero film.",
+    imgURL: superman,
+    desc: "The iconic superhero film that introduced Superman to the silver screen.",
+    price: 1499,
+    releasedate: new Date("1978-12-15"),
+    stock: 12,
+    runtime: 143,
+    isAvailable: true,
+    createdAt: new Date("2021-05-22T09:15:00Z"),
+    updatedAt: new Date("2024-05-20T14:45:00Z"),
+    movieLinks: "https://example.com/movies/superman",
+    youtube: "https://www.youtube.com/embed/Ox8ZLF6cGM0?si=gURfrdWW-I7gCJvh",
+    genres: ["Action", "Adventure", "Superhero"],
   },
   {
+    id: "3",
     title: "Minecraft",
-    imgLink: minecraft,
-    desc: "A movie adaptation of the popular video game.",
+    imgURL: minecraft,
+    desc: "An imaginative blocky world brought to life in a family-friendly adventure.",
+    price: 1999,
+    releasedate: new Date("2024-07-01"),
+    stock: 0,
+    runtime: 105,
+    isAvailable: false,
+    createdAt: new Date("2024-02-12T11:00:00Z"),
+    updatedAt: new Date("2024-09-01T10:00:00Z"),
+    movieLinks: "https://example.com/movies/minecraft",
+    youtube: "https://www.youtube.com/embed/wJO_vIDZn-I?si=n343Ixvb6AcfsAZx",
+    genres: ["Family", "Adventure", "Fantasy"],
   },
 ];
-
 //Imports for final landingpage
 import FeaturedCarousel from "@/components/layout/featuredmovie/moviecarousel";
 import GenreList from "@/components/layout/genrelist/genrelist";

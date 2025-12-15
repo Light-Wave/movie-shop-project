@@ -106,9 +106,22 @@ const columns: ColumnDef<MovieWithGenres>[] = [
   },
   {
     accessorKey: "price",
-    header: () => <div className="text-right">Price</div>,
+    header: ({ column }) => {
+      return (
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Price
+            <ArrowUpDown />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const amount = parseInt(row.getValue("price"));
+
       return (
         <div className="text-right font-medium">
           <PriceDisplay price={amount} />

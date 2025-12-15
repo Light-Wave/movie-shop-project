@@ -35,7 +35,7 @@ export default function FeaturedCarousel({
                   <CardContent className="h-full w-full p-0 flex justify-center items-center">
                     <div className="relative w-full h-full">
                       <Image
-                        src={movie.imgLink}
+                        src={movie.imgURL}
                         alt={`${movie.title} poster`}
                         width={400}
                         height={500}
