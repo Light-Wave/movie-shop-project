@@ -3,9 +3,15 @@
 import { prisma } from "@/lib/prisma";
 import { createArtistSchema } from "@/zod/artists";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers"; // Import headers
 
 export async function createArtist(formData: FormData) {
-  const session = await auth.api.getSession();
+  const headerList = headers();
+  const headersObject: Record<string, string> = {};
+  headerList.forEach((value, key) => {
+    headersObject[key] = value;
+  });
+  const session = await auth.api.getSession({ headers: headersObject }); // Pass headers
   if (!session) return { error: "You must be logged in to create an artist." };
   const userId = session.user.id;
 
