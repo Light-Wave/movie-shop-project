@@ -1,33 +1,74 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { updateMovie } from "@/server-actions/movie/update";
 
 export function MovieUpdateForm({ movie }: { movie?: any }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [movieArtists, setMovieArtists] = useState<
+    { artistId: string; role: string }[]
+  >([]);
+
+
+
+  const handleGenreChange = (genreId: string) => {
+    setSelectedGenres((prev) =>
+      prev.includes(genreId)
+        ? prev.filter((id) => id !== genreId)
+        : [...prev, genreId]
+    );
+  };
+
+  const addArtist = () => {
+    setMovieArtists([...movieArtists, { artistId: "", role: "ACTOR" }]);
+  };
+
+  const removeArtist = (index: number) => {
+    setMovieArtists(movieArtists.filter((_, i) => i !== index));
+  };
+
+  const handleArtistChange = (
+    index: number,
+    field: "artistId" | "role",
+    value: string
+  ) => {
+    const updated = [...movieArtists];
+    updated[index][field] = value;
+    setMovieArtists(updated);
+  };
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
+    formData.append("id", movie.id);
+    formData.append("genres", JSON.stringify(selectedGenres));
+    formData.append("artists", JSON.stringify(movieArtists));
     const res = await updateMovie(formData);
     setLoading(false);
 
-    if (res?.success) {
-      setResult("Movie updated!");
-    } else {
-      setResult("Error: " + JSON.stringify(res?.errors || res?.error));
-    }
+    if (res?.success) setResult("Movie updated!");
+    else setResult("Error: " + JSON.stringify(res?.errors || res?.error));
   }
 
   return (
     <form action={handleSubmit} className="space-y-4 max-w-lg">
-      {/* Hidden movie ID */}
       <input type="hidden" name="id" value={movie.id} />
 
+      {/* Grundläggande filmfält */}
       <div>
         <Label htmlFor="title">Title</Label>
         <Input id="title" name="title" defaultValue={movie.title ?? ""} />
@@ -49,7 +90,7 @@ export function MovieUpdateForm({ movie }: { movie?: any }) {
           name="price"
           type="number"
           step="0.01"
-          defaultValue={movie.price ?? ""}
+          defaultValue={movie.price / 100 ?? ""}
         />
       </div>
 
@@ -95,6 +136,10 @@ export function MovieUpdateForm({ movie }: { movie?: any }) {
           defaultValue={movie.runtime ?? ""}
         />
       </div>
+
+
+
+
 
       <Button type="submit" disabled={loading}>
         {loading ? "Updating..." : "Update Movie"}

@@ -1,5 +1,4 @@
-"use client";
-
+import { prisma } from "@/lib/prisma";
 import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,7 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export function UpdateArtistForm({ artist }: { artist: any }) {
+function UpdateArtistForm({ artist }: { artist: any }) {
+  "use client";
+
   const [isPending, startTransition] = useTransition();
 
   const form = useForm({
@@ -35,6 +36,8 @@ export function UpdateArtistForm({ artist }: { artist: any }) {
     for (const [key, value] of Object.entries(values)) {
       if (value !== undefined) formData.append(key, value as string);
     }
+    formData.append("id", artist.id);
+
 
     startTransition(async () => {
       const res = await updateArtist(formData);
@@ -100,5 +103,22 @@ export function UpdateArtistForm({ artist }: { artist: any }) {
         </Button>
       </form>
     </Form>
+  );
+}
+
+export default async function ManageArtistsPage() {
+  const artists = await prisma.artist.findMany();
+
+  return (
+    <div>
+      <h1>Manage Artists</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {artists.map((artist) => (
+          <div key={artist.id} className="p-4 border rounded-lg">
+            <UpdateArtistForm artist={artist} />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
