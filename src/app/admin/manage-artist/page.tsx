@@ -16,6 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+async function getArtists() {
+    return prisma.artist.findMany();
+}
+
 function UpdateArtistForm({ artist }: { artist: any }) {
   "use client";
 
@@ -107,7 +111,7 @@ function UpdateArtistForm({ artist }: { artist: any }) {
 }
 
 export default async function ManageArtistsPage() {
-  const artists = await prisma.artist.findMany();
+  const artists = await getArtists();
 
   return (
     <div>

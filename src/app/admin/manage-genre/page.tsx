@@ -2,8 +2,12 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+async function getGenres() {
+    return prisma.genre.findMany();
+}
+
 export default async function ManageGenrePage() {
-  const genres = await prisma.genre.findMany();
+  const genres = await getGenres();
 
   return (
     <div>
