@@ -23,6 +23,7 @@ export function UpdateArtistForm({ artist }: { artist: any }) {
   const form = useForm({
     resolver: zodResolver(updateArtistSchema),
     defaultValues: {
+      id: artist.id,
       name: artist.name ?? "",
       bio: artist.bio ?? "",
       imageUrl: artist.imageUrl ?? "",
@@ -32,8 +33,11 @@ export function UpdateArtistForm({ artist }: { artist: any }) {
   async function onSubmit(values: any) {
     const formData = new FormData();
 
+    // Explicitly add the ID to formData
+    formData.append("id", artist.id);
+
     for (const [key, value] of Object.entries(values)) {
-      if (value !== undefined) formData.append(key, value as string);
+      if (key !== "id" && value !== undefined) formData.append(key, value as string);
     }
 
     startTransition(async () => {

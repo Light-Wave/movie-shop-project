@@ -7,5 +7,5 @@ export const createArtistSchema = z.object({
 });
 
 export const updateArtistSchema = createArtistSchema.extend({
-  id: z.string().optional(),
+  id: z.string().min(1, "ID is required"),
 });
