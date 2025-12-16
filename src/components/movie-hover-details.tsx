@@ -1,5 +1,5 @@
 import { CalendarIcon } from "lucide-react";
-
+import AddToCartButton from "@/components/cartComponents/addToCartButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Children, ReactNode } from "react";
@@ -47,6 +47,7 @@ export function HoverCardMovie({ movie, children }: Params) {
             <div className="text-muted-foreground text-xs">
               <PriceDisplay movie={movie} />
             </div>
+             <AddToCartButton movieId={movie.id}  />
           </div>
         </div>
       </HoverCardContent>

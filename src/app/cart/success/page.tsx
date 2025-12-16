@@ -1,10 +1,15 @@
-/*just a useless comment*/
-/* I am commenting here*/
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-// You managed to buy someting!
-// It will be here in Jan
-// Maybe June
-// In a year
-// Maybe two
-// But we'lll take your money now
-// See you soon!
+export default function SuccessPage() {
+  return (
+    <div className="text-center space-y-4">
+      <h1 className="text-2xl font-bold">Order Successful 🎉</h1>
+      <p>Thank you for your purchase!</p>
+
+      <Button asChild>
+        <Link href="/browse">Continue Shopping</Link>
+      </Button>
+    </div>
+  );
+}
