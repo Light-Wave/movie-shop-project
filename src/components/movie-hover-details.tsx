@@ -16,9 +16,13 @@ import { MovieWithDetails } from "./types/movie";
 import { GenreBadge } from "./genre-badge";
 import { ArtistBadge } from "./artist-badge";
 
-type Params = { movie: MovieWithDetails; children: ReactNode };
+type Params = {
+  movie: MovieWithDetails; children: ReactNode; 
+  addItemAction: (formData: FormData) => Promise<void>;
+};
 
-export function HoverCardMovie({ movie, children }: Params) {
+export function HoverCardMovie({ movie, children, addItemAction }: Params) {
+   console.log("🟠 CLIENT HoverCardMovie action typeof:", typeof addItemAction, "movieId:", movie.id);
   return (
     <HoverCard>
       <HoverCardTrigger asChild>{children}</HoverCardTrigger>
@@ -47,7 +51,7 @@ export function HoverCardMovie({ movie, children }: Params) {
             <div className="text-muted-foreground text-xs">
               <PriceDisplay movie={movie} />
             </div>
-             <AddToCartButton movieId={movie.id}  />
+             <AddToCartButton movieId={movie.id} addItemAction={addItemAction} />
           </div>
         </div>
       </HoverCardContent>

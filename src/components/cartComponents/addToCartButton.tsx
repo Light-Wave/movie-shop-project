@@ -1,24 +1,27 @@
+
+// src/components/cartComponents/AddToCartButton.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useFormStatus } from "react-dom";
 
 export default function AddToCartButton({
   movieId,
-  onAdd,                   // the server action comes in as a prop..
+  addItemAction,
   className,
 }: {
   movieId: string;
-  onAdd: (formData: FormData) => Promise<void>;
+  addItemAction: (formData: FormData) => Promise<void>; // Server Action passed from a Server Component
   className?: string;
 }) {
-  const { pending } = useFormStatus();
+  console.log("🟢 AddToCartButton addItemAction typeof:", typeof addItemAction, "movieId:", movieId);
 
   return (
-    <form action={onAdd}>
+    <form>
+      {/* The Server Action will read this from FormData */}
       <input type="hidden" name="movieId" value={movieId} />
-      <Button type="submit" className={className} disabled={pending}>
-        {pending ? "Adding…" : "Add to Cart"}
+      {/* ✅ per-button action is robust in popovers/portals */}
+      <Button formAction={addItemAction} type="submit" className={className}>
+        Add to Cart
       </Button>
     </form>
   );

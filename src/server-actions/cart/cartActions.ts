@@ -58,6 +58,7 @@ export async function clearCartAction() {
 export async function addItemAction(formData: FormData) {
   console.log("addItemAction fired");
   const movieId = formData.get("movieId") as string;
+  console.log("✅ SERVER received movieId:", movieId);
   if (!movieId) return;
 
   const cart = await getCart();
