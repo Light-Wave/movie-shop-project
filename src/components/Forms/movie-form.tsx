@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,8 +18,7 @@ import {
 import { updateMovie } from "@/server-actions/movie/update";
 
 export function MovieUpdateForm({ movie }: { movie: any }) {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [movieArtists, setMovieArtists] = useState<
     { artistId: string; role: string }[]
@@ -51,19 +51,32 @@ export function MovieUpdateForm({ movie }: { movie: any }) {
   };
 
   async function handleSubmit(formData: FormData) {
-    setLoading(true);
-    formData.append("id", movie.id);
-    formData.append("genres", JSON.stringify(selectedGenres));
-    formData.append("artists", JSON.stringify(movieArtists));
-    const res = await updateMovie(formData);
-    setLoading(false);
+    startTransition(async () => {
+      formData.append("id", movie.id);
+      formData.append("genres", JSON.stringify(selectedGenres));
+      formData.append("artists", JSON.stringify(movieArtists));
+      const res = await updateMovie(formData);
 
-    if (res?.success) setResult("Movie updated!");
-    else setResult("Error: " + JSON.stringify(res?.errors || res?.error));
+      if (res?.success) {
+        toast.success("Movie updated!");
+      } else {
+        toast.error("Error updating movie", {
+          description: JSON.stringify(res?.errors || res?.error),
+        });
+      }
+    });
   }
 
   return (
-    <form action={handleSubmit} className="space-y-4 max-w-lg">
+    <form
+      action={handleSubmit}
+      className="space-y-4 max-w-lg"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        handleSubmit(formData);
+      }}
+    >
       <input type="hidden" name="id" value={movie.id} />
 
       {/* Grundläggande filmfält */}
@@ -131,11 +144,9 @@ export function MovieUpdateForm({ movie }: { movie: any }) {
         />
       </div>
 
-      <Button type="submit" disabled={loading}>
-        {loading ? "Updating..." : "Update Movie"}
+      <Button type="submit" disabled={isPending}>
+        {isPending ? "Updating..." : "Update Movie"}
       </Button>
-
-      {result && <p className="text-sm pt-2">{result}</p>}
     </form>
   );
 }

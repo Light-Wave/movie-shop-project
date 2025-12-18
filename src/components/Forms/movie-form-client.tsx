@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,26 +16,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function MovieCreateForm({ artists, genres }: { artists: any[], genres: any[] }) {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
+export default function MovieCreateForm({
+  artists,
+  genres,
+}: {
+  artists: any[];
+  genres: any[];
+}) {
+  const [isPending, startTransition] = useTransition();
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [movieArtists, setMovieArtists] = useState<
     { artistId: string; role: string }[]
   >([]);
 
   async function handleSubmit(formData: FormData) {
-    setLoading(true);
-    formData.append("genres", JSON.stringify(selectedGenres));
-    formData.append("artists", JSON.stringify(movieArtists));
-    const res = await createMovie(formData);
-    setLoading(false);
+    startTransition(async () => {
+      formData.append("genres", JSON.stringify(selectedGenres));
+      formData.append("artists", JSON.stringify(movieArtists));
+      const res = await createMovie(formData);
 
-    if (res?.success) {
-      setResult("Movie created!");
-    } else {
-      setResult("Error: " + JSON.stringify(res?.error));
-    }
+      if (res?.success) {
+        toast.success("Movie created!");
+        // Cant reset form as this is not a useForm hook
+      } else {
+        toast.error("Error creating movie", {
+          description: JSON.stringify(res?.error),
+        });
+      }
+    });
   }
 
   const handleGenreChange = (genreId: string) => {
@@ -65,7 +74,16 @@ export default function MovieCreateForm({ artists, genres }: { artists: any[], g
 
   return (
     <div className="flex justify-center items-center h-full ">
-      <form action={handleSubmit} className="space-y-4 w-full max-w-lg">
+      <form
+        action={handleSubmit}
+        className="space-y-4 w-full max-w-lg"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+        handleSubmit(formData);
+        (e.target as HTMLFormElement).reset();
+        }}
+      >
         <div>
           <Label htmlFor="title">Title</Label>
           <Input id="title" name="title" required />
@@ -165,11 +183,9 @@ export default function MovieCreateForm({ artists, genres }: { artists: any[], g
           </Button>
         </div>
 
-        <Button type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Create Movie"}
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "Creating..." : "Create Movie"}
         </Button>
-
-        {result && <p className="text-sm pt-2">{result}</p>}
       </form>
     </div>
   );

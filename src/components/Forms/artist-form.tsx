@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { updateArtistSchema } from "@/zod/artists";
 import { updateArtist } from "@/server-actions/artists/update";
 
+import { toast } from "sonner";
 import {
   Form,
   FormField,
@@ -37,16 +38,22 @@ export function UpdateArtistForm({ artist }: { artist: any }) {
     formData.append("id", artist.id);
 
     for (const [key, value] of Object.entries(values)) {
-      if (key !== "id" && value !== undefined) formData.append(key, value as string);
+      if (key !== "id" && value !== undefined)
+        formData.append(key, value as string);
     }
 
     startTransition(async () => {
       const res = await updateArtist(formData);
 
       if (res.error) {
-        console.log("Error:", res.error);
+        toast.error("Failed to update artist.", {
+          description:
+            typeof res.error === "string"
+              ? res.error
+              : JSON.stringify(res.error),
+        });
       } else {
-        console.log("Success!", res);
+        toast.success("Artist updated successfully!");
       }
     });
   }

@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers"; // Import headers
 
 export async function createArtist(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() }); // Pass headers
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { error: "You must be logged in to create an artist." };
   const userId = session.user.id;
 
