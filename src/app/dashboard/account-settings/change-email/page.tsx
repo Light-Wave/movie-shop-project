@@ -21,7 +21,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ChangeEmailValues, changeEmailSchema } from "@/zod/change-email";
 
-export default function ChangePassword() {
+export default function ChangeEmail() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const session = authClient.useSession();
@@ -103,7 +103,7 @@ export default function ChangePassword() {
             />
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Working..." : "Change Password"}
+              {isLoading ? "Working..." : "Change Email"}
             </Button>
           </form>
         </Form>

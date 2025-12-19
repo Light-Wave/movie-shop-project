@@ -17,6 +17,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
+import Link from "next/link";
 
 // Menu items.
 const items = [
@@ -70,10 +71,10 @@ export function AppSidebar({ userName }: Params) {
                       {accountSettings.map((item) => (
                         <SidebarMenuSubItem key={item.title}>
                           <SidebarMenuButton asChild>
-                            <a href={item.url}>
+                            <Link href={item.url}>
                               <item.icon />
                               <span>{item.title}</span>
-                            </a>
+                            </Link>
                           </SidebarMenuButton>
                         </SidebarMenuSubItem>
                       ))}
@@ -84,10 +85,10 @@ export function AppSidebar({ userName }: Params) {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
