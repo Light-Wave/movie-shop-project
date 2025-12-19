@@ -25,9 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body className="sm:w-full m-auto font-sans bg-zinc-50 dark:bg-black dark:text-white">
-        <div className="min-h-screen flex flex-col">
-          <Nav />
+      <body className="font-sans bg-zinc-50 dark:bg-black dark:text-white">
+        <Nav />
+        <div className="sm:w-9/10 m-auto min-h-screen flex flex-col">
           <main className="flex-1 container py-8">{children}</main>
 
           <footer className="border-t py-4 text-center text-sm text-muted-foreground">

@@ -17,14 +17,12 @@ export default async function Layout({
   }
 
   return (
-    <div className="sm:w-9/10">
-      <SidebarProvider>
-        <AppSidebar userName={session.user.name} />
-        <main>
-          <SidebarTrigger />
-          {children}
-        </main>
-      </SidebarProvider>
-    </div>
+    <SidebarProvider>
+      <AppSidebar userName={session.user.name} />
+      <main>
+        <SidebarTrigger />
+        {children}
+      </main>
+    </SidebarProvider>
   );
 }
