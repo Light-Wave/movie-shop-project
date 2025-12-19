@@ -13,9 +13,9 @@ const navLinks = [
 
 export function Nav() {
   return (
-    <header className="m-auto w-9/10 sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="text-xl font-bold">DELTA LOGO</div>
+    <header className="m-auto w-full sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 flex flex-row justify-center items-center">
+      <div className="container w-9/10 flex h-16 items-center justify-between">
+        <div className="text-xl font-bold px-4">DELTA LOGO</div>
 
         <nav className="hidden md:flex items-center space-x-4">
           {navLinks.map((link) => (
