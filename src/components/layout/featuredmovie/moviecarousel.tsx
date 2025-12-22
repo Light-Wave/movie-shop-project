@@ -12,6 +12,7 @@ import { MovieWithDetails } from "@/components/sharedutils/movie-fetch";
 import placeholder from "../../../../public/placeholders/placeholder.jpg";
 import { Play } from "lucide-react";
 import { ArtistBadge } from "@/components/artist-badge";
+import Link from "next/link";
 
 /**
  * Carousel component for featured movies, takes Moviedata[]
@@ -89,7 +90,7 @@ export default function FeaturedCarousel({
                       className="rounded-full px-8 font-bold"
                       asChild
                     >
-                      <a href={`/browse/${movie.id}`}>View Details</a>
+                      <Link href={`/browse/${movie.id}`}>View Details</Link>
                     </Button>
                   </div>
 

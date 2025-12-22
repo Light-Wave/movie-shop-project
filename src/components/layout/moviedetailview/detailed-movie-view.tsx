@@ -19,6 +19,7 @@ import placeholder from "../../../../public/placeholders/placeholder.jpg";
 import { useCartPlaceholder } from "../../../../public/placeholders/cart-placeholder";
 
 import { Movie, Genre, Artist, MovieArtist } from "@/generated/prisma/client";
+import { ArtistBadge } from "@/components/artist-badge";
 /**
  * Movie detail page props
  * @param movie movie object to display
@@ -61,6 +62,9 @@ function formatRuntime(runtime: number | null): string {
  * Movie detail page component
  * takes in movie param to display, and similiarmovies to display recomendation.
  * Currently the recommendations are just based on the genres of the movie display
+ * Added more robust handling of actors, directors and genres since the data is fetched from the outside.
+ * The fetched data might include movies without director/actor or genre. we now should be ready for that.
+ * It is possible that the fetched data can include a very long list of actors, but it should not completely ruin the card.
  * TODO: Adjust recommendations to be more accurate/useful?
  */
 export default function MovieDetailPage({
@@ -102,11 +106,10 @@ export default function MovieDetailPage({
             </div>
 
             <Badge
-              className={`mt-4 text-sm font-semibold px-4 py-1 ${
-                movie.isAvailable
-                  ? "bg-green-500 hover:bg-green-600"
-                  : "bg-red-500 hover:bg-red-600"
-              }`}
+              className={`mt-4 text-sm font-semibold px-4 py-1 ${movie.isAvailable
+                ? "bg-green-500 hover:bg-green-600"
+                : "bg-red-500 hover:bg-red-600"
+                }`}
             >
               {movie.isAvailable ? "In Stock" : "Out of Stock"}
             </Badge>
@@ -122,22 +125,49 @@ export default function MovieDetailPage({
                 Released: {formattedReleaseDate} | Runtime: {formattedRuntime}
               </CardDescription>
 
-              {movie.movieLinks?.length > 0 && (
-                <CardDescription className="text-lg text-muted-foreground pt-1">
-                  {movie.movieLinks.map((link, index) => (
-                    <span key={link.id}>
-                      {link.role === "DIRECTOR" ? "Director" : "Actor"}:{" "}
-                      {link.artist.name}
-                      {index < movie.movieLinks.length - 1 && " | "}
+              <div className="flex flex-col gap-3 mt-4">
+                {movie.movieLinks?.filter((link) => link.role === "DIRECTOR").length > 0 && (
+                  <div className="flex flex-row items-baseline gap-2">
+                    <span className="text-lg font-bold w-28 shrink-0">
+                      {movie.movieLinks.filter((link) => link.role === "DIRECTOR").length > 1
+                        ? "Directors:"
+                        : "Director:"}
                     </span>
-                  ))}
-                </CardDescription>
-              )}
-
-              <div className="flex flex-wrap gap-2 pt-2">
-                {movie.genres?.map((genre) => (
-                  <GenreBadge key={genre.id} genre={genre} />
-                ))}
+                    <div className="flex flex-wrap gap-2">
+                      {movie.movieLinks
+                        .filter((link) => link.role === "DIRECTOR")
+                        .map((link) => (
+                          <ArtistBadge key={link.id} artist={link.artist} />
+                        ))}
+                    </div>
+                  </div>
+                )}
+                {movie.movieLinks?.filter((link) => link.role === "ACTOR").length > 0 && (
+                  <div className="flex flex-row items-baseline gap-2">
+                    <span className="text-lg font-bold w-28 shrink-0">
+                      Actors:
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {movie.movieLinks
+                        .filter((link) => link.role === "ACTOR")
+                        .map((link) => (
+                          <ArtistBadge key={link.id} artist={link.artist} />
+                        ))}
+                    </div>
+                  </div>
+                )}
+                {movie.genres?.length > 0 && (
+                  <div className="flex flex-row items-baseline gap-2">
+                    <span className="text-lg font-bold w-28 shrink-0">
+                      {movie.genres.length > 1 ? "Genres:" : "Genre:"}
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {movie.genres.map((genre) => (
+                        <GenreBadge key={genre.id} genre={genre} />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </CardHeader>
 
@@ -194,8 +224,10 @@ export default function MovieDetailPage({
        */}
       {similarMovies.length > 0 && (
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
-          <div className="flex flex-wrap gap-4">
+          <h2 className="text-2xl font-bold mb-6 tracking-tight text-zinc-800">
+            Recommended movies based on genre
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 items-stretch">
             {similarMovies.map((similarMovie) => (
               <SimilarMovieCard key={similarMovie.id} movie={similarMovie} />
             ))}

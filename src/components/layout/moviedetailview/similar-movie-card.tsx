@@ -34,49 +34,43 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
   return (
     <Link
       href={movieUrl}
-      className=" w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(16.666%-0.85rem)]"
+      className="group w-full sm:w-auto"
     >
-      <Card className="h-full overflow-hidden transition-all duration-300 hover:scale-105">
-        <div className="aspect-2/3 overflow-hidden">
-          {movie.imageUrl ? (
-            <Image
-              src={movie.imageUrl}
-              alt={movie.title}
-              fill
-              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 17vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-110"
-            />
-          ) : (
-            <div className="relative w-full h-full bg-muted flex items-center justify-center">
-              <Image
-                src={placeholder}
-                alt={movie.title}
-                fill
-                sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 17vw"
-                className="object-cover"
-              />
-            </div>
-          )}
+      <Card className="h-full overflow-hidden border-zinc-200 transition-all duration-300 hover:shadow-md grid grid-rows-[auto_1fr]">
+        <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
+          <Image
+            src={movie.imageUrl || placeholder}
+            alt={movie.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 15vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
         </div>
-        <CardContent className="px-2 flex flex-col">
-          <CardTitle className="text-sm font-semibold line-clamp-2">
-            {movie.title}
-          </CardTitle>
-          <div className="flex flex-wrap mt-1">
-            {movie.genres?.slice(0, 2).map((genre) => (
-              <Badge key={genre.id} variant="secondary" className="text-xs">
-                {genre.name}
-              </Badge>
-            ))}
+
+        <CardContent className="p-3 flex flex-col justify-between gap-3">
+          <div className="space-y-1.5">
+            <CardTitle className="text-sm font-bold line-clamp-2 leading-snug">
+              {movie.title}
+            </CardTitle>
+
+            <div className="flex flex-wrap gap-1">
+              {movie.genres?.slice(0, 2).map((genre) => (
+                <Badge key={genre.id} variant="secondary" className="text-[10px] px-1.5 py-0 h-4 uppercase tracking-wider font-semibold">
+                  {genre.name}
+                </Badge>
+              ))}
+            </div>
           </div>
-          <div className="mt-2 text-sm font-bold">
-            <PriceDisplay price={movie.price} />
-          </div>
-          <div className="mt-2">
+
+          <div className="space-y-3">
+            <div className="text-base font-black text-primary">
+              <PriceDisplay price={movie.price} />
+            </div>
+
             <Button
               variant="default"
               size="sm"
-              className="w-full text-xs h-8"
+              className="w-full text-xs h-9 font-bold transition-colors"
               onClick={(e) => handleAddToCart(e, movie.title)}
             >
               Add to Cart
