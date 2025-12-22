@@ -3,16 +3,15 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import MovieEditForm from "@/components/Forms/movie-form-edit-client";
 
-export default async function EditMoviePage({
-  params,
-}: {
-  params: { "product-id": string };
-}) {
+export default async function EditMoviePage(
+  props: PageProps<"/admin/manage-products/[product-id]">
+) {
+  const params = await props.params;
   const moviePromise = prisma.movie.findUnique({
     where: { id: params["product-id"] },
     include: {
       genres: true,
-      movieArtists: {
+      movieLinks: {
         include: {
           artist: true,
         },

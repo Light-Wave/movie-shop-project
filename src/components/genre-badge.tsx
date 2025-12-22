@@ -4,8 +4,9 @@ import { ReducedGenre } from "./types/movie";
 
 type Params = {
   genre: ReducedGenre & { _count?: { movies: number } };
+  adminView?: boolean;
 };
-export function GenreBadge({ genre }: Params) {
+export function GenreBadge({ genre, adminView }: Params) {
   return (
     <Badge
       asChild
@@ -16,10 +17,14 @@ export function GenreBadge({ genre }: Params) {
       }
     >
       <Link
-        href={{
-          pathname: "/browse",
-          query: { genre: genre.name }, // TODO: make the genre id readable by humans, and use that instead
-        }}
+        href={
+          adminView
+            ? `/admin/manage-genre/${genre.id}`
+            : {
+                pathname: "/browse",
+                query: { genre: genre.name }, // TODO: make the genre id readable by humans, and use that instead
+              }
+        }
       >
         {genre.name}
         {genre._count && genre._count.movies > 0

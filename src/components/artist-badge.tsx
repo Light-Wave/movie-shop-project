@@ -4,10 +4,12 @@ import { ReducedArtist, ReducedMovieLink } from "./types/movie";
 import { roleToString } from "@/lib/role-to-string";
 
 type Params =
-  | {
-      artist: ReducedArtist;
-    }
-  | { movieLink: ReducedMovieLink };
+  | (
+      | {
+          artist: ReducedArtist;
+        }
+      | { movieLink: ReducedMovieLink }
+    ) & { adminView?: boolean };
 export function ArtistBadge(params: Params) {
   let artist: ReducedArtist;
   if ("artist" in params) {
@@ -25,10 +27,14 @@ export function ArtistBadge(params: Params) {
       }
     >
       <Link
-        href={{
-          pathname: "/browse",
-          query: { artist: artist.name },
-        }}
+        href={
+          params.adminView
+            ? `/admin/manage-artist/${artist.id}`
+            : {
+                pathname: "/browse",
+                query: { artist: artist.name },
+              }
+        }
       >
         {"movieLink" in params
           ? `${roleToString(params.movieLink.role)}: ${artist.name}`

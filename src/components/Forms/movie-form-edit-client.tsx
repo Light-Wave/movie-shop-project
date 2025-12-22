@@ -16,17 +16,29 @@ import {
 import { updateMovie } from "@/server-actions/movie/update";
 import { usePathname } from "next/navigation";
 
-export default function MovieEditForm({ movie, artists, genres }: { movie: any, artists: any[], genres: any[] }) {
+export default function MovieEditForm({
+  movie,
+  artists,
+  genres,
+}: {
+  movie: any;
+  artists: any[];
+  genres: any[];
+}) {
   const id = usePathname().split("/").pop() as string;
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
-  const [selectedGenres, setSelectedGenres] = useState<string[]>(movie.genres.map((g: any) => g.id));
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(
+    movie.genres.map((g: any) => g.id)
+  );
   const [movieArtists, setMovieArtists] = useState<
     { artistId: string; role: string }[]
-  >(movie.movieArtists.map((ma: any) => ({
-    artistId: ma.artistId,
-    role: ma.role,
-  })));
+  >(
+    movie.movieLinks.map((ma: any) => ({
+      artistId: ma.artistId,
+      role: ma.role,
+    }))
+  );
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
