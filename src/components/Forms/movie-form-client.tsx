@@ -15,13 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Artist, Genre } from "@/generated/prisma/client";
 
 export default function MovieCreateForm({
   artists,
   genres,
 }: {
-  artists: any[];
-  genres: any[];
+  artists: Artist[];
+  genres: Genre[];
 }) {
   const [isPending, startTransition] = useTransition();
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -80,8 +81,8 @@ export default function MovieCreateForm({
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
-        handleSubmit(formData);
-        (e.target as HTMLFormElement).reset();
+          handleSubmit(formData);
+          (e.target as HTMLFormElement).reset();
         }}
       >
         <div>

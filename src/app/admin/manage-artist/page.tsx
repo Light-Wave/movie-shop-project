@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { updateArtistSchema } from "@/zod/artists";
 import { updateArtist } from "@/server-actions/artists/update";
 
+import { toast } from "sonner";
 import {
   Form,
   FormField,
@@ -17,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 async function getArtists() {
-    return prisma.artist.findMany();
+  return prisma.artist.findMany();
 }
 
 function UpdateArtistForm({ artist }: { artist: any }) {
@@ -42,14 +43,13 @@ function UpdateArtistForm({ artist }: { artist: any }) {
     }
     formData.append("id", artist.id);
 
-
     startTransition(async () => {
       const res = await updateArtist(formData);
 
       if (res.error) {
-        console.log("Error:", res.error);
+        toast.error(res.error.toString());
       } else {
-        console.log("Success!", res);
+        toast.success("Artist updated successfully!");
       }
     });
   }
