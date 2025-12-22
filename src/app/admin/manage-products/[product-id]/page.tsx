@@ -8,10 +8,8 @@ export default async function EditMoviePage({
 }: {
   params: { "product-id": string };
 }) {
-  const resolvedParams = await params;
-
   const moviePromise = prisma.movie.findUnique({
-    where: { id: resolvedParams["product-id"] },
+    where: { id: params["product-id"] },
     include: {
       genres: true,
       movieArtists: {
