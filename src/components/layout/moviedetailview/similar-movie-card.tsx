@@ -6,7 +6,9 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import PriceDisplay from "@/components/prise-display";
 import { generateMovieUrl } from "@/components/sharedutils/slug-utils";
-import placeholder from "../placeholders/placeholder.jpg";
+import { Button } from "@/components/ui/button";
+import { useCartPlaceholder } from "../../../../public/placeholders/cart-placeholder";
+import placeholder from "../../../../public/placeholders/placeholder.jpg";
 
 import { Movie, Genre, Artist, MovieArtist } from "@/generated/prisma/client";
 
@@ -20,17 +22,22 @@ export type SimilarMovie = Movie & {
 interface SimilarMovieCardProps {
   movie: SimilarMovie;
 }
-
+/**
+ * takes in a movie and display recommended movies based on the genre of the movie
+ * TODO: Possibly improve this to take other factors into account.
+ * not using Genrebadge since css collided and it didn not make much sense to have the badges clickable here
+ */
 export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
   const movieUrl = generateMovieUrl(movie.id, movie.title);
+  const { handleAddToCart } = useCartPlaceholder();
 
   return (
     <Link
       href={movieUrl}
-      className="group shrink-0 w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(16.666%-0.85rem)]"
+      className=" w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(16.666%-0.85rem)]"
     >
-      <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 border-none bg-linear-to-b from-card to-muted/30">
-        <div className="relative aspect-2/3 overflow-hidden">
+      <Card className="h-full overflow-hidden transition-all duration-300 hover:scale-105">
+        <div className="aspect-2/3 overflow-hidden">
           {movie.imageUrl ? (
             <Image
               src={movie.imageUrl}
@@ -50,25 +57,30 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
               />
             </div>
           )}
-          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
-        <CardContent className="p-3">
-          <CardTitle className="text-sm font-semibold line-clamp-2 group-hover:text-primary transition-colors">
+        <CardContent className="px-2 flex flex-col">
+          <CardTitle className="text-sm font-semibold line-clamp-2">
             {movie.title}
           </CardTitle>
-          <div className="flex flex-wrap gap-1 mt-2">
+          <div className="flex flex-wrap mt-1">
             {movie.genres?.slice(0, 2).map((genre) => (
-              <Badge
-                key={genre.id}
-                variant="secondary"
-                className="text-xs px-1.5 py-0.5"
-              >
+              <Badge key={genre.id} variant="secondary" className="text-xs">
                 {genre.name}
               </Badge>
             ))}
           </div>
-          <div className="mt-2 text-sm font-bold text-primary">
+          <div className="mt-2 text-sm font-bold">
             <PriceDisplay price={movie.price} />
+          </div>
+          <div className="mt-2">
+            <Button
+              variant="default"
+              size="sm"
+              className="w-full text-xs h-8"
+              onClick={(e) => handleAddToCart(e, movie.title)}
+            >
+              Add to Cart
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -15,10 +15,15 @@ import { Separator } from "@/components/ui/separator";
 import PriceDisplay from "@/components/prise-display";
 import { GenreBadge } from "@/components/genre-badge";
 import { SimilarMovieCard, type SimilarMovie } from "./similar-movie-card";
-import placeholder from "../placeholders/placeholder.jpg";
+import placeholder from "../../../../public/placeholders/placeholder.jpg";
+import { useCartPlaceholder } from "../../../../public/placeholders/cart-placeholder";
 
 import { Movie, Genre, Artist, MovieArtist } from "@/generated/prisma/client";
-
+/**
+ * Movie detail page props
+ * @param movie movie object to display
+ * @param similarMovies similar movies to display
+ */
 interface MovieDetailPageProps {
   movie: Movie & {
     genres: Genre[];
@@ -52,10 +57,17 @@ function formatRuntime(runtime: number | null): string {
   return runtime ? `${runtime} min` : "N/A";
 }
 
+/**
+ * Movie detail page component
+ * takes in movie param to display, and similiarmovies to display recomendation.
+ * Currently the recommendations are just based on the genres of the movie display
+ * TODO: Adjust recommendations to be more accurate/useful?
+ */
 export default function MovieDetailPage({
   movie,
   similarMovies = [],
 }: MovieDetailPageProps) {
+  const { handleAddToCart } = useCartPlaceholder();
   const formattedReleaseDate = formatReleaseDate(movie.releaseDate);
   const formattedRuntime = formatRuntime(movie.runtime);
 
@@ -133,7 +145,7 @@ export default function MovieDetailPage({
 
             <CardContent className="p-0">
               <h3 className="text-xl font-semibold mb-2">Synopsis</h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed">
                 {movie.description ?? "No description available."}
               </p>
             </CardContent>
@@ -148,6 +160,7 @@ export default function MovieDetailPage({
                 <Button
                   disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
                   className="text-lg px-8 py-6"
+                  onClick={(e) => handleAddToCart(e, movie.title)}
                 >
                   {movie.isAvailable ? "Add to Cart" : "Notify Me"}
                 </Button>
