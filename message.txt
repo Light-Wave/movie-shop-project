@@ -1,6 +1,0 @@
-I have resolved the import error.
-
-- The `src/app/admin/manage-products/new/page.tsx` file has been refactored to directly use `prisma` for fetching artists and genres.
-- The `src/components/Forms/movie-form.tsx` component (which was unused) has been cleaned up by removing all its data-fetching logic for artists and genres.
-
-All `get.ts` files from the `src/server-actions` directory (for artists, genres, and movies) have now been effectively removed from the codebase. The pages should now work correctly without any `get.ts` files.
