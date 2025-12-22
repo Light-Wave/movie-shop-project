@@ -16,10 +16,10 @@ export default function SignInOrOut(params: Params) {
       {session.data === null ? (
         <ButtonGroup>
           <Button {...params} variant="outline" asChild>
-            <Link href={"./login"}>Sign In</Link>
+            <Link href="/login">Sign In</Link>
           </Button>
           <Button {...params} variant="outline" asChild>
-            <Link href={"./register"}>Register</Link>
+            <Link href="/register">Register</Link>
           </Button>
         </ButtonGroup>
       ) : (
