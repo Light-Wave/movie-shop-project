@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import SignInOrOut from "@/components/signin-signup-logout";
 import teamDelta from "@/../public/team-delta-reversed.svg";
 import Image from "next/image";
+import CartBadge from "@/components/cartComponents/cartBadge";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -47,6 +48,7 @@ export function Nav() {
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[300px]"
             />
           </div>
+          <CartBadge />
           <SignInOrOut />
         </div>
 
