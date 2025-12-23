@@ -30,8 +30,6 @@ import {
 import { prisma } from "@/lib/prisma";
 import { ChevronsUpDown } from "lucide-react";
 
-import { addItemAction } from "@/server-actions/cart/cartActions";
-
 export default async function Dashboard({
   searchParams,
 }: {
@@ -111,7 +109,7 @@ export default async function Dashboard({
         </CollapsibleContent>
       </Collapsible>
 
-      <MovieTable data={movies} addItemAction={addItemAction} />
+      <MovieTable data={movies} />
     </div>
   );
 }

@@ -5,7 +5,6 @@ import { getCartTotalItems } from "@/lib/cartUtils";
 
 
 export default async function CartBadge() {
-    console.log("🟢 CartBadge rendered");
   const cart = await getCart();
    const total = getCartTotalItems(cart);
 

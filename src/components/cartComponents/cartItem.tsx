@@ -1,3 +1,6 @@
+"use client";
+
+import { useFormState, useFormStatus } from "react-dom";
 import type { CartItemWithMovie } from "@/components/types/movie";
 import {
   updateQuantityAction,
@@ -6,67 +9,72 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-function formatSEK(cents: number) {
-  return new Intl.NumberFormat("sv-SE", {
-    style: "currency",
-    currency: "SEK",
-  }).format(cents / 100);
+
+function SubmitButton({
+  children,
+  disabled,
+}: {
+  children: React.ReactNode;
+  disabled?: boolean;
+}) {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      type="submit"
+      size="icon"
+      variant="outline"
+      disabled={pending || disabled}
+    >
+      {children}
+    </Button>
+  );
 }
 
 export function CartItem({ item }: { item: CartItemWithMovie }) {
   const { movie, quantity } = item;
-  const lineTotal = movie.priceCents * quantity;
+
+  const [, updateAction] = useFormState(updateQuantityAction, {
+    success: true,
+  });
+
+  const [, removeAction] = useFormState(removeItemAction, {
+    success: true,
+  });
 
   return (
     <Card>
       <CardContent className="flex items-center justify-between py-4">
-        {/* LEFT */}
+      
         <div className="flex-1">
           <h3 className="font-semibold">{movie.title}</h3>
-          <p className="text-sm text-muted-foreground">
-            {formatSEK(movie.priceCents)} each
-          </p>
 
           {!movie.isAvailable && (
-            <p className="mt-1 text-sm text-red-600">Unavailable</p>
+            <p className="text-sm text-red-600">Unavailable</p>
           )}
         </div>
 
-        {/* RIGHT */}
+       
         <div className="flex items-center gap-4">
-          {/* Quantity controls */}
+          {/* Quantity */}
           <div className="flex items-center gap-2">
-            <form action={updateQuantityAction}>
+            <form action={updateAction}>
               <input type="hidden" name="movieId" value={movie.id} />
               <input type="hidden" name="quantity" value={quantity - 1} />
-              <Button
-                type="submit"
-                size="icon"
-                variant="outline"
-                disabled={quantity <= 1}
-              >
-            
-              </Button>
+              <SubmitButton disabled={quantity <= 1}>−</SubmitButton>
             </form>
 
-            <span className="w-8 text-center">{quantity}</span>
+            <span className="w-6 text-center">{quantity}</span>
 
-            <form action={updateQuantityAction}>
+            <form action={updateAction}>
               <input type="hidden" name="movieId" value={movie.id} />
               <input type="hidden" name="quantity" value={quantity + 1} />
-              <Button type="submit" size="icon" variant="outline">
-                +
-              </Button>
+              <SubmitButton>+</SubmitButton>
             </form>
           </div>
 
-          {/* Line total */}
-          <p className="font-semibold w-24 text-right">
-            {formatSEK(lineTotal)}
-          </p>
-
           {/* Remove */}
-          <form action={removeItemAction}>
+          <form action={removeAction}>
             <input type="hidden" name="movieId" value={movie.id} />
             <Button type="submit" variant="destructive" size="sm">
               Remove

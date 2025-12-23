@@ -59,12 +59,6 @@ import PriceDisplay from "./prise-display";
 import { HoverCardMovie } from "./movie-hover-details";
 import { MovieWithGenres } from "./types/movie";
 
-
-type Params = { data: MovieWithGenres[] ;
-  addItemAction: (formData: FormData) => Promise<void>;
-};
-
-function makeColumns(addItemAction: (fd: FormData) => Promise<void>) {
 const columns: ColumnDef<MovieWithGenres>[] = [
   {
     accessorKey: "title",
@@ -80,7 +74,7 @@ const columns: ColumnDef<MovieWithGenres>[] = [
       );
     },
     cell: ({ row }) => (
-      <HoverCardMovie movie={row.original} addItemAction={addItemAction}>
+      <HoverCardMovie movie={row.original}>
         <div className="capitalize">{row.getValue("title")}</div>
       </HoverCardMovie>
     ),
@@ -164,18 +158,10 @@ const columns: ColumnDef<MovieWithGenres>[] = [
       );
     },
   },
-  ];
-  
-return columns;
-}
+];
+type Params = { data: MovieWithGenres[] };
 
-//type Params = { data: MovieWithGenres[] };
-
-export function MovieTable({ data, addItemAction }: Params) {
-  
-  
-console.log("🟡 CLIENT MovieTable addItemAction typeof:", typeof addItemAction);
-  
+export function MovieTable({ data }: Params) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -183,12 +169,6 @@ console.log("🟡 CLIENT MovieTable addItemAction typeof:", typeof addItemAction
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
-  const columns = React.useMemo(() => {
-    console.log("🟡 CLIENT MovieTable columns factory runs; action typeof:", typeof addItemAction);
-    return makeColumns(addItemAction)
-  }, [addItemAction]);
-
 
   const table = useReactTable({
     data,

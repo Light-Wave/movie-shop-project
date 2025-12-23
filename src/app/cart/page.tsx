@@ -3,12 +3,6 @@ import { getCartWithMovies } from "@/server-actions/cart/cartActions";
 import { CartItem } from "@/components/cartComponents/cartItem";
 import { Button } from "@/components/ui/button";
 
-function formatSEK(cents: number) {
-  return new Intl.NumberFormat("sv-SE", {
-    style: "currency",
-    currency: "SEK",
-  }).format(cents / 100);
-}
 
 export default async function CartPage() {
   const items = await getCartWithMovies();
@@ -31,7 +25,7 @@ export default async function CartPage() {
       ))}
 
       <div className="flex justify-between items-center border-t pt-4">
-        <p className="text-lg font-semibold">Total: {formatSEK(total)}</p>
+        <p className="text-lg font-semibold">Total: {total}</p>
 
         <Button asChild>
           <Link href="/cart/checkout">Proceed to Checkout</Link>
