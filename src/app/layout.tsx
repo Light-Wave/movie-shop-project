@@ -31,7 +31,27 @@ export default function RootLayout({
           <main className="flex-1 container py-8">{children}</main>
 
           <footer className="border-t py-4 text-center text-sm text-muted-foreground">
-            © 2025 Delta super-special elite coding Inc. All rights reserved.
+            <p>
+              © 2025 Delta super-special elite coding Inc. All rights reserved.
+            </p>
+            Logo by{" "}
+            <a
+              href="https://delapouite.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline-offset-4 hover:underline"
+            >
+              Delapouite
+            </a>{" "}
+            under{" "}
+            <a
+              href="https://creativecommons.org/licenses/by/3.0/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline-offset-4 hover:underline"
+            >
+              CC BY 3.0
+            </a>
           </footer>
         </div>
         <Toaster />
