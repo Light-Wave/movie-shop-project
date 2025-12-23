@@ -40,7 +40,7 @@ export default async function AdminPage() {
           </CollapsibleTrigger>
         </Button>
         <Button variant="default" className="mx-4" asChild>
-          <Link href="/admin/manage-genre/new"> Add New Artist </Link>
+          <Link href="/admin/manage-artist/new"> Add New Artist </Link>
         </Button>
         <CollapsibleContent>
           <div className="space-x-1">

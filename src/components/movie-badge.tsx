@@ -1,6 +1,5 @@
 import { Badge } from "./ui/badge";
 import Link from "next/link";
-import { ReducedGenre } from "./types/movie";
 
 type Params = {
   name: string;
