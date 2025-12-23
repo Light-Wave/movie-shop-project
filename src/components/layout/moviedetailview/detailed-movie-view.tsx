@@ -16,10 +16,10 @@ import PriceDisplay from "@/components/prise-display";
 import { GenreBadge } from "@/components/genre-badge";
 import { SimilarMovieCard, type SimilarMovie } from "./similar-movie-card";
 import placeholder from "../../../../public/placeholders/placeholder.jpg";
-import { useCartPlaceholder } from "../../../../public/placeholders/cart-placeholder";
 
 import { Movie, Genre, Artist, MovieArtist } from "@/generated/prisma/client";
 import { ArtistBadge } from "@/components/artist-badge";
+import AddToCartButton from "@/components/cartComponents/addToCartButton";
 /**
  * Movie detail page props
  * @param movie movie object to display
@@ -71,7 +71,6 @@ export default function MovieDetailPage({
   movie,
   similarMovies = [],
 }: MovieDetailPageProps) {
-  const { handleAddToCart } = useCartPlaceholder();
   const formattedReleaseDate = formatReleaseDate(movie.releaseDate);
   const formattedRuntime = formatRuntime(movie.runtime);
 
@@ -106,10 +105,11 @@ export default function MovieDetailPage({
             </div>
 
             <Badge
-              className={`mt-4 text-sm font-semibold px-4 py-1 ${movie.isAvailable
-                ? "bg-green-500 hover:bg-green-600"
-                : "bg-red-500 hover:bg-red-600"
-                }`}
+              className={`mt-4 text-sm font-semibold px-4 py-1 ${
+                movie.isAvailable
+                  ? "bg-green-500 hover:bg-green-600"
+                  : "bg-red-500 hover:bg-red-600"
+              }`}
             >
               {movie.isAvailable ? "In Stock" : "Out of Stock"}
             </Badge>
@@ -126,10 +126,13 @@ export default function MovieDetailPage({
               </CardDescription>
 
               <div className="flex flex-col gap-3 mt-4">
-                {movie.movieLinks?.filter((link) => link.role === "DIRECTOR").length > 0 && (
+                {movie.movieLinks?.filter((link) => link.role === "DIRECTOR")
+                  .length > 0 && (
                   <div className="flex flex-row items-baseline gap-2">
                     <span className="text-lg font-bold w-28 shrink-0">
-                      {movie.movieLinks.filter((link) => link.role === "DIRECTOR").length > 1
+                      {movie.movieLinks.filter(
+                        (link) => link.role === "DIRECTOR"
+                      ).length > 1
                         ? "Directors:"
                         : "Director:"}
                     </span>
@@ -142,7 +145,8 @@ export default function MovieDetailPage({
                     </div>
                   </div>
                 )}
-                {movie.movieLinks?.filter((link) => link.role === "ACTOR").length > 0 && (
+                {movie.movieLinks?.filter((link) => link.role === "ACTOR")
+                  .length > 0 && (
                   <div className="flex flex-row items-baseline gap-2">
                     <span className="text-lg font-bold w-28 shrink-0">
                       Actors:
@@ -187,13 +191,11 @@ export default function MovieDetailPage({
                 <PriceDisplay price={movie.price} />
               </div>
               <div className="flex space-x-3">
-                <Button
+                <AddToCartButton
                   disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
+                  movieId={movie.id}
                   className="text-lg px-8 py-6"
-                  onClick={(e) => handleAddToCart(e, movie.title)}
-                >
-                  {movie.isAvailable ? "Add to Cart" : "Notify Me"}
-                </Button>
+                />
               </div>
             </CardFooter>
 

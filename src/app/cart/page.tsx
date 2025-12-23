@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getCartWithMovies } from "@/server-actions/cart/cartActions";
 import { CartItem } from "@/components/cartComponents/cartItem";
 import { Button } from "@/components/ui/button";
-
+import PriceDisplay from "@/components/prise-display";
 
 export default async function CartPage() {
   const items = await getCartWithMovies();
@@ -25,7 +25,9 @@ export default async function CartPage() {
       ))}
 
       <div className="flex justify-between items-center border-t pt-4">
-        <p className="text-lg font-semibold">Total: {total}</p>
+        <p className="text-lg font-semibold">
+          Total: <PriceDisplay price={total} />
+        </p>
 
         <Button asChild>
           <Link href="/cart/checkout">Proceed to Checkout</Link>

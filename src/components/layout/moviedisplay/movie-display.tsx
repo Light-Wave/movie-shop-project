@@ -16,11 +16,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
 import PriceDisplay from "@/components/prise-display";
 import { MovieWithDetails } from "@/components/sharedutils/movie-fetch";
 import placeholder from "../../../../public/placeholders/placeholder.jpg";
-import { useCartPlaceholder } from "../../../../public/placeholders/cart-placeholder";
+import AddToCartButton from "@/components/cartComponents/addToCartButton";
 
 /**
  * Displays lists of movies under a section title.
@@ -28,13 +27,11 @@ import { useCartPlaceholder } from "../../../../public/placeholders/cart-placeho
  */
 export default function MovieDisplay({
   sectionTitle,
-  movieData
+  movieData,
 }: {
   sectionTitle?: string;
   movieData: MovieWithDetails[];
 }) {
-  const { handleAddToCart } = useCartPlaceholder();
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between px-4">
@@ -52,11 +49,11 @@ export default function MovieDisplay({
               key={movie.id}
               className=" basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
             >
-              <Link
-                href={`/browse/${movie.id}`}
-                className="block h-full transition-transform hover:scale-[1.02]"
-              >
-                <Card className="gap-0.5 pb-1 h-full overflow-hidden border-zinc-200 flex flex-col">
+              <Card className="gap-0.5 pb-1 h-full overflow-hidden border-zinc-200 flex flex-col">
+                <Link
+                  href={`/browse/${movie.id}`}
+                  className="block h-full transition-transform hover:scale-[1.02] flex-1"
+                >
                   <div className="relative aspect-2/3 w-full overflow-hidden">
                     <Image
                       src={movie.imageUrl || placeholder}
@@ -77,23 +74,20 @@ export default function MovieDisplay({
                       </div>
                     </div>
 
-                    <CardDescription className="text-sm line-clamp-2 text-zinc-500 my-2 grow">
+                    <CardDescription className="text-sm line-clamp-2 text-zinc-500 my-2">
                       {movie.description || "No description available."}
                     </CardDescription>
-
-                    <CardFooter className="p-0 mt-auto">
-                      <Button
-                        className="w-full"
-                        variant="default"
-                        size="sm"
-                        onClick={(e) => handleAddToCart(e, movie.title)}
-                      >
-                        Add to Cart
-                      </Button>
-                    </CardFooter>
                   </CardContent>
-                </Card>
-              </Link>
+                </Link>
+
+                <CardFooter className="p-0 mt-auto">
+                  <AddToCartButton
+                    movieId={movie.id}
+                    className="w-full hover:scale-[1.02]"
+                    size="sm"
+                  />
+                </CardFooter>
+              </Card>
             </CarouselItem>
           ))}
         </CarouselContent>

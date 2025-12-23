@@ -6,11 +6,10 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import PriceDisplay from "@/components/prise-display";
 import { generateMovieUrl } from "@/components/sharedutils/slug-utils";
-import { Button } from "@/components/ui/button";
-import { useCartPlaceholder } from "../../../../public/placeholders/cart-placeholder";
 import placeholder from "../../../../public/placeholders/placeholder.jpg";
 
 import { Movie, Genre, Artist, MovieArtist } from "@/generated/prisma/client";
+import AddToCartButton from "@/components/cartComponents/addToCartButton";
 
 export type SimilarMovie = Movie & {
   genres: Genre[];
@@ -29,14 +28,10 @@ interface SimilarMovieCardProps {
  */
 export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
   const movieUrl = generateMovieUrl(movie.id, movie.title);
-  const { handleAddToCart } = useCartPlaceholder();
 
   return (
-    <Link
-      href={movieUrl}
-      className="group w-full sm:w-auto"
-    >
-      <Card className="h-full overflow-hidden border-zinc-200 transition-all duration-300 hover:shadow-md grid grid-rows-[auto_1fr]">
+    <Card className="h-full overflow-hidden border-zinc-200 transition-all duration-300 hover:shadow-md grid grid-rows-[auto_1fr] w-full sm:w-auto">
+      <Link href={movieUrl} className="group block">
         <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
           <Image
             src={movie.imageUrl || placeholder}
@@ -55,7 +50,11 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
 
             <div className="flex flex-wrap gap-1">
               {movie.genres?.slice(0, 2).map((genre) => (
-                <Badge key={genre.id} variant="secondary" className="text-[10px] px-1.5 py-0 h-4 uppercase tracking-wider font-semibold">
+                <Badge
+                  key={genre.id}
+                  variant="secondary"
+                  className="text-[10px] px-1.5 py-0 h-4 uppercase tracking-wider font-semibold"
+                >
                   {genre.name}
                 </Badge>
               ))}
@@ -66,18 +65,19 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
             <div className="text-base font-black text-primary">
               <PriceDisplay price={movie.price} />
             </div>
-
-            <Button
-              variant="default"
-              size="sm"
-              className="w-full text-xs h-9 font-bold transition-colors"
-              onClick={(e) => handleAddToCart(e, movie.title)}
-            >
-              Add to Cart
-            </Button>
           </div>
         </CardContent>
-      </Card>
-    </Link>
+      </Link>
+
+      <CardContent className="p-3 pt-0 flex flex-col justify-between gap-3">
+        <div className="space-y-3">
+          <AddToCartButton
+            movieId={movie.id}
+            className="w-full text-xs h-9 font-bold transition-colors"
+            size="sm"
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 }

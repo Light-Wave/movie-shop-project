@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import type { CartItemWithMovie } from "@/components/types/movie";
 import {
   updateQuantityAction,
@@ -8,7 +8,7 @@ import {
 } from "@/server-actions/cart/cartActions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
+import { useActionState } from "react";
 
 function SubmitButton({
   children,
@@ -34,18 +34,17 @@ function SubmitButton({
 export function CartItem({ item }: { item: CartItemWithMovie }) {
   const { movie, quantity } = item;
 
-  const [, updateAction] = useFormState(updateQuantityAction, {
+  const [, updateAction] = useActionState(updateQuantityAction, {
     success: true,
   });
 
-  const [, removeAction] = useFormState(removeItemAction, {
+  const [, removeAction] = useActionState(removeItemAction, {
     success: true,
   });
 
   return (
     <Card>
       <CardContent className="flex items-center justify-between py-4">
-      
         <div className="flex-1">
           <h3 className="font-semibold">{movie.title}</h3>
 
@@ -54,7 +53,6 @@ export function CartItem({ item }: { item: CartItemWithMovie }) {
           )}
         </div>
 
-       
         <div className="flex items-center gap-4">
           {/* Quantity */}
           <div className="flex items-center gap-2">

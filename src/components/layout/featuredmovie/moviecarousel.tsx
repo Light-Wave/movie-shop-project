@@ -13,6 +13,7 @@ import placeholder from "../../../../public/placeholders/placeholder.jpg";
 import { Play } from "lucide-react";
 import { ArtistBadge } from "@/components/artist-badge";
 import Link from "next/link";
+import AddToCartButton from "@/components/cartComponents/addToCartButton";
 
 /**
  * Carousel component for featured movies, takes Moviedata[]
@@ -92,6 +93,11 @@ export default function FeaturedCarousel({
                     >
                       <Link href={`/browse/${movie.id}`}>View Details</Link>
                     </Button>
+                    <AddToCartButton
+                      movieId={movie.id}
+                      className="rounded-full px-8 font-bold"
+                      size="lg"
+                    />
                   </div>
 
                   {/* people section, right now taking a single Director and a single Actor.
