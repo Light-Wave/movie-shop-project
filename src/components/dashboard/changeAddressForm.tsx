@@ -350,6 +350,7 @@ export default function ChangeAddressForm({
                 variant="destructive"
                 disabled={isPending}
                 onClick={handleDeleteAddresses}
+                type="button"
               >
                 {isPending ? "..." : "Delete saved addresses"}
               </Button>
