@@ -136,6 +136,7 @@ model Movie {
   movieLinks  MovieArtist[]
   createdById String?
   createdBy   User?         @relation(fields: [createdById], references: [id])
+  trailerUrl  String?
 
   @@index([title])
   @@map("movie")

@@ -12,10 +12,12 @@ npx prisma migrate reset
 npx prisma migrate dev
 npx prisma generate
 npx prisma migrate deploy
-npm run db:seed
+npx tsx prisma/seed-tmdb.ts
 npx prisma studio
 npm run dev
 ```
 
 And check out this page to see if better auth is working: http://localhost:3000/api/auth/get-session
 If it works, the page should say 'null'
+
+To use old seed function, use `npm run db:seed`
