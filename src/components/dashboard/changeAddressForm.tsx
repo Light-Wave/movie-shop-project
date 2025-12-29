@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +17,10 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { addressSchema, AddressSchemaValues } from "@/zod/address";
 import { Address } from "@/generated/prisma/client";
-import { updateAddress } from "@/server-actions/userData/address";
+import {
+  deleteAddresses,
+  updateAddress,
+} from "@/server-actions/userData/address";
 
 type Params = {
   billingAddress: Address | null | undefined;
@@ -57,6 +60,11 @@ export default function ChangeAddressForm({
   });
 
   const useSeparateBilling = Boolean(form.watch("useSeparateBilling"));
+
+  // Track whether user has saved addresses so we can hide Delete button after deletion
+  const [hasSavedAddresses, setHasSavedAddresses] = useState(
+    Boolean(billingAddress || deliveryAddress)
+  );
 
   async function onSubmit(values: AddressSchemaValues) {
     console.log("Submitting address:", values);
@@ -102,15 +110,10 @@ export default function ChangeAddressForm({
         const res = await updateAddress(formData);
         if (res?.success) {
           toast.success("Address updated");
-          // refresh to fetch updated addresses if this component is server-rendered elsewhere
-          try {
-            // dynamic import to avoid adding client-only router to top-level scope
-            const { useRouter } = await import("next/navigation");
-            // Can't call hook here; instead, reload the page
-            window.location.reload();
-          } catch (e) {
-            // fallback: do nothing
-          }
+          // Update local form state to reflect saved addresses so we don't need a page reload
+          // The resolver ensures billing fields are present (copied when necessary)
+          form.reset(values);
+          setHasSavedAddresses(true);
         } else {
           toast.error("Failed to update address", {
             description: (res as any)?.error || "Unknown error",
@@ -118,6 +121,38 @@ export default function ChangeAddressForm({
         }
       } catch (err) {
         toast.error("Error saving address", { description: String(err) });
+      }
+    });
+  }
+
+  async function handleDeleteAddresses() {
+    startTransition(async () => {
+      try {
+        const res = await deleteAddresses();
+        if (res.success) {
+          toast.success("Addresses deleted");
+          // Clear local saved-address flag and reset the form to empty values
+          setHasSavedAddresses(false);
+          form.reset({
+            delivery_street: "",
+            delivery_city: "",
+            delivery_state: "",
+            delivery_zipCode: "",
+            delivery_country: "",
+            useSeparateBilling: false,
+            billing_street: "",
+            billing_city: "",
+            billing_state: "",
+            billing_zipCode: "",
+            billing_country: "",
+          });
+        } else {
+          toast.error("Failed to delete addresses", {
+            description: (res as any)?.error || "Unknown error",
+          });
+        }
+      } catch (err) {
+        toast.error("Error deleting addresses", { description: String(err) });
       }
     });
   }
@@ -305,9 +340,22 @@ export default function ChangeAddressForm({
 
           <div className="flex justify-end">
             <Button type="submit" disabled={isPending}>
-              {isPending ? "Saving..." : "Save Address"}
+              {isPending ? "..." : "Save Address"}
             </Button>
           </div>
+
+          {hasSavedAddresses && (
+            <div className="flex justify-end">
+              <Button
+                variant="destructive"
+                disabled={isPending}
+                onClick={handleDeleteAddresses}
+                type="reset"
+              >
+                {isPending ? "..." : "Delete saved addresses"}
+              </Button>
+            </div>
+          )}
         </form>
       </Form>
     </div>
