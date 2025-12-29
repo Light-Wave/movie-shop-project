@@ -24,32 +24,23 @@ export default function FeaturedCarousel({
 }: {
   movieData: MovieWithDetails[];
 }) {
-  const trailerUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-
   return (
     <div className="mx-auto max-w-6xl shadow-2xl rounded-xl">
       <Carousel
-        className="w-full"
+        className="w-full group"
         opts={{
           loop: true,
         }}
       >
         <CarouselContent>
           {movieData.map((movie, index) => {
-            const directorLink = movie.movieLinks.find(
-              (link) => link.role === "DIRECTOR"
-            );
-            const actorLink = movie.movieLinks.find(
-              (link) => link.role === "ACTOR"
-            );
-
             return (
               <CarouselItem
                 key={index}
-                className="flex flex-col h-auto sm:flex-row sm:h-[600px] justify-betwee rounded-xl overflow-hidden"
+                className="flex flex-col h-auto sm:flex-row sm:h-[600px] justify-between rounded-xl overflow-hidden"
               >
                 {/* Image Section "left" */}
-                <div className="w-full h-[400px] sm:w-1/2 sm:h-full relative group">
+                <div className="w-full h-[500px] sm:w-[400px] sm:h-full relative group shrink-0">
                   <Image
                     src={movie.imageUrl || placeholder}
                     alt={`${movie.title} poster`}
@@ -60,12 +51,12 @@ export default function FeaturedCarousel({
                 </div>
 
                 {/* Content Section "right" */}
-                <div className="w-full sm:w-1/2 flex flex-col justify-center p-6 space-y-6 relative">
+                <div className="w-full h-full flex flex-col justify-center p-6 sm:p-10 space-y-6 relative overflow-hidden">
                   <div className="space-y-4">
-                    <CardTitle className="text-4xl sm:text-6xl font-black tracking-tight">
+                    <CardTitle className="text-4xl sm:text-6xl font-black tracking-tight line-clamp-2 pb-2">
                       {movie.title}
                     </CardTitle>
-                    <CardDescription className="text-lg sm:text-xl text-gray-600 tracking-tight">
+                    <CardDescription className="text-lg sm:text-xl text-gray-600 tracking-tight line-clamp-3 sm:line-clamp-4">
                       {movie.description || "No description available."}
                     </CardDescription>
                   </div>
@@ -77,7 +68,7 @@ export default function FeaturedCarousel({
                       asChild
                     >
                       <a
-                        href={trailerUrl}
+                        href={movie.trailerUrl ?? undefined}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -87,7 +78,6 @@ export default function FeaturedCarousel({
                     </Button>
                     <Button
                       size="lg"
-                      variant="outline"
                       className="rounded-full px-8 font-bold"
                       asChild
                     >
@@ -100,12 +90,18 @@ export default function FeaturedCarousel({
                     />
                   </div>
 
-                  {/* people section, right now taking a single Director and a single Actor.
-                   * TODO: Decide on how many artists should be displayed.
-                   */}
-                  <div className="flex flex-wrap gap-2">
-                    {directorLink && <ArtistBadge movieLink={directorLink} />}
-                    {actorLink && <ArtistBadge movieLink={actorLink} />}
+                  {/* people section, displaying multiple artists in a single row without partial cuts */}
+                  <div className="flex flex-wrap gap-2 h-[26px] overflow-hidden">
+                    {movie.movieLinks
+                      .sort((a, b) => {
+                        // Show DIRECTORS first
+                        if (a.role === "DIRECTOR" && b.role !== "DIRECTOR") return -1;
+                        if (a.role !== "DIRECTOR" && b.role === "DIRECTOR") return 1;
+                        return 0;
+                      })
+                      .map((link, i) => (
+                        <ArtistBadge key={i} movieLink={link} />
+                      ))}
                   </div>
                 </div>
               </CarouselItem>
@@ -119,8 +115,8 @@ export default function FeaturedCarousel({
          * TODO: Decide if the arrows are necessary
          */}
         <div className="hidden md:block">
-          <CarouselPrevious className="left-4" />
-          <CarouselNext className="right-4" />
+          <CarouselPrevious className="left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/80 hover:bg-white text-zinc-900 border-none shadow-xl" />
+          <CarouselNext className="right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/80 hover:bg-white text-zinc-900 border-none shadow-xl" />
         </div>
       </Carousel>
     </div>

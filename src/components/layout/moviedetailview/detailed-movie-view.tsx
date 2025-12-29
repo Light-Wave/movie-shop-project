@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import PriceDisplay from "@/components/prise-display";
 import { GenreBadge } from "@/components/genre-badge";
@@ -35,7 +34,7 @@ interface MovieDetailPageProps {
   similarMovies?: SimilarMovie[];
 }
 
-// TODO: This needs to be replaced with proper embeds from database, currently database has no youtube entries.
+// DEMO_TRAILE_URL is only left in as a fallback (and possibly to accidentally rickroll someone for funsies)
 const DEMO_TRAILER_URL =
   "https://www.youtube.com/embed/dQw4w9WgXcQ?si=tyuXr5LIaw8VVeQA";
 
@@ -199,15 +198,13 @@ export default function MovieDetailPage({
               </div>
             </CardFooter>
 
-            {/* Trailer Section *
-             * TODO -> update DEMO_TRAILER_URL to proper youtube variable from database
-             */}
-            {DEMO_TRAILER_URL && (
+            {/* Trailer Section */}
+            {movie.trailerUrl && (
               <div className="mt-6 flex justify-center">
                 <div className="w-full max-w-2xl aspect-video">
                   <iframe
                     className="w-full h-full rounded-lg shadow-lg"
-                    src={DEMO_TRAILER_URL}
+                    src={movie.trailerUrl}
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
