@@ -57,9 +57,9 @@ import {
 import { Movie } from "@/generated/prisma/client";
 import PriceDisplay from "./prise-display";
 import { HoverCardMovie } from "./movie-hover-details";
-import { MovieWithGenres } from "./types/movie";
+import { MovieWithDetails } from "./types/movie";
 
-const columns: ColumnDef<MovieWithGenres>[] = [
+const columns: ColumnDef<MovieWithDetails>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -159,7 +159,7 @@ const columns: ColumnDef<MovieWithGenres>[] = [
     },
   },
 ];
-type Params = { data: MovieWithGenres[] };
+type Params = { data: MovieWithDetails[] };
 
 export function MovieTable({ data }: Params) {
   const [sorting, setSorting] = React.useState<SortingState>([]);

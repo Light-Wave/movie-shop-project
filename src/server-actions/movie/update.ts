@@ -49,7 +49,7 @@ export async function updateMovie(formData: FormData) {
       genres: {
         set: genres ? genres.map((genreId: string) => ({ id: genreId })) : [],
       },
-      movieArtists: {
+      movieLinks: {
         create: artists
           ? artists.map((artist: { artistId: string; role: string }) => ({
               artist: { connect: { id: artist.artistId } },
