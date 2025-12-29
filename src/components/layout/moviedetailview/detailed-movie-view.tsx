@@ -34,10 +34,6 @@ interface MovieDetailPageProps {
   similarMovies?: SimilarMovie[];
 }
 
-// DEMO_TRAILE_URL is only left in as a fallback (and possibly to accidentally rickroll someone for funsies)
-const DEMO_TRAILER_URL =
-  "https://www.youtube.com/embed/dQw4w9WgXcQ?si=tyuXr5LIaw8VVeQA";
-
 /**
  * Formats date, currently set to US since our default currency is $$$ <--- This might need a change if we add support for other countries.
  */
