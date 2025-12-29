@@ -14,13 +14,6 @@ export default async function ChangeAddress() {
   if (session == null) {
     throw new Error("User is not authenticated");
   }
-  if (addresses === null) {
-    prisma.userData.create({
-      data: {
-        userId: session.user.id,
-      },
-    });
-  }
   return (
     <ChangeAddressForm
       billingAddress={addresses?.billingAddress}

@@ -22,11 +22,11 @@ export const addressSchema = z
     useSeparateBilling: booleanCoerce.default(false),
 
     // billing fields are optional in raw input; we'll validate them conditionally
-    billing_street: z.string().min(1, "Street is required").optional(),
-    billing_city: z.string().min(1, "City is required").optional(),
+    billing_street: z.string().optional(),
+    billing_city: z.string().optional(),
     billing_state: z.string().optional(),
-    billing_zipCode: z.string().min(1, "Zip Code is required").optional(),
-    billing_country: z.string().min(1, "Country is required").optional(),
+    billing_zipCode: z.string().optional(),
+    billing_country: z.string().optional(),
   })
   .superRefine((val, ctx) => {
     // When separate billing is requested, billing fields are required

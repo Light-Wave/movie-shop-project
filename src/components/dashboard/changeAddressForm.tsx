@@ -41,7 +41,11 @@ export default function ChangeAddressForm({
       delivery_country: deliveryAddress?.country ?? "",
 
       useSeparateBilling: Boolean(
-        billingAddress && billingAddress.id !== deliveryAddress?.id
+        billingAddress &&
+          (billingAddress.city !== deliveryAddress?.city ||
+            billingAddress.street !== deliveryAddress?.street ||
+            billingAddress.zipCode !== deliveryAddress?.zipCode ||
+            billingAddress.country !== deliveryAddress?.country)
       ),
 
       billing_street: billingAddress?.street ?? "",
@@ -55,40 +59,65 @@ export default function ChangeAddressForm({
   const useSeparateBilling = Boolean(form.watch("useSeparateBilling"));
 
   async function onSubmit(values: AddressSchemaValues) {
+    console.log("Submitting address:", values);
     startTransition(async () => {
-      const formData = new FormData();
-      // Append delivery fields
-      formData.append("delivery_street", values.delivery_street);
-      formData.append("delivery_city", values.delivery_city);
-      formData.append("delivery_state", values.delivery_state ?? "");
-      formData.append("delivery_zipCode", values.delivery_zipCode);
-      formData.append("delivery_country", values.delivery_country);
+      try {
+        const formData = new FormData();
+        // Append delivery fields
+        formData.append("delivery_street", values.delivery_street);
+        formData.append("delivery_city", values.delivery_city);
+        formData.append("delivery_state", values.delivery_state ?? "");
+        formData.append("delivery_zipCode", values.delivery_zipCode);
+        formData.append("delivery_country", values.delivery_country);
 
-      // Append useSeparateBilling as string
-      formData.append(
-        "useSeparateBilling",
-        values.useSeparateBilling ? "true" : "false"
-      );
+        // Append useSeparateBilling as string
+        formData.append(
+          "useSeparateBilling",
+          values.useSeparateBilling ? "true" : "false"
+        );
 
-      // Append billing fields if present (schema will copy delivery when not using separate billing)
-      if (values.billing_street)
-        formData.append("billing_street", values.billing_street);
-      if (values.billing_city)
-        formData.append("billing_city", values.billing_city);
-      if (values.billing_state)
-        formData.append("billing_state", values.billing_state ?? "");
-      if (values.billing_zipCode)
-        formData.append("billing_zipCode", values.billing_zipCode);
-      if (values.billing_country)
-        formData.append("billing_country", values.billing_country);
+        // Always append billing fields: if separate billing is false, copy delivery values
+        const billingStreet = values.useSeparateBilling
+          ? values.billing_street
+          : values.delivery_street;
+        const billingCity = values.useSeparateBilling
+          ? values.billing_city
+          : values.delivery_city;
+        const billingState = values.useSeparateBilling
+          ? values.billing_state
+          : values.delivery_state;
+        const billingZip = values.useSeparateBilling
+          ? values.billing_zipCode
+          : values.delivery_zipCode;
+        const billingCountry = values.useSeparateBilling
+          ? values.billing_country
+          : values.delivery_country;
 
-      const res = await updateAddress(formData);
-      if (res?.success) {
-        toast.success("Address updated");
-      } else {
-        toast.error("Failed to update address", {
-          description: (res as any)?.error || "Unknown error",
-        });
+        formData.append("billing_street", billingStreet ?? "");
+        formData.append("billing_city", billingCity ?? "");
+        formData.append("billing_state", billingState ?? "");
+        formData.append("billing_zipCode", billingZip ?? "");
+        formData.append("billing_country", billingCountry ?? "");
+
+        const res = await updateAddress(formData);
+        if (res?.success) {
+          toast.success("Address updated");
+          // refresh to fetch updated addresses if this component is server-rendered elsewhere
+          try {
+            // dynamic import to avoid adding client-only router to top-level scope
+            const { useRouter } = await import("next/navigation");
+            // Can't call hook here; instead, reload the page
+            window.location.reload();
+          } catch (e) {
+            // fallback: do nothing
+          }
+        } else {
+          toast.error("Failed to update address", {
+            description: (res as any)?.error || "Unknown error",
+          });
+        }
+      } catch (err) {
+        toast.error("Error saving address", { description: String(err) });
       }
     });
   }
@@ -195,7 +224,7 @@ export default function ChangeAddressForm({
           />
 
           {useSeparateBilling && (
-            <div>
+            <div className="space-y-6">
               <h2 className="text-lg font-medium">Billing Address</h2>
 
               <FormField
