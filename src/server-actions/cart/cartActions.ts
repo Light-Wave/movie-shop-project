@@ -10,6 +10,8 @@ import {
   removeCartItem,
   updateCartItem,
   getCartTotalItems,
+  COOKIE_NAME,
+  COOKIE_OPTIONS,
 } from "@/lib/cartUtils";
 import type {
   CartItem,
@@ -24,17 +26,6 @@ export type CartActionState = {
   message?: string;
   cartCount?: number;
 };
-
-const COOKIE_NAME = "movie_cart";
-
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  maxAge: 60 * 60 * 24 * 365, // 1 year
-  path: "/",
-};
-
 
 /** Save cart → cookie and revalidate relevant routes */
 async function saveCart(items: CartItem[]) {
@@ -228,4 +219,24 @@ export async function checkoutAction() {
   await clearCartAction();
   redirect("/cart/success");
 }
-``;
+
+export async function validateCart() {
+  const cart = await getCart();
+  if (cart.length === 0) return;
+
+  const ids = cart.map((i) => i.movieId);
+
+  const movies = await prisma.movie.findMany({
+    where: { id: { in: ids } },
+    select: {
+      id: true,
+    },
+  });
+  if (movies.length === ids.length) return; // All good
+
+  // Some movies are no longer valid, remove them from cart
+  const validIds = new Set(movies.map((m) => m.id));
+  const newCart = cart.filter((item) => validIds.has(item.movieId));
+  console.log("Cart validation removed items, new cart:", newCart);
+  saveCart(newCart);
+}
