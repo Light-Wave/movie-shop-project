@@ -15,28 +15,38 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { addressSchema, AddressSchemaValues } from "@/zod/address";
 import { Address } from "@/generated/prisma/client";
+import { updateAddress } from "@/server-actions/userData/address";
+import { checkoutSchema, CheckoutSchemaValues } from "@/zod/checkout";
 import {
-  deleteAddresses,
-  updateAddress,
-} from "@/server-actions/userData/address";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { checkoutAction } from "@/server-actions/cart/cartActions";
 
 type Params = {
   billingAddress: Address | null | undefined;
   deliveryAddress: Address | null | undefined;
+  email?: string;
 };
 
-export default function ChangeAddressForm({
+export default function CheckoutForm({
   billingAddress,
   deliveryAddress,
+  email,
 }: Params) {
-  const [isPending, startTransition] = useTransition();
-
   // Let react-hook-form infer types from the resolver to avoid type mismatches
   const form = useForm({
-    resolver: zodResolver(addressSchema),
+    resolver: zodResolver(checkoutSchema),
     defaultValues: {
+      email: email ?? "",
       delivery_street: deliveryAddress?.street ?? "",
       delivery_city: deliveryAddress?.city ?? "",
       delivery_state: deliveryAddress?.state ?? "",
@@ -61,68 +71,60 @@ export default function ChangeAddressForm({
 
   const useSeparateBilling = Boolean(form.watch("useSeparateBilling"));
 
-  // Track whether user has saved addresses so we can hide Delete button after deletion
-  const [hasSavedAddresses, setHasSavedAddresses] = useState(
-    Boolean(billingAddress || deliveryAddress)
-  );
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [pendingValues, setPendingValues] =
+    useState<CheckoutSchemaValues | null>(null);
 
-  async function onSubmit(values: AddressSchemaValues) {
-    startTransition(async () => {
-      try {
-        const res = await updateAddress(values);
-        if (res?.success) {
-          toast.success("Address updated");
-          // Update local form state to reflect saved addresses so we don't need a page reload
-          // The resolver ensures billing fields are present (copied when necessary)
-          form.reset(values);
-          setHasSavedAddresses(true);
-        } else {
-          toast.error("Failed to update address", {
-            description: (res as any)?.error || "Unknown error",
-          });
-        }
-      } catch (err) {
-        toast.error("Error saving address", { description: String(err) });
-      }
-    });
+  function checkAddresses(values: CheckoutSchemaValues) {
+    const addressesChanged =
+      email && // if we have an email, a user is logged in
+      (!billingAddress ||
+        !deliveryAddress ||
+        billingAddress.city !== values.billing_city ||
+        billingAddress.street !== values.billing_street ||
+        billingAddress.zipCode !== values.billing_zipCode ||
+        billingAddress.country !== values.billing_country ||
+        deliveryAddress.city !== values.delivery_city ||
+        deliveryAddress.street !== values.delivery_street ||
+        deliveryAddress.zipCode !== values.delivery_zipCode ||
+        deliveryAddress.country !== values.delivery_country);
+
+    setPendingValues(values);
+    if (addressesChanged) {
+      // open confirmation dialog
+      setShowSaveDialog(true);
+      return;
+    } else {
+      checkoutAction(values);
+      setPendingValues(null);
+    }
   }
-
-  async function handleDeleteAddresses() {
-    startTransition(async () => {
-      try {
-        const res = await deleteAddresses();
-        if (res.success) {
-          toast.success("Addresses deleted");
-          // Clear local saved-address flag and reset the form to empty values
-          setHasSavedAddresses(false);
-          form.reset({
-            delivery_street: "",
-            delivery_city: "",
-            delivery_state: "",
-            delivery_zipCode: "",
-            delivery_country: "",
-            useSeparateBilling: false,
-            billing_street: "",
-            billing_city: "",
-            billing_state: "",
-            billing_zipCode: "",
-            billing_country: "",
-          });
-        } else {
-          toast.error("Failed to delete addresses", {
-            description: (res as any)?.error || "Unknown error",
-          });
-        }
-      } catch (err) {
-        toast.error("Error deleting addresses", { description: String(err) });
-      }
-    });
+  async function onSubmit() {
+    if (!pendingValues) return;
+    checkoutAction(pendingValues);
+    setPendingValues(null);
   }
 
   return (
-    <div className="w-full max-w-lg mx-auto">
+    <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          onSubmit={form.handleSubmit(checkAddresses)}
+          className="space-y-6"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem hidden={!!email}>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <h2 className="text-lg font-medium">Delivery Address</h2>
 
           <FormField
@@ -299,27 +301,60 @@ export default function ChangeAddressForm({
               </div>
             </div>
           )}
-
-          <div className="flex justify-end">
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "..." : "Save Address"}
-            </Button>
-          </div>
-
-          {hasSavedAddresses && (
-            <div className="flex justify-end">
-              <Button
-                variant="destructive"
-                disabled={isPending}
-                onClick={handleDeleteAddresses}
-                type="button"
-              >
-                {isPending ? "..." : "Delete saved addresses"}
-              </Button>
-            </div>
-          )}
+          <Button type="submit" className="w-full">
+            Place Order
+          </Button>
         </form>
       </Form>
-    </div>
+      <AlertDialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Save addresses for later?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Would you like to save these addresses to your account for future
+              use? You can always update or remove them later in your account
+              settings.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                // close dialog and proceed (don't save)
+                setShowSaveDialog(false);
+                onSubmit();
+              }}
+            >
+              No
+            </AlertDialogCancel>
+
+            <AlertDialogAction
+              onClick={async () => {
+                if (!pendingValues) return;
+                setShowSaveDialog(false);
+
+                try {
+                  const res = await updateAddress(pendingValues);
+                  if (res?.success) {
+                    toast.success("Address updated");
+                  } else {
+                    toast.error("Failed to update address", {
+                      description: (res as any)?.error || "Unknown error",
+                    });
+                  }
+                } catch (err) {
+                  toast.error("Error saving address", {
+                    description: String(err),
+                  });
+                } finally {
+                  onSubmit();
+                }
+              }}
+            >
+              Yes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
