@@ -1,8 +1,12 @@
+"use client";
+
 import { Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import SignInOrOut from "@/components/signin-signup-logout";
+import { authClient } from "@/lib/auth-client"; // Import authClient
+import Link from "next/link"; // Import Link
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -12,6 +16,8 @@ const navLinks = [
 ];
 
 export function Nav() {
+  const session = authClient.useSession(); // Get session data
+
   return (
     <header className="m-auto w-full sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 flex flex-row justify-center items-center">
       <div className="container w-9/10 flex h-16 items-center justify-between">
@@ -27,6 +33,14 @@ export function Nav() {
               {link.name}
             </a>
           ))}
+          {session.data?.user.role === "ADMIN" && ( // Conditional Admin link
+            <Link
+              href="/admin"
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
+              Admin
+            </Link>
+          )}
         </nav>
 
         <div className="hidden md:flex items-center space-x-2">
@@ -68,6 +82,14 @@ export function Nav() {
                     {link.name}
                   </a>
                 ))}
+                {session.data?.user.role === "ADMIN" && ( // Conditional Admin link for mobile
+                  <Link
+                    href="/admin"
+                    className="text-lg font-medium hover:text-primary"
+                  >
+                    Admin
+                  </Link>
+                )}
                 <div className="border-t pt-4">
                   <SignInOrOut />
                 </div>

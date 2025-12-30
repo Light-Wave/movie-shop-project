@@ -10,8 +10,14 @@ import { headers } from "next/headers";
 
 export async function updateGenre(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return { error: "You must be logged in to update a genre." };
-  //TODO: Verify user is admin
+  // Add admin role check
+  if (!session) {
+    return { error: "Unauthorized: Must be logged in to update a genre." };
+  }
+  const user = (session as unknown as { user?: { role?: string } })?.user;
+  if (!user || user.role !== "ADMIN") {
+    return { error: "Unauthorized: Must be an admin to update genres." };
+  }
   const rawData = Object.fromEntries(formData.entries());
   const parsed = updateGenreSchema.safeParse(rawData);
 

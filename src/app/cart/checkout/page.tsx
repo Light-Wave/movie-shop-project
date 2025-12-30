@@ -1,7 +1,8 @@
-// Checkout process:
-// o Address input
-// o Payment simulation (no real payment gateway required)
-// o Order confirmation
-
-// Optinal Add buttons to share movie links on social media platforms
-// Optinal Create a simple discount system for special oƯers or promotional codes
+export default function CheckoutPage() {
+  return (
+    <div className="container mx-auto py-10">
+      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+      <p>Checkout form will be displayed here.</p>
+    </div>
+  );
+}

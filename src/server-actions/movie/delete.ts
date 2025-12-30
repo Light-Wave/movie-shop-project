@@ -22,7 +22,7 @@ export async function deleteMovieAction(
     }
 
     const user = (session as unknown as { user?: { role?: string } })?.user;
-    if (!user || user.role !== "admin") {
+    if (!user || user.role !== "ADMIN") {
       return { success: false, error: "Unauthorized: admin required" };
     }
 

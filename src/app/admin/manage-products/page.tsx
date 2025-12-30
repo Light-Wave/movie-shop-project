@@ -6,7 +6,7 @@ export default async function ManageProductsPage() {
   const movies = await prisma.movie.findMany({
     include: {
       genres: true,
-      movieArtists: {
+      movieLinks: {
         include: {
           artist: true,
         },

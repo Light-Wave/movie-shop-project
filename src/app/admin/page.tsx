@@ -8,17 +8,25 @@ import { MovieBadge } from "@/components/movie-badge";
 import PriceDisplay from "@/components/prise-display";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import { ChevronsUpDown } from "lucide-react";
+import Link from "next/link";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { prisma } from "@/lib/prisma";
-import { ChevronsUpDown } from "lucide-react";
-import Link from "next/link";
 
 export default async function AdminPage() {
-  //TODO: Check if user is admin
+  const session = await auth.api.getSession({ headers: await headers() });
+  console.log("Admin session object:", session);
+  if ((session?.user as any).role !== "ADMIN") {
+    redirect("/");
+  }
+
   const [artists, genres, products, users, orders] = await Promise.all([
     prisma.artist.findMany(),
     prisma.genre.findMany(),
@@ -117,7 +125,8 @@ export default async function AdminPage() {
               <Badge key={order.id}>
                 {users.find((u) => u.id === order.userId)?.email} -{" "}
                 {users.find((u) => u.id === order.userId)?.name} -
-                <PriceDisplay price={order.totalAmount} /> - {order.status}
+                <PriceDisplay price={order.totalAmount.toNumber()} /> -{" "}
+                {order.status}
               </Badge>
             ))}
           </div>
