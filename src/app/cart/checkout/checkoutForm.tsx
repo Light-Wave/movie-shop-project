@@ -95,7 +95,8 @@ export default function CheckoutForm({
       setShowSaveDialog(true);
       return;
     } else {
-      onSubmit();
+      checkoutAction(values);
+      setPendingValues(null);
     }
   }
   async function onSubmit() {
@@ -307,7 +308,14 @@ export default function CheckoutForm({
       </Form>
       <AlertDialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
         <AlertDialogContent>
-          ...
+          <AlertDialogHeader>
+            <AlertDialogTitle>Save addresses for later?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Would you like to save these addresses to your account for future
+              use? You can always update or remove them later in your account
+              settings.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
               onClick={() => {
