@@ -3,20 +3,19 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
-import { addressSchema } from "@/zod/address";
+import { addressSchema, AddressSchemaValues } from "@/zod/address";
 import { revalidatePath } from "next/cache";
 
 type Result = { success: true } | { success: false; error: string };
 
-export async function updateAddress(formData: FormData) {
+export async function updateAddress(formData: AddressSchemaValues) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
   if (!session) {
     return { success: false, error: "User is not logged in" };
   }
-  const rawData = Object.fromEntries(formData.entries());
-  const parsed = addressSchema.safeParse(rawData);
+  const parsed = addressSchema.safeParse(formData);
 
   if (!parsed.success) {
     const errors = parsed.error.issues.map((issue) => ({
