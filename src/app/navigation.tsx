@@ -6,6 +6,7 @@ import SignInOrOut from "@/components/signin-signup-logout";
 import teamDelta from "@/../public/team-delta-reversed.svg";
 import Image from "next/image";
 import CartBadge from "@/components/cartComponents/cartBadge";
+import { CartValidationBootstrap } from "@/components/cartComponents/cartValidator";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -49,6 +50,7 @@ export function Nav() {
             />
           </div>
           <CartBadge />
+          <CartValidationBootstrap />
           <SignInOrOut />
         </div>
 
