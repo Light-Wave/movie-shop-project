@@ -13,8 +13,8 @@ export default async function ManageUsersPage() {
   const users = await prisma.user.findMany();
 
   const roleMap = {
-    USER: "User",
-    ADMIN: "Admin",
+    user: "User",
+    admin: "Admin",
   };
 
   return (
@@ -34,10 +34,14 @@ export default async function ManageUsersPage() {
         <TableBody>
           {users.map((user) => (
             <TableRow key={user.id}>
-              <TableCell className="font-medium">{user.id.substring(0, 10)}...</TableCell>
+              <TableCell className="font-medium">
+                {user.id.substring(0, 10)}...
+              </TableCell>
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
-              <TableCell>{roleMap[user.role as keyof typeof roleMap]}</TableCell>
+              <TableCell>
+                {roleMap[user.role as keyof typeof roleMap]}
+              </TableCell>
               <TableCell>{user.emailVerified ? "Yes" : "No"}</TableCell>
             </TableRow>
           ))}
