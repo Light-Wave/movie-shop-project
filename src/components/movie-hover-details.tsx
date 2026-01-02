@@ -58,7 +58,7 @@ export function HoverCardMovie({ movie, children }: Params) {
 
             <div className="pt-2 flex items-center justify-between border-t mt-2">
               <div className="text-lg font-bold text-green-700">
-                <PriceDisplay price={Number(movie.price)} />
+                <PriceDisplay price={movie.price} />
               </div>
             </div>
           </div>
