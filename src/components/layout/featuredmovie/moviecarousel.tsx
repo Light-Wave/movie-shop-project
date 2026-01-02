@@ -71,20 +71,7 @@ export default function FeaturedCarousel({
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     priority={index === 0}
                   />
-                  {/* In stock ribbon */}
-                  <div className="absolute -left-8 top-5 z-10 w-32 text-center transform -rotate-45 shadow-lg">
-                    <div
-                      className={`text-[10px] font-black uppercase tracking-wider px-8 py-1.5 ${
-                        movie.isAvailable && (movie.stock ?? 0) > 0
-                          ? "bg-green-600 text-white"
-                          : "bg-red-600 text-white"
-                      }`}
-                    >
-                      {movie.isAvailable && (movie.stock ?? 0) > 0
-                        ? "In Stock"
-                        : "Out of Stock"}
-                    </div>
-                  </div>
+
                 </div>
 
                 {/* Content Section "right" */}
