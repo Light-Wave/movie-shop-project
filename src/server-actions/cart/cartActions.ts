@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
@@ -10,6 +10,8 @@ import {
   removeCartItem,
   updateCartItem,
   getCartTotalItems,
+  COOKIE_NAME,
+  COOKIE_OPTIONS,
 } from "@/lib/cartUtils";
 import type {
   CartItem,
@@ -18,23 +20,14 @@ import type {
 } from "@/components/types/movie";
 
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { checkoutSchema, CheckoutSchemaValues } from "@/zod/checkout";
 
 export type CartActionState = {
   success: boolean;
   message?: string;
   cartCount?: number;
 };
-
-const COOKIE_NAME = "movie_cart";
-
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  maxAge: 60 * 60 * 24 * 365, // 1 year
-  path: "/",
-};
-
 
 /** Save cart → cookie and revalidate relevant routes */
 async function saveCart(items: CartItem[]) {
@@ -173,7 +166,7 @@ export async function getCartWithMovies(): Promise<CartItemWithMovie[]> {
  * - (Optional) Create Order + OrderItem rows and decrement stock.
  * - Clears cart and redirects to success page.
  */
-export async function checkoutAction() {
+export async function checkoutAction(formData: CheckoutSchemaValues) {
   const items = await getCartWithMovies();
   if (items.length === 0) {
     redirect("/cart");
@@ -181,6 +174,9 @@ export async function checkoutAction() {
 
   // Validate
   for (const it of items) {
+    if (isNaN(it.quantity)) {
+      throw new Error(`"${it.movie.title}" request count is NaN`);
+    }
     if (!it.movie.isAvailable) {
       throw new Error(`"${it.movie.title}" is unavailable.`);
     }
@@ -198,34 +194,98 @@ export async function checkoutAction() {
   );
 
   // ToDO: Persist order (uncomment and plug userId when auth is ready)
-  // const userId = /* your auth session user id */;
-  // const order = await prisma.order.create({
-  //   data: {
-  //     userId,
-  //     totalAmount: (subtotalCents / 100).toFixed(2), // Decimal string
-  //     status: "PROCESSING",
-  //     items: {
-  //       create: items.map((it) => ({
-  //         movieId: it.movie.id,
-  //         quantity: it.quantity,
-  //         priceAtPurchase: (it.movie.priceCents / 100).toFixed(2),
-  //       })),
-  //     },
-  //   },
-  // });
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userId = session?.user.id;
+
+  const parsed = checkoutSchema.safeParse(formData);
+
+  if (!parsed.success) {
+    const errors = parsed.error.issues.map((issue) => ({
+      field: issue.path.join("."),
+      message: issue.message,
+    }));
+    return { error: errors };
+  }
+
+  const data = parsed.data;
+
+  // Build clean payloads for Prisma from prefixed form fields
+  const deliveryAddressPayload = {
+    street: data.delivery_street,
+    city: data.delivery_city,
+    state: data.delivery_state ?? null,
+    zipCode: data.delivery_zipCode,
+    country: data.delivery_country,
+  };
+
+  // If useSeparateBilling is false, copy billing from delivery. Otherwise, read billing fields.
+  let billingAddressPayload: typeof deliveryAddressPayload;
+  if (data.useSeparateBilling) {
+    billingAddressPayload = {
+      // Use nullish coalescing to satisfy TypeScript, though Zod ensures presence
+      street: data.billing_street ?? "",
+      city: data.billing_city ?? "",
+      state: data.billing_state ?? null,
+      zipCode: data.billing_zipCode ?? "",
+      country: data.billing_country ?? "",
+    };
+  } else {
+    billingAddressPayload = { ...deliveryAddressPayload };
+  }
+
+  const order = await prisma.order.create({
+    data: {
+      user: { connect: { id: userId } },
+      totalAmount: total,
+      status: "PROCESSING",
+      items: {
+        create: items.map((it) => ({
+          movieId: it.movie.id,
+          quantity: it.quantity,
+          priceAtPurchase: it.movie.priceCents,
+        })),
+      },
+
+      deliveryAddress: {
+        create: deliveryAddressPayload,
+      },
+      billingAddress: { create: billingAddressPayload },
+      email: data.email,
+    },
+  });
 
   // TODO: decrement stock in a transaction
-  // await prisma.$transaction(
-  //   items.map((it) =>
-  //     prisma.movie.update({
-  //       where: { id: it.movie.id },
-  //       data: { stock: { decrement: it.quantity } },
-  //     })
-  //   )
-  // );
+  await prisma.$transaction(
+    items.map((it) =>
+      prisma.movie.update({
+        where: { id: it.movie.id },
+        data: { stock: { decrement: it.quantity } },
+      })
+    )
+  );
 
   // Clear cart & success
   await clearCartAction();
-  redirect("/cart/success");
+  redirect(`/cart/${order.id}`);
 }
-``;
+
+export async function validateCart() {
+  const cart = await getCart();
+  if (cart.length === 0) return;
+
+  const ids = cart.map((i) => i.movieId);
+
+  const movies = await prisma.movie.findMany({
+    where: { id: { in: ids } },
+    select: {
+      id: true,
+    },
+  });
+  if (movies.length === ids.length) return; // All good
+
+  // Some movies are no longer valid, remove them from cart
+  const validIds = new Set(movies.map((m) => m.id));
+  const newCart = cart.filter((item) => validIds.has(item.movieId));
+  console.log("Cart validation removed items, new cart:", newCart);
+  saveCart(newCart);
+}

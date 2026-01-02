@@ -1,5 +1,15 @@
 import { CartItem } from "@/components/types/movie";
 
+export const COOKIE_NAME = "movie_cart";
+
+export const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  maxAge: 60 * 60 * 24 * 365, // 1 year
+  path: "/",
+};
+
 export function parseCart(cartCookie: string | undefined): CartItem[] {
   if (!cartCookie) return [];
   try {
