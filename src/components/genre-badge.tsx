@@ -15,15 +15,16 @@ export function GenreBadge({ genre, adminView }: Params) {
           ? "default"
           : "secondary"
       }
+      className="rounded-[12px_4px_14px_6px] text-[10px] font-bold uppercase tracking-wider shadow-sm"
     >
       <Link
         href={
           adminView
             ? `/admin/manage-genre/${genre.id}`
             : {
-                pathname: "/browse",
-                query: { genre: genre.name }, // TODO: make the genre id readable by humans, and use that instead
-              }
+              pathname: "/browse",
+              query: { genre: genre.name }, // TODO: make the genre id readable by humans, and use that instead
+            }
         }
       >
         {genre.name}

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import PriceDisplay from "@/components/prise-display";
 import { generateMovieUrl } from "@/components/sharedutils/slug-utils";
@@ -30,7 +30,7 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
   const movieUrl = generateMovieUrl(movie.id, movie.title);
 
   return (
-    <Card className="h-full overflow-hidden border-zinc-200 transition-all duration-300 hover:shadow-md grid grid-rows-[auto_1fr] w-full sm:w-auto">
+    <Card className="p-0 h-full overflow-hidden border-zinc-200 transition-all duration-300 hover:shadow-md grid grid-rows-[auto_1fr] w-full sm:w-auto">
       <Link href={movieUrl} className="group block">
         <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
           <Image
@@ -40,11 +40,25 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 15vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
+          {/* Stock ribbon*/}
+          <div className="absolute -left-8 top-5 z-10 w-32 text-center transform -rotate-45 shadow-lg">
+            <div
+              className={`text-[10px] font-black uppercase tracking-wider px-8 py-1.5 ${
+                movie.isAvailable && (movie.stock ?? 0) > 0
+                  ? "bg-green-600 text-white"
+                  : "bg-red-600 text-white"
+              }`}
+            >
+              {movie.isAvailable && (movie.stock ?? 0) > 0
+                ? "In Stock"
+                : "Out of Stock"}
+            </div>
+          </div>
         </div>
 
-        <CardContent className="p-3 flex flex-col justify-between gap-3">
+        <CardContent className="p-2 flex flex-col justify-between gap-2">
           <div className="space-y-1.5">
-            <CardTitle className="text-sm font-bold line-clamp-2 leading-snug">
+            <CardTitle className="text-sm font-bold line-clamp-2 leading-snug min-h-[2.8em]">
               {movie.title}
             </CardTitle>
 
@@ -60,24 +74,19 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
               ))}
             </div>
           </div>
-
-          <div className="space-y-3">
-            <div className="text-base font-black text-primary">
-              <PriceDisplay price={movie.price} />
-            </div>
-          </div>
         </CardContent>
       </Link>
 
-      <CardContent className="p-3 pt-0 flex flex-col justify-between gap-3">
-        <div className="space-y-3">
-          <AddToCartButton
-            movieId={movie.id}
-            className="w-full text-xs h-9 font-bold transition-colors"
-            size="sm"
-          />
+      <CardFooter className="p-2 pt-0 flex justify-between items-center gap-2">
+        <div className="text-sm font-black text-green-700/90 italic">
+          <PriceDisplay price={movie.price} />
         </div>
-      </CardContent>
+        <AddToCartButton
+          movieId={movie.id}
+          className="text-[10px] h-8 px-3 font-bold transition-all bg-green-600 hover:bg-green-700 text-white border-none shadow-sm"
+          size="sm"
+        />
+      </CardFooter>
     </Card>
   );
 }

@@ -35,6 +35,9 @@ import {
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -189,6 +192,16 @@ export function MovieTable({ data }: Params) {
     },
   });
 
+  // Sync internal table filter with global search param
+  const searchParams = useSearchParams();
+  const globalSearch = searchParams.get("search");
+
+  useEffect(() => {
+    if (globalSearch !== null) {
+      table.getColumn("title")?.setFilterValue(globalSearch);
+    }
+  }, [globalSearch, table]);
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -238,9 +251,9 @@ export function MovieTable({ data }: Params) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

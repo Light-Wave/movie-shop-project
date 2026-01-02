@@ -37,6 +37,8 @@ export default async function Dashboard({
 }) {
   const genresSearch = (await searchParams)?.genre;
   const artistSearch = (await searchParams)?.artist;
+  const searchTerm = (await searchParams)?.search;
+
   const moviePromise = prisma.movie.findMany({
     include: {
       genres: { select: { id: true, name: true } },
@@ -60,6 +62,12 @@ export default async function Dashboard({
               name: artistSearch as string,
             },
           },
+        },
+      }),
+      ...(searchTerm && {
+        title: {
+          contains: searchTerm as string,
+          mode: "insensitive",
         },
       }),
     },

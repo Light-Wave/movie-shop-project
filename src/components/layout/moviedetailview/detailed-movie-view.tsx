@@ -19,6 +19,8 @@ import placeholder from "../../../../public/placeholders/placeholder.jpg";
 import { Movie, Genre, Artist, MovieArtist } from "@/generated/prisma/client";
 import { ArtistBadge } from "@/components/artist-badge";
 import AddToCartButton from "@/components/cartComponents/addToCartButton";
+import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
 /**
  * Movie detail page props
  * @param movie movie object to display
@@ -70,145 +72,158 @@ export default function MovieDetailPage({
   const formattedRuntime = formatRuntime(movie.runtime);
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
-      <Card className="shadow-lg border-none">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6">
-          {/* Left column -> Movie poster & Availability */}
-          <div className="md:col-span-1 flex flex-col items-center">
-            <div className="w-full aspect-2/3 max-w-xs md:max-w-none relative rounded-lg overflow-hidden border">
-              {movie.imageUrl ? (
+    <div className="w-full mx-auto px-0 sm:px-4 py-0 sm:py-6 md:py-8 lg:px-8">
+      <Card className="shadow-2xl border-none sm:rounded-xl rounded-none overflow-hidden bg-white/50 backdrop-blur-sm p-0">
+        <div className="flex flex-col md:flex-row min-h-[600px]">
+          {/* Top/Left Section -> Movie Poster */}
+          <div className="w-full aspect-2/3 md:aspect-auto md:w-[400px] md:h-auto relative group shrink-0 overflow-hidden">
+            {movie.imageUrl ? (
+              <Image
+                src={movie.imageUrl}
+                alt={movie.title}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 400px"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            ) : (
+              <div className="relative flex items-center justify-center w-full h-full bg-muted">
                 <Image
-                  src={movie.imageUrl}
+                  src={placeholder}
                   alt={movie.title}
                   fill
                   priority
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transition duration-300 hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-cover"
                 />
-              ) : (
-                <div className="relative flex items-center justify-center w-full h-full bg-muted">
-                  <Image
-                    src={placeholder}
-                    alt={movie.title}
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition duration-300 hover:scale-110"
-                  />
-                </div>
-              )}
-            </div>
-
-            <Badge
-              className={`mt-4 text-sm font-semibold px-4 py-1 ${
-                movie.isAvailable
-                  ? "bg-green-500 hover:bg-green-600"
-                  : "bg-red-500 hover:bg-red-600"
-              }`}
-            >
-              {movie.isAvailable ? "In Stock" : "Out of Stock"}
-            </Badge>
-          </div>
-
-          {/* Right side -> Title, description, price, actions */}
-          <div className="md:col-span-2 space-y-6">
-            <CardHeader className="p-0">
-              <CardTitle className="text-4xl font-extrabold tracking-tight">
-                {movie.title}
-              </CardTitle>
-              <CardDescription className="text-lg text-muted-foreground pt-1">
-                Released: {formattedReleaseDate} | Runtime: {formattedRuntime}
-              </CardDescription>
-
-              <div className="flex flex-col gap-3 mt-4">
-                {movie.movieLinks?.filter((link) => link.role === "DIRECTOR")
-                  .length > 0 && (
-                  <div className="flex flex-row items-baseline gap-2">
-                    <span className="text-lg font-bold w-28 shrink-0">
-                      {movie.movieLinks.filter(
-                        (link) => link.role === "DIRECTOR"
-                      ).length > 1
-                        ? "Directors:"
-                        : "Director:"}
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {movie.movieLinks
-                        .filter((link) => link.role === "DIRECTOR")
-                        .map((link) => (
-                          <ArtistBadge key={link.id} artist={link.artist} />
-                        ))}
-                    </div>
-                  </div>
-                )}
-                {movie.movieLinks?.filter((link) => link.role === "ACTOR")
-                  .length > 0 && (
-                  <div className="flex flex-row items-baseline gap-2">
-                    <span className="text-lg font-bold w-28 shrink-0">
-                      Actors:
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {movie.movieLinks
-                        .filter((link) => link.role === "ACTOR")
-                        .map((link) => (
-                          <ArtistBadge key={link.id} artist={link.artist} />
-                        ))}
-                    </div>
-                  </div>
-                )}
-                {movie.genres?.length > 0 && (
-                  <div className="flex flex-row items-baseline gap-2">
-                    <span className="text-lg font-bold w-28 shrink-0">
-                      {movie.genres.length > 1 ? "Genres:" : "Genre:"}
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {movie.genres.map((genre) => (
-                        <GenreBadge key={genre.id} genre={genre} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardHeader>
-
-            <Separator />
-
-            <CardContent className="p-0">
-              <h3 className="text-xl font-semibold mb-2">Synopsis</h3>
-              <p className="text-gray-700 leading-relaxed">
-                {movie.description ?? "No description available."}
-              </p>
-            </CardContent>
-
-            <Separator />
-
-            <CardFooter className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-              <div className="text-3xl font-bold text-primary">
-                <PriceDisplay price={movie.price} />
-              </div>
-              <div className="flex space-x-3">
-                <AddToCartButton
-                  disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
-                  movieId={movie.id}
-                  className="text-lg px-8 py-6"
-                />
-              </div>
-            </CardFooter>
-
-            {/* Trailer Section */}
-            {movie.trailerUrl && (
-              <div className="mt-6 flex justify-center">
-                <div className="w-full max-w-2xl aspect-video">
-                  <iframe
-                    className="w-full h-full rounded-lg shadow-lg"
-                    src={movie.trailerUrl}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                </div>
               </div>
             )}
+
+            {/* Diagonal Corner Ribbon */}
+            <div className="absolute -left-8 top-5 z-10 w-32 text-center transform -rotate-45 shadow-lg">
+              <div
+                className={`text-[10px] font-black uppercase tracking-wider px-8 py-1.5 ${
+                  movie.isAvailable && (movie.stock ?? 0) > 0
+                    ? "bg-green-600 text-white"
+                    : "bg-red-600 text-white"
+                }`}
+              >
+                {movie.isAvailable && (movie.stock ?? 0) > 0
+                  ? "In Stock"
+                  : "Out of Stock"}
+              </div>
+            </div>
+          </div>
+
+          {/* Content Section "right" */}
+          <div className="flex-1 flex flex-col pt-4 px-5 pb-1 sm:pt-8 sm:px-8 sm:pb-4 space-y-4 sm:space-y-6 bg-gradient-to-br from-white to-zinc-50/50">
+            <div className="flex-1 space-y-4 sm:space-y-6">
+              <CardHeader className="p-0 text-center md:text-left items-center md:items-start">
+                <CardTitle className="text-3xl sm:text-6xl font-serif font-black tracking-tight leading-tight">
+                  {movie.title}
+                </CardTitle>
+                <CardDescription className="text-sm sm:text-lg text-zinc-500 font-medium pt-2">
+                  {formattedReleaseDate} • {formattedRuntime}
+                </CardDescription>
+
+                <div className="flex flex-col gap-3 mt-4 sm:mt-6 w-full">
+                  {movie.movieLinks?.filter((link) => link.role === "DIRECTOR")
+                    .length > 0 && (
+                    <div className="flex flex-col md:flex-row md:items-center gap-2 items-center">
+                      <span className="text-[10px] uppercase tracking-widest font-black text-zinc-400 w-full md:w-24 shrink-0 text-center md:text-left">
+                        Director
+                      </span>
+                      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                        {movie.movieLinks
+                          .filter((link) => link.role === "DIRECTOR")
+                          .map((link) => (
+                            <ArtistBadge key={link.id} artist={link.artist} />
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {movie.genres?.length > 0 && (
+                    <div className="flex flex-col md:flex-row md:items-center gap-2 items-center">
+                      <span className="text-[10px] uppercase tracking-widest font-black text-zinc-400 w-full md:w-24 shrink-0 text-center md:text-left">
+                        Genres
+                      </span>
+                      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                        {movie.genres.map((genre) => (
+                          <GenreBadge key={genre.id} genre={genre} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {movie.movieLinks?.filter((link) => link.role === "ACTOR")
+                    .length > 0 && (
+                    <div className="flex flex-col md:flex-row md:items-start items-center gap-2">
+                      <span className="text-[10px] uppercase tracking-widest font-black text-zinc-400 w-full md:w-24 shrink-0 text-center md:text-left md:pt-1">
+                        Cast
+                      </span>
+                      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                        {movie.movieLinks
+                          .filter((link) => link.role === "ACTOR")
+                          .map((link) => (
+                            <ArtistBadge key={link.id} artist={link.artist} />
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {movie.trailerUrl && (
+                    <div className="flex flex-col md:flex-row md:items-center items-center gap-2 pt-1">
+                      <span className="hidden md:block text-[10px] uppercase tracking-widest font-black text-zinc-400 w-24 shrink-0 text-center md:text-left">
+                        Trailer
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-fit mx-auto md:mx-0 rounded-full font-serif font-black bg-zinc-900/5 hover:bg-zinc-900/10 text-zinc-900 border-zinc-200 transition-all flex items-center gap-2 h-8 px-3"
+                        asChild
+                      >
+                        <a
+                          href={movie.trailerUrl.replace(
+                            "/embed/",
+                            "/watch?v="
+                          )}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Play className="w-2.5 h-2.5 fill-zinc-900" />
+                          <span className="text-[10px]">Watch Trailer</span>
+                        </a>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </CardHeader>
+
+              <div className="pt-2">
+                <h3 className="text-sm uppercase tracking-widest font-black text-zinc-400 mb-3 text-center md:text-left">
+                  Synopsis
+                </h3>
+                <p className="text-zinc-700 leading-relaxed text-base sm:text-lg max-w-3xl mx-auto md:mx-0 text-center md:text-left">
+                  {movie.description ?? "No description available."}
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-3 sm:pt-4 border-t border-zinc-100/50">
+              <div className="flex justify-between items-center w-full">
+                <div className="text-xl sm:text-2xl font-black text-green-700/90 italic">
+                  <PriceDisplay price={movie.price} />
+                </div>
+                <div className="flex">
+                  <AddToCartButton
+                    disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
+                    movieId={movie.id}
+                    className="w-auto text-sm sm:text-base h-10 sm:h-11 px-6 sm:px-8 bg-green-600 hover:bg-green-700 text-white border-none font-black transition-all shadow-xl active:scale-95"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Card>

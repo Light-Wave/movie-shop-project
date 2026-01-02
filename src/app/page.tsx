@@ -5,9 +5,9 @@
 //✅ o Top 5 cheapest Movie - Partially done, needs data integration
 // Optional Implement a simple recommendation system based on user purchase
 // history, favorite genres, directors, or actors
-// Add movies to cart (stored in cookies)
+// ✅ Add movies to cart (stored in cookies)
 // Optional Enable users to add movies to a wishlist for future purchase
-// Optinal Add functionality to link and display movie trailers (embedded YouTube videos)
+// ✅ Optinal Add functionality to link and display movie trailers (embedded YouTube videos)
 // Optinal Add buttons to share movie links on social media platforms
 
 import FeaturedCarousel from "@/components/layout/featuredmovie/moviecarousel";
@@ -44,9 +44,8 @@ export default async function Home() {
 
   return (
     <div className=" bg-zinc-50 font-sans dark:bg-black">
-      <main className="w-full m-auto space-y-12 py-8">
+      <main className="w-full m-auto space-y-6 pt-0 pb-4">
         <div>
-          <h1 className="text-3xl font-bold mb-6 px-4">Featured Selection</h1>
           <FeaturedCarousel movieData={featuredMovies} />
         </div>
 
@@ -54,7 +53,7 @@ export default async function Home() {
           <GenreList />
         </div>
 
-        <div className="space-y-16 pb-20">
+        <div className="space-y-8 pb-8">
           <section>
             <p className="italic">
               most sold section, need order data available to populate
