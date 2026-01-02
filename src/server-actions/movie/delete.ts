@@ -21,8 +21,7 @@ export async function deleteMovieAction(
       return { success: false, error: "Unauthorized: admin required" };
     }
 
-    const user = (session as unknown as { user?: { role?: string } })?.user;
-    if (!user || user.role !== "ADMIN") {
+    if (!session.user || session.user.role !== "admin") {
       return { success: false, error: "Unauthorized: admin required" };
     }
 

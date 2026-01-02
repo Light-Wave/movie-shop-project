@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import teamDelta from "@/../public/team-delta-reversed.svg";
@@ -9,6 +10,8 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   const { data: session } = authClient.useSession();
   const user = session?.user;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <footer className="w-full border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -63,7 +66,7 @@ export default function Footer() {
               >
                 Your Cart
               </Link>
-              {user && (
+              {mounted && user && (
                 <Link
                   href="/dashboard"
                   className="text-xs text-muted-foreground hover:text-primary transition-colors"

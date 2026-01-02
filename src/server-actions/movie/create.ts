@@ -18,8 +18,7 @@ export async function createMovie(formData: FormData) {
   if (!session) {
     return { error: "Unauthorized: Must be logged in to create a movie." };
   }
-  const user = (session as unknown as { user?: { role?: string } })?.user;
-  if (!user || user.role !== "ADMIN") {
+  if (!session.user || session.user.role !== "admin") {
     return { error: "Unauthorized: Must be an admin to create movies." };
   }
   const userId = session.user.id;

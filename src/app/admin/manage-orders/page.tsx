@@ -40,9 +40,11 @@ export default async function ManageOrdersPage() {
                   {order.id.substring(0, 10)}...
                 </Link>
               </TableCell>
-              <TableCell>{order.user.name}</TableCell>
               <TableCell>
-                <PriceDisplay price={order.totalAmount.toNumber()} />
+                {order.user?.name ?? order.user?.email ?? "Unknown"}
+              </TableCell>
+              <TableCell>
+                <PriceDisplay price={order.totalAmount} />
               </TableCell>
               <TableCell>{order.status}</TableCell>
               <TableCell>{order.orderDate.toLocaleDateString()}</TableCell>

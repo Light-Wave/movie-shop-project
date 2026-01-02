@@ -23,7 +23,7 @@ import {
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   console.log("Admin session object:", session);
-  if ((session?.user as any).role !== "ADMIN") {
+  if ((session?.user as any).role !== "admin") {
     redirect("/");
   }
 

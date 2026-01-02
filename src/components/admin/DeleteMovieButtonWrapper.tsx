@@ -9,7 +9,7 @@ type Props = {
 export async function DeleteMovieButtonWrapper({ movieId, movieTitle }: Props) {
   const session = await auth.api.getSession();
 
-  if ((session?.user as any)?.role !== "ADMIN") {
+  if ((session?.user as any)?.role !== "admin") {
     return null;
   }
 

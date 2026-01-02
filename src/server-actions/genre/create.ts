@@ -14,8 +14,7 @@ export async function createGenre(formData: FormData) {
   if (!session) {
     return { error: "Unauthorized: Must be logged in to create a genre." };
   }
-  const user = (session as unknown as { user?: { role?: string } })?.user;
-  if (!user || user.role !== "ADMIN") {
+  if (!session.user || session.user.role !== "admin") {
     return { error: "Unauthorized: Must be an admin to create genres." };
   }
   const userId = session.user.id;
