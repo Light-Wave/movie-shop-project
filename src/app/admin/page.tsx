@@ -125,8 +125,7 @@ export default async function AdminPage() {
               <Badge key={order.id}>
                 {users.find((u) => u.id === order.userId)?.email} -{" "}
                 {users.find((u) => u.id === order.userId)?.name} -
-                <PriceDisplay price={order.totalAmount.toNumber()} /> -{" "}
-                {order.status}
+                <PriceDisplay price={order.totalAmount} /> - {order.status}
               </Badge>
             ))}
           </div>

@@ -1,12 +1,12 @@
-import "dotenv/config";
-import { prisma } from "../src/lib/prisma";
-import type { Genre, Artist, ArtistRole } from "../src/generated/prisma/client";
 import fs from "node:fs";
 import path from "node:path";
-import * as crypto from "node:crypto";
-import * as util from "node:util";
+import { Prisma } from "../src/generated/prisma/client";
+import { prisma } from "../src/lib/prisma";
+import type { ArtistRole } from "../src/generated/prisma/enums";
+import type { Genre, Artist } from "../src/generated/prisma/client";
+import "dotenv/config";
 
-const scrypt = util.promisify(crypto.scrypt);
+// Use the shared Prisma client exported from `src/lib/prisma`
 
 // Paths to JSON files
 const genresPath = path.join(__dirname, "genres.json");
@@ -89,8 +89,6 @@ async function linkArtistToMovie(
   });
 }
 
-
-
 async function main() {
   if ((process.env.NODE_ENV || "").toLowerCase() === "production") {
     console.error("Refusing to run seed in production.");
@@ -98,7 +96,6 @@ async function main() {
   }
 
   console.log("Seeding genres...");
-  console.log("Prisma client status:", prisma);
   await ensureGenres(genresData);
 
   console.log("Seeding artists...");
@@ -119,7 +116,6 @@ async function main() {
       }
     }
   }
-
 
   console.log("Seeding completed.");
 }
