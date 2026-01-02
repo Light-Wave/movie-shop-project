@@ -62,20 +62,7 @@ export default function MovieDisplay({
                       className="object-cover"
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     />
-                    {/* In Stock Ribbon */}
-                    <div className="absolute -left-8 top-5 z-10 w-32 text-center transform -rotate-45 shadow-lg">
-                      <div
-                        className={`text-[10px] font-black uppercase tracking-wider px-8 py-1.5 ${
-                          movie.isAvailable && (movie.stock ?? 0) > 0
-                            ? "bg-green-600 text-white"
-                            : "bg-red-600 text-white"
-                        }`}
-                      >
-                        {movie.isAvailable && (movie.stock ?? 0) > 0
-                          ? "In Stock"
-                          : "Out of Stock"}
-                      </div>
-                    </div>
+
                   </div>
 
                   <div className="px-3 pt-2 flex flex-col flex-1">
