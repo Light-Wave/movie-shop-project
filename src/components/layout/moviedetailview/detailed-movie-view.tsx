@@ -116,7 +116,7 @@ export default function MovieDetailPage({
           </div>
 
           {/* Content Section "right" */}
-          <div className="flex-1 flex flex-col pt-4 px-5 pb-1 sm:pt-8 sm:px-8 sm:pb-4 space-y-4 sm:space-y-6 bg-gradient-to-br from-white to-zinc-50/50">
+          <div className="flex-1 flex flex-col pt-4 px-5 pb-1 sm:pt-8 sm:px-8 sm:pb-4 space-y-4 sm:space-y-6 bg-linear-to-br from-white to-zinc-50/50">
             <div className="flex-1 space-y-4 sm:space-y-6">
               <CardHeader className="p-0 text-center md:text-left items-center md:items-start">
                 <CardTitle className="text-3xl sm:text-6xl font-serif font-black tracking-tight leading-tight">
