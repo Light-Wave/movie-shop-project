@@ -50,6 +50,9 @@ export default async function AdminPage() {
         <Button variant="default" className="mx-4" asChild>
           <Link href="/admin/manage-artist/new"> Add New Artist </Link>
         </Button>
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-artist"> Manage Artists </Link>
+        </Button>
         <CollapsibleContent>
           <div className="space-x-1">
             {artists.map((artist) => (
@@ -67,6 +70,9 @@ export default async function AdminPage() {
         <Button variant="default" className="mx-4" asChild>
           <Link href="/admin/manage-genre/new"> Add New Genre </Link>
         </Button>
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-genre"> Manage Genres </Link>
+        </Button>
         <CollapsibleContent>
           <div className="space-x-1">
             {genres.map((genre) => (
@@ -83,6 +89,9 @@ export default async function AdminPage() {
         </Button>
         <Button variant="default" className="mx-4" asChild>
           <Link href="/admin/manage-products/new"> Add New Movie </Link>
+        </Button>
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-products"> Manage Movies </Link>
         </Button>
         <CollapsibleContent>
           <div className="space-x-1">
@@ -103,6 +112,9 @@ export default async function AdminPage() {
             Users <ChevronsUpDown />
           </CollapsibleTrigger>
         </Button>
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-users"> Manage Users </Link>
+        </Button>
         <CollapsibleContent>
           <div className="space-x-1">
             {users.map((user) => (
@@ -118,6 +130,10 @@ export default async function AdminPage() {
           <CollapsibleTrigger>
             Orders <ChevronsUpDown />
           </CollapsibleTrigger>
+        </Button>
+
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-orders"> Manage Orders </Link>
         </Button>
         <CollapsibleContent>
           <div className="space-x-1">

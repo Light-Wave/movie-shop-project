@@ -41,17 +41,16 @@ export function NavClient({ cartBadge }: NavClientProps) {
   if (user) {
     if (isAdmin) {
       navLinks.push({
-        name: "Admin Dashboard",
+        name: "Admin",
         href: "/admin",
         icon: LayoutDashboard,
       });
-    } else {
-      navLinks.push({
-        name: "Dashboard",
-        href: "/dashboard",
-        icon: LayoutDashboard,
-      });
     }
+    navLinks.push({
+      name: "Dashboard",
+      href: "/dashboard",
+      icon: LayoutDashboard,
+    });
   }
 
   // Handle search submission

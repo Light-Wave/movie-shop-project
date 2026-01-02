@@ -74,6 +74,14 @@ export default function Footer() {
                   Dashboard
                 </Link>
               )}
+              {mounted && user && user.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Admin
+                </Link>
+              )}
             </nav>
           </div>
 
