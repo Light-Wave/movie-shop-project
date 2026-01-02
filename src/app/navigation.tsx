@@ -8,10 +8,17 @@ export async function Nav() {
     headers: await headers(),
   });
 
-  return (
-    <NavClient
-      initialSession={session}
-      cartBadge={<CartBadge />}
-    />
-  );
+  const sessionUser = session
+    ? {
+        user: {
+          name: session.user.name,
+          email: session.user.email,
+          image: session.user.image,
+          // role is not part of the model yet, so accepts "any" for now, should work even after role is set, but ideally should be typed correctly
+          role: (session.user as any).role,
+        },
+      }
+    : null;
+
+  return <NavClient initialSession={sessionUser} cartBadge={<CartBadge />} />;
 }
