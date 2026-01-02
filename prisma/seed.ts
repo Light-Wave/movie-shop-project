@@ -1,18 +1,12 @@
 import "dotenv/config";
-import { Prisma } from "../src/generated/prisma/client";
+import { prisma } from "../src/lib/prisma";
+import type { Genre, Artist, ArtistRole } from "../src/generated/prisma/client";
 import fs from "node:fs";
 import path from "node:path";
 import * as crypto from "node:crypto";
 import * as util from "node:util";
 
 const scrypt = util.promisify(crypto.scrypt);
-
-import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg"; // Import PrismaPg
-
-const connectionString = `${process.env.DATABASE_URL}`; // Define connectionString
-const adapter = new PrismaPg({ connectionString }); // Instantiate adapter
-const prisma = new PrismaClient({ adapter }); // Instantiate PrismaClient with adapter
 
 // Paths to JSON files
 const genresPath = path.join(__dirname, "genres.json");
