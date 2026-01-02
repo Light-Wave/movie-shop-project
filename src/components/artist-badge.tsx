@@ -5,11 +5,11 @@ import { roleToString } from "@/lib/role-to-string";
 
 type Params =
   | (
-      | {
-          artist: ReducedArtist;
-        }
-      | { movieLink: ReducedMovieLink }
-    ) & { adminView?: boolean };
+    | {
+      artist: ReducedArtist;
+    }
+    | { movieLink: ReducedMovieLink }
+  ) & { adminView?: boolean };
 export function ArtistBadge(params: Params) {
   let artist: ReducedArtist;
   if ("artist" in params) {
@@ -25,15 +25,16 @@ export function ArtistBadge(params: Params) {
           ? "default"
           : "secondary"
       }
+      className="rounded-[12px_4px_14px_6px] text-[10px] font-bold uppercase tracking-wider shadow-sm"
     >
       <Link
         href={
           params.adminView
             ? `/admin/manage-artist/${artist.id}`
             : {
-                pathname: "/browse",
-                query: { artist: artist.name },
-              }
+              pathname: "/browse",
+              query: { artist: artist.name },
+            }
         }
       >
         {"movieLink" in params

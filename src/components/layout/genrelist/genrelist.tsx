@@ -14,7 +14,7 @@ export default async function GenreList() {
   }
 
   return (
-    <div className="my-8">
+    <div className="my-4">
       <div className="flex items-center justify-between mb-4 px-1">
         <h2 className="text-2xl font-bold tracking-tight">Popular Genres</h2>
         <Link className="hover:underline text-sm font-medium" href="/browse">

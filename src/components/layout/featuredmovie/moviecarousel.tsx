@@ -1,3 +1,5 @@
+"use client";
+
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import {
   Carousel,
@@ -5,6 +7,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -14,6 +17,8 @@ import { Play } from "lucide-react";
 import { ArtistBadge } from "@/components/artist-badge";
 import Link from "next/link";
 import AddToCartButton from "@/components/cartComponents/addToCartButton";
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 /**
  * Carousel component for featured movies, takes Moviedata[]
@@ -24,10 +29,28 @@ export default function FeaturedCarousel({
 }: {
   movieData: MovieWithDetails[];
 }) {
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [current, setCurrent] = React.useState(0);
+  const [count, setCount] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   return (
-    <div className="mx-auto max-w-6xl shadow-2xl rounded-xl">
+    <div className="mx-auto max-w-full lg:max-w-full -mx-2 sm:mx-auto shadow-none sm:shadow-2xl rounded-none sm:rounded-xl relative group">
       <Carousel
-        className="w-full group"
+        setApi={setApi}
+        className="w-full"
         opts={{
           loop: true,
         }}
@@ -37,10 +60,10 @@ export default function FeaturedCarousel({
             return (
               <CarouselItem
                 key={index}
-                className="flex flex-col h-auto sm:flex-row sm:h-[600px] justify-between rounded-xl overflow-hidden"
+                className="flex flex-col h-auto sm:flex-row sm:min-h-[600px] justify-between rounded-none sm:rounded-xl overflow-hidden"
               >
                 {/* Image Section "left" */}
-                <div className="w-full h-[500px] sm:w-[400px] sm:h-full relative group shrink-0">
+                <div className="w-full h-[500px] sm:w-[400px] lg:w-[500px] sm:h-auto sm:self-stretch relative group shrink-0 overflow-hidden">
                   <Image
                     src={movie.imageUrl || placeholder}
                     alt={`${movie.title} poster`}
@@ -48,72 +71,126 @@ export default function FeaturedCarousel({
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     priority={index === 0}
                   />
+                  {/* In stock ribbon */}
+                  <div className="absolute -left-8 top-5 z-10 w-32 text-center transform -rotate-45 shadow-lg">
+                    <div
+                      className={`text-[10px] font-black uppercase tracking-wider px-8 py-1.5 ${
+                        movie.isAvailable && (movie.stock ?? 0) > 0
+                          ? "bg-green-600 text-white"
+                          : "bg-red-600 text-white"
+                      }`}
+                    >
+                      {movie.isAvailable && (movie.stock ?? 0) > 0
+                        ? "In Stock"
+                        : "Out of Stock"}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Content Section "right" */}
-                <div className="w-full h-full flex flex-col justify-center p-6 sm:p-10 space-y-6 relative overflow-hidden">
-                  <div className="space-y-4">
-                    <CardTitle className="text-4xl sm:text-6xl font-black tracking-tight line-clamp-2 pb-2">
-                      {movie.title}
-                    </CardTitle>
-                    <CardDescription className="text-lg sm:text-xl text-gray-600 tracking-tight line-clamp-3 sm:line-clamp-4">
-                      {movie.description || "No description available."}
-                    </CardDescription>
+                <div className="w-full h-full flex flex-col p-3 sm:p-10 relative overflow-hidden text-center sm:text-left items-center sm:items-start min-h-[400px]">
+                  <div className="flex-1 flex flex-col justify-center w-full space-y-4 sm:space-y-6">
+                    <div className="space-y-2 sm:space-y-4 w-full">
+                      <CardTitle className="text-2xl sm:text-5xl font-serif font-black tracking-tight line-clamp-none pb-1 sm:pb-2">
+                        {movie.title}
+                      </CardTitle>
+                      {/* mobile artist badges */}
+                      <div className="flex flex-wrap gap-2 h-[26px] overflow-hidden sm:hidden justify-center">
+                        {movie.movieLinks
+                          .sort((a, b) => {
+                            if (a.role === "DIRECTOR" && b.role !== "DIRECTOR")
+                              return -1;
+                            if (a.role !== "DIRECTOR" && b.role === "DIRECTOR")
+                              return 1;
+                            return 0;
+                          })
+                          .map((link, i) => (
+                            <ArtistBadge key={i} movieLink={link} />
+                          ))}
+                      </div>
+                      <CardDescription className="text-base sm:text-xl text-gray-600 tracking-tight line-clamp-3 sm:line-clamp-4 leading-snug">
+                        {movie.description || "No description available."}
+                      </CardDescription>
+                    </div>
+
+                    <div className="flex flex-row gap-3 w-full sm:w-auto justify-center sm:justify-start">
+                      <Button
+                        variant="outline"
+                        size="default"
+                        className="flex-1 sm:flex-initial sm:h-10 sm:px-7 rounded-full px-3.5 font-bold gap-2 sm:bg-zinc-900 sm:text-white sm:border-none sm:hover:bg-zinc-800 transition-all sm:text-base"
+                        asChild
+                      >
+                        <a
+                          href={
+                            movie.trailerUrl?.replace("/embed/", "/watch?v=") ??
+                            undefined
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
+                          <span>
+                            <span className="hidden sm:inline">Watch </span>
+                            Trailer
+                          </span>
+                        </a>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="default"
+                        className="flex-1 sm:flex-initial sm:h-10 sm:px-7 rounded-full px-3.5 font-bold sm:bg-zinc-900 sm:text-white sm:border-none sm:hover:bg-zinc-800 transition-all sm:text-base"
+                        asChild
+                      >
+                        <Link href={`/browse/${movie.id}`}>
+                          <span className="hidden sm:inline">View </span>Details
+                        </Link>
+                      </Button>
+                    </div>
+
+                    {/* Desktop artist badges, placed under description */}
+                    <div className="hidden sm:flex flex-wrap gap-2 mt-4">
+                      {movie.movieLinks
+                        .sort((a, b) => {
+                          if (a.role === "DIRECTOR" && b.role !== "DIRECTOR")
+                            return -1;
+                          if (a.role !== "DIRECTOR" && b.role === "DIRECTOR")
+                            return 1;
+                          return 0;
+                        })
+                        .map((link, i) => (
+                          <ArtistBadge key={i} movieLink={link} />
+                        ))}
+                    </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                    <Button
-                      size="lg"
-                      className="rounded-full px-8 font-bold gap-2"
-                      asChild
-                    >
-                      <a
-                        href={movie.trailerUrl ?? undefined}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Play className="w-5 h-5 fill-current" />
-                        Watch Trailer
-                      </a>
-                    </Button>
-                    <Button
-                      size="lg"
-                      className="rounded-full px-8 font-bold"
-                      asChild
-                    >
-                      <Link href={`/browse/${movie.id}`}>View Details</Link>
-                    </Button>
+                  {/* Bottom Action Bar - Price and Cart */}
+                  <div className="w-full flex justify-end mt-4">
                     <AddToCartButton
                       movieId={movie.id}
-                      className="rounded-full px-8 font-bold"
-                      size="lg"
+                      className="w-auto h-10 px-6 sm:h-12 sm:px-8 rounded-full font-serif font-black bg-green-600 hover:bg-green-700 text-white border-none shadow-2xl transition-all active:scale-95 text-base sm:text-lg"
+                      size="default"
                     />
-                  </div>
-
-                  {/* people section, displaying multiple artists in a single row without partial cuts */}
-                  <div className="flex flex-wrap gap-2 h-[26px] overflow-hidden">
-                    {movie.movieLinks
-                      .sort((a, b) => {
-                        // Show DIRECTORS first
-                        if (a.role === "DIRECTOR" && b.role !== "DIRECTOR") return -1;
-                        if (a.role !== "DIRECTOR" && b.role === "DIRECTOR") return 1;
-                        return 0;
-                      })
-                      .map((link, i) => (
-                        <ArtistBadge key={i} movieLink={link} />
-                      ))}
                   </div>
                 </div>
               </CarouselItem>
             );
           })}
         </CarouselContent>
-        {/*navigation arrows for above mobile.
-         * Unsure if we want to keep them even on large devices
-         * Pro: Easier to see that more movies are featured
-         * Con: not very elegant
-         * TODO: Decide if the arrows are necessary
-         */}
+        {/* Pagination, dots with a wider "dot" to show current*/}
+        <div className="absolute top-[480px] sm:top-auto sm:bottom-6 left-1/2 sm:left-[200px] -translate-x-1/2 flex gap-2 z-20">
+          {Array.from({ length: count }).map((_, i) => (
+            <button
+              key={i}
+              className={cn(
+                "w-2 h-2 rounded-full transition-all duration-300 shadow-sm",
+                current === i ? "bg-white w-6" : "bg-white/40 hover:bg-white/70"
+              )}
+              onClick={() => api?.scrollTo(i)}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+
         <div className="hidden md:block">
           <CarouselPrevious className="left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/80 hover:bg-white text-zinc-900 border-none shadow-xl" />
           <CarouselNext className="right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/80 hover:bg-white text-zinc-900 border-none shadow-xl" />

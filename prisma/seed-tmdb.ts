@@ -48,7 +48,7 @@ async function fetchTMDBMovies(apiKey: string, count: number = 40) {
                 // Find first YouTube trailer
                 const trailer = data.videos?.results?.find((v: any) => v.site === "YouTube" && v.type === "Trailer");
                 if (trailer) {
-                    data.trailerUrl = `https://www.youtube.com/embed/${trailer.key}`;
+                    data.trailerUrl = `https://www.youtube.com/watch?v=${trailer.key}`;
                 }
                 return data;
             }

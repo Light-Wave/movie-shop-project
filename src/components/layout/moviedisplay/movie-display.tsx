@@ -33,26 +33,26 @@ export default function MovieDisplay({
   movieData: MovieWithDetails[];
 }) {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between px-4">
-        <h2 className="text-2xl font-bold">{sectionTitle}</h2>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-black tracking-tight">{sectionTitle}</h2>
       </div>
       <Carousel
         opts={{
           align: "start",
         }}
-        className="w-full px-4"
+        className="w-full"
       >
-        <CarouselContent>
+        <CarouselContent className="-ml-2 sm:-ml-4">
           {movieData.map((movie) => (
             <CarouselItem
               key={movie.id}
-              className=" basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+              className="pl-2 sm:pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
             >
-              <Card className="gap-0.5 pb-1 h-full overflow-hidden border-zinc-200 flex flex-col">
+              <Card className="p-0 h-full overflow-hidden border-zinc-200 flex flex-col hover:border-zinc-300 transition-colors shadow-sm">
                 <Link
                   href={`/browse/${movie.id}`}
-                  className="block h-full transition-transform hover:scale-[1.02] flex-1"
+                  className="transition-transform hover:scale-[1.01] flex-1 flex flex-col"
                 >
                   <div className="relative aspect-2/3 w-full overflow-hidden">
                     <Image
@@ -62,28 +62,42 @@ export default function MovieDisplay({
                       className="object-cover"
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     />
-                  </div>
-
-                  <CardContent className="px-3 pt-1 pb-1.5 flex flex-col grow">
-                    <div className="flex flex-col">
-                      <CardTitle className="text-lg font-bold line-clamp-1">
-                        {movie.title}
-                      </CardTitle>
-                      <div className="flex items-center font-bold">
-                        <PriceDisplay price={movie.price} />
+                    {/* In Stock Ribbon */}
+                    <div className="absolute -left-8 top-5 z-10 w-32 text-center transform -rotate-45 shadow-lg">
+                      <div
+                        className={`text-[10px] font-black uppercase tracking-wider px-8 py-1.5 ${
+                          movie.isAvailable && (movie.stock ?? 0) > 0
+                            ? "bg-green-600 text-white"
+                            : "bg-red-600 text-white"
+                        }`}
+                      >
+                        {movie.isAvailable && (movie.stock ?? 0) > 0
+                          ? "In Stock"
+                          : "Out of Stock"}
                       </div>
                     </div>
+                  </div>
 
-                    <CardDescription className="text-sm line-clamp-2 text-zinc-500 my-2">
+                  <div className="px-3 pt-2 flex flex-col flex-1">
+                    <div className="min-h-[2.8rem] sm:min-h-[3.2rem] mb-1">
+                      <h3 className="text-base sm:text-xl font-serif font-black line-clamp-2 group-hover:text-primary transition-colors leading-snug">
+                        {movie.title}
+                      </h3>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-zinc-500/90 line-clamp-2 sm:line-clamp-4 leading-relaxed">
                       {movie.description || "No description available."}
-                    </CardDescription>
-                  </CardContent>
+                    </p>
+                  </div>
                 </Link>
 
-                <CardFooter className="p-0 mt-auto">
+                <CardFooter className="w-full px-3 pb-3 pt-1 flex justify-between items-center mt-auto">
+                  <div className="flex items-center font-bold text-base sm:text-lg text-green-700/90 italic">
+                    <PriceDisplay price={movie.price} />
+                  </div>
                   <AddToCartButton
                     movieId={movie.id}
-                    className="w-full hover:scale-[1.02]"
+                    className="h-9 px-5 rounded-sm hover:bg-green-700 bg-green-600 text-white font-bold transition-all border-none text-xs shadow-md active:scale-95"
                     size="sm"
                   />
                 </CardFooter>

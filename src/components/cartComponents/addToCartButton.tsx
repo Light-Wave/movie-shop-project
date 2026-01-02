@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, type ComponentProps } from "react";
+import { useActionState, useEffect, type ComponentProps } from "react";
 import { useFormStatus } from "react-dom";
 import { addItemAction } from "@/server-actions/cart/cartActions";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 type Props = {
   movieId: string;
@@ -32,13 +33,18 @@ export default function AddToCartButton(props: Props) {
     success: false,
   });
 
+  useEffect(() => {
+    if (state?.success) {
+      toast.success("Added to cart", {
+        position: "bottom-right",
+      });
+    }
+  }, [state]);
+
   return (
-    <form action={formAction} className="w-full">
+    <form action={formAction} className="w-fit relative">
       <input type="hidden" name="movieId" value={props.movieId} />
       <SubmitButton {...props} />
-      {state?.success && (
-        <p className="mt-1 text-sm text-green-600">Added to cart</p>
-      )}
     </form>
   );
 }
