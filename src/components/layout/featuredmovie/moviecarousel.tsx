@@ -47,7 +47,7 @@ export default function FeaturedCarousel({
   }, [api]);
 
   return (
-    <div className="mx-auto max-w-full lg:max-w-full -mx-2 sm:mx-auto shadow-none sm:shadow-2xl rounded-none sm:rounded-xl relative group">
+    <div className="mx-auto max-w-full lg:max-w-full sm:mx-auto shadow-none sm:shadow-2xl rounded-none sm:rounded-xl relative group">
       <Carousel
         setApi={setApi}
         className="w-full"
