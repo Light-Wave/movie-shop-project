@@ -7,7 +7,14 @@ import { headers } from "next/headers"; // Import headers
 
 export async function createArtist(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return { error: "You must be logged in to create an artist." };
+  // Add admin role check
+  if (!session) {
+    return { error: "Unauthorized: Must be logged in to create an artist." };
+  }
+  if (!session.user || session.user.role !== "admin") {
+    return { error: "Unauthorized: Must be an admin to create artists." };
+  }
+
   const userId = session.user.id;
 
   const rawData = Object.fromEntries(formData.entries());
