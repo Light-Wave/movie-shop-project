@@ -32,7 +32,7 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
   return (
     <Card className="p-0 h-full overflow-hidden border-zinc-200 transition-all duration-300 hover:shadow-md grid grid-rows-[auto_1fr] w-full sm:w-auto">
       <Link href={movieUrl} className="group block">
-        <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
+        <div className="relative aspect-2/3 w-full overflow-hidden bg-muted">
           <Image
             src={movie.imageUrl || placeholder}
             alt={movie.title}
