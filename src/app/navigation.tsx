@@ -21,5 +21,10 @@ export async function Nav() {
       }
     : null;
 
-  return <NavClient initialSession={sessionUser} cartBadge={<CartBadge />} />;
+  return (
+    <>
+      <NavClient initialSession={sessionUser} cartBadge={<CartBadge />} />
+      <CartValidationBootstrap />
+    </>
+  );
 }
