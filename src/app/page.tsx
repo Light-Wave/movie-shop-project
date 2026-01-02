@@ -23,19 +23,18 @@ import {
 
 export default async function Home() {
   // Fetch featured movies for carousel
-  // TODO: Make it possible to set featured movies, either by flag in database or in admin page
-  // For now, we will use a static list of movies, data is dynamic from the database
-  const featuredMoviesTitles = ["warfront", "Laugh Riot", "Frozen Dreams"];
-  const featuredMoviesData = await Promise.all(
-    featuredMoviesTitles.map((title) => getMovieByTitle(title))
-  );
-
-  // Filter out null values to guarantee that there is a Movie to display
-  const featuredMovies = featuredMoviesData.filter(
-    (m): m is NonNullable<typeof m> => m !== null
-  );
+  // For now, we will use the 3 most recently added movies as featured
+  // TODO: Let the admin set the featured movies in the dashboard
+  // ALTERNATIVE: Use the most popular movies
+  const allRecentlyAdded = await getRecentlyAddedMovies(30);
+  const featuredMovies = [
+    allRecentlyAdded[5],
+    allRecentlyAdded[15],
+    allRecentlyAdded[25],
+  ];
 
   // Fetch the four specific lists, passed on number is how many movies to display. the function default is 5
+  // topPurchased is not yet implemented
   const [topPurchased, recentlyAdded, oldest, cheapest] = await Promise.all([
     getTopPurchasedMovies(10),
     getRecentlyAddedMovies(10),

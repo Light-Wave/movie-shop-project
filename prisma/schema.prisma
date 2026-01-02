@@ -28,6 +28,7 @@ model User {
   createdMovies  Movie[]
   createdArtists Artist[]
   createGenres   Genre[]
+  userData       UserData?
 
   @@unique([email])
   @@map("user")
@@ -141,21 +142,27 @@ model Movie {
   movieLinks  MovieArtist[]
   createdById String?
   createdBy   User?         @relation(fields: [createdById], references: [id])
+  trailerUrl  String?
 
   @@index([title])
   @@map("movie")
 }
 
 model Order {
-  id          String      @id @default(uuid())
-  userId      String
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  totalAmount Decimal     @db.Decimal(10, 2)
-  status      OrderStatus @default(PENDING)
-  orderDate   DateTime    @default(now())
-  items       OrderItem[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id                String      @id @default(uuid())
+  userId            String?
+  user              User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalAmount       Int
+  status            OrderStatus @default(PENDING)
+  orderDate         DateTime    @default(now())
+  items             OrderItem[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  deliveryAddress   Address     @relation(name: "deliveryForOrder", fields: [deliveryAddressId], references: [id])
+  billingAddress    Address     @relation(name: "billingForOrder", fields: [billingAddressId], references: [id])
+  deliveryAddressId String      @unique
+  billingAddressId  String      @unique
+  email             String?
 
   @@index([userId])
   @@map("order")
@@ -205,4 +212,36 @@ model MovieArtist {
   @@index([movieId])
   @@index([artistId])
   @@map("movie_artist")
+}
+
+model UserData {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency          String   @default("USD")
+  deliveryAddress   Address? @relation(name: "DeliveryAddress", fields: [deliveryAddressId], references: [id])
+  billingAddress    Address? @relation(name: "BillingAddress", fields: [billingAddressId], references: [id])
+  deliveryAddressId String?  @unique
+  billingAddressId  String?  @unique
+
+  @@index([userId])
+  @@map("user_data")
+}
+
+model Address {
+  id               String    @id @default(uuid())
+  street           String
+  city             String
+  state            String?
+  zipCode          String
+  country          String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deliveryFor      UserData? @relation(name: "DeliveryAddress")
+  billingFor       UserData? @relation(name: "BillingAddress")
+  deliveryForOrder Order?    @relation(name: "deliveryForOrder")
+  billingForOrder  Order?    @relation(name: "billingForOrder")
+
+  @@index([id])
+  @@map("address")
 }

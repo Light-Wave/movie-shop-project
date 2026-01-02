@@ -1,4 +1,11 @@
-import { FolderCheck, Mail, Star, Settings, KeyRound } from "lucide-react";
+import {
+  FolderCheck,
+  Mail,
+  Star,
+  Settings,
+  KeyRound,
+  House,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -43,6 +50,11 @@ const accountSettings = [
     title: "Change Email",
     url: "/dashboard/account-settings/change-email",
     icon: Mail,
+  },
+  {
+    title: "Change Address",
+    url: "/dashboard/account-settings/address",
+    icon: House,
   },
 ];
 

@@ -47,7 +47,7 @@ export async function createMovie(formData: FormData) {
       genres: {
         connect: genres.map((id: string) => ({ id })),
       },
-      movieArtists: {
+      movieLinks: {
         create: artists.map((artist: { artistId: string; role: string }) => ({
           artist: { connect: { id: artist.artistId } },
           role: artist.role as ArtistRole,

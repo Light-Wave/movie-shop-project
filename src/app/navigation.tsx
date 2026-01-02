@@ -7,6 +7,10 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import SignInOrOut from "@/components/signin-signup-logout";
 import { authClient } from "@/lib/auth-client"; // Import authClient
 import Link from "next/link"; // Import Link
+import teamDelta from "@/../public/team-delta-reversed.svg";
+import Image from "next/image";
+import CartBadge from "@/components/cartComponents/cartBadge";
+import { CartValidationBootstrap } from "@/components/cartComponents/cartValidator";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -21,7 +25,14 @@ export function Nav() {
   return (
     <header className="m-auto w-full sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 flex flex-row justify-center items-center">
       <div className="container w-9/10 flex h-16 items-center justify-between">
-        <div className="text-xl font-bold px-4">DELTA LOGO</div>
+        <div className="text-2xl font-bold px-4 text-center">
+          <Image
+            src={teamDelta}
+            alt="Team Delta Logo"
+            className="h-18 w-18 inline"
+          />
+          Team Delta
+        </div>
 
         <nav className="hidden md:flex items-center space-x-4">
           {navLinks.map((link) => (
@@ -52,6 +63,8 @@ export function Nav() {
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[300px]"
             />
           </div>
+          <CartBadge />
+          <CartValidationBootstrap />
           <SignInOrOut />
         </div>
 

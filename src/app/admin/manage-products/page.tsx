@@ -24,7 +24,10 @@ export default async function ManageProductsPage() {
       </div>
       <div className="space-y-2">
         {movies.map((movie) => (
-          <div key={movie.id} className="flex items-center justify-between p-2 border rounded-md">
+          <div
+            key={movie.id}
+            className="flex items-center justify-between p-2 border rounded-md"
+          >
             <div>{movie.title}</div>
             <Button asChild variant="outline">
               <Link href={`/admin/manage-products/${movie.id}`}>Edit</Link>

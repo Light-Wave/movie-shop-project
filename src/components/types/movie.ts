@@ -12,3 +12,21 @@ export type MovieWithDetails = Movie & {
   genres: ReducedGenre[];
   movieLinks: ReducedMovieLink[];
 };
+
+export interface CartItem {
+  movieId: string;
+  quantity: number;
+}
+
+export type CartMovieView = {
+  id: string;
+  title: string;
+  priceCents: number;
+  imageUrl?: string;
+  isAvailable: boolean;
+  stock: number;
+};
+
+export interface CartItemWithMovie extends CartItem {
+  movie: CartMovieView;
+}

@@ -1,19 +1,15 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function SuccessPage() {
   return (
-    <div className="container mx-auto py-10 text-center">
-      <h1 className="text-3xl font-bold mb-6">Thank you for your order!</h1>
-      <p>Your order has been placed successfully.</p>
-      <div className="mt-8">
-        <Link href="/" className="text-blue-500 hover:underline">
-          Continue Shopping
-        </Link>
-        <span className="mx-4">|</span>
-        <Link href="/dashboard/history" className="text-blue-500 hover:underline">
-          View Order History
-        </Link>
-      </div>
+    <div className="text-center space-y-4">
+      <h1 className="text-2xl font-bold">Order Successful 🎉</h1>
+      <p>Thank you for your purchase!</p>
+
+      <Button asChild>
+        <Link href="/browse">Continue Shopping</Link>
+      </Button>
     </div>
   );
 }

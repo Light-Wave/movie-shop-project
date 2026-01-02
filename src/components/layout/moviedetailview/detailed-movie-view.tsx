@@ -10,16 +10,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import PriceDisplay from "@/components/prise-display";
 import { GenreBadge } from "@/components/genre-badge";
 import { SimilarMovieCard, type SimilarMovie } from "./similar-movie-card";
 import placeholder from "../../../../public/placeholders/placeholder.jpg";
-import { useCartPlaceholder } from "../../../../public/placeholders/cart-placeholder";
 
 import { Movie, Genre, Artist, MovieArtist } from "@/generated/prisma/client";
 import { ArtistBadge } from "@/components/artist-badge";
+import AddToCartButton from "@/components/cartComponents/addToCartButton";
 /**
  * Movie detail page props
  * @param movie movie object to display
@@ -34,10 +33,6 @@ interface MovieDetailPageProps {
   };
   similarMovies?: SimilarMovie[];
 }
-
-// TODO: This needs to be replaced with proper embeds from database, currently database has no youtube entries.
-const DEMO_TRAILER_URL =
-  "https://www.youtube.com/embed/dQw4w9WgXcQ?si=tyuXr5LIaw8VVeQA";
 
 /**
  * Formats date, currently set to US since our default currency is $$$ <--- This might need a change if we add support for other countries.
@@ -71,7 +66,6 @@ export default function MovieDetailPage({
   movie,
   similarMovies = [],
 }: MovieDetailPageProps) {
-  const { handleAddToCart } = useCartPlaceholder();
   const formattedReleaseDate = formatReleaseDate(movie.releaseDate);
   const formattedRuntime = formatRuntime(movie.runtime);
 
@@ -106,10 +100,11 @@ export default function MovieDetailPage({
             </div>
 
             <Badge
-              className={`mt-4 text-sm font-semibold px-4 py-1 ${movie.isAvailable
-                ? "bg-green-500 hover:bg-green-600"
-                : "bg-red-500 hover:bg-red-600"
-                }`}
+              className={`mt-4 text-sm font-semibold px-4 py-1 ${
+                movie.isAvailable
+                  ? "bg-green-500 hover:bg-green-600"
+                  : "bg-red-500 hover:bg-red-600"
+              }`}
             >
               {movie.isAvailable ? "In Stock" : "Out of Stock"}
             </Badge>
@@ -126,10 +121,13 @@ export default function MovieDetailPage({
               </CardDescription>
 
               <div className="flex flex-col gap-3 mt-4">
-                {movie.movieLinks?.filter((link) => link.role === "DIRECTOR").length > 0 && (
+                {movie.movieLinks?.filter((link) => link.role === "DIRECTOR")
+                  .length > 0 && (
                   <div className="flex flex-row items-baseline gap-2">
                     <span className="text-lg font-bold w-28 shrink-0">
-                      {movie.movieLinks.filter((link) => link.role === "DIRECTOR").length > 1
+                      {movie.movieLinks.filter(
+                        (link) => link.role === "DIRECTOR"
+                      ).length > 1
                         ? "Directors:"
                         : "Director:"}
                     </span>
@@ -142,7 +140,8 @@ export default function MovieDetailPage({
                     </div>
                   </div>
                 )}
-                {movie.movieLinks?.filter((link) => link.role === "ACTOR").length > 0 && (
+                {movie.movieLinks?.filter((link) => link.role === "ACTOR")
+                  .length > 0 && (
                   <div className="flex flex-row items-baseline gap-2">
                     <span className="text-lg font-bold w-28 shrink-0">
                       Actors:
@@ -187,25 +186,21 @@ export default function MovieDetailPage({
                 <PriceDisplay price={movie.price} />
               </div>
               <div className="flex space-x-3">
-                <Button
+                <AddToCartButton
                   disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
+                  movieId={movie.id}
                   className="text-lg px-8 py-6"
-                  onClick={(e) => handleAddToCart(e, movie.title)}
-                >
-                  {movie.isAvailable ? "Add to Cart" : "Notify Me"}
-                </Button>
+                />
               </div>
             </CardFooter>
 
-            {/* Trailer Section *
-             * TODO -> update DEMO_TRAILER_URL to proper youtube variable from database
-             */}
-            {DEMO_TRAILER_URL && (
+            {/* Trailer Section */}
+            {movie.trailerUrl && (
               <div className="mt-6 flex justify-center">
                 <div className="w-full max-w-2xl aspect-video">
                   <iframe
                     className="w-full h-full rounded-lg shadow-lg"
-                    src={DEMO_TRAILER_URL}
+                    src={movie.trailerUrl}
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
