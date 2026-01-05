@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,8 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateMovie } from "@/server-actions/movie/update";
-import { usePathname } from "next/navigation";
+import { updateMovie, setAvailable } from "@/server-actions/movie/update";
+import { useFormStatus } from "react-dom";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function MovieEditForm({
   movie,
@@ -26,8 +28,10 @@ export default function MovieEditForm({
   genres: any[];
 }) {
   const id = usePathname().split("/").pop() as string;
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [toggling, setToggling] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(
     movie.genres.map((g: any) => g.id)
   );
@@ -39,6 +43,8 @@ export default function MovieEditForm({
       role: ma.role,
     }))
   );
+
+  const { pending } = useFormStatus();
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
@@ -146,6 +152,39 @@ export default function MovieEditForm({
           type="number"
           defaultValue={movie.runtime ?? ""}
         />
+      </div>
+
+      <div>
+        <Label>Availability</Label>
+        <Button
+          type="button"
+          onClick={async () => {
+            setToggling(true);
+            try {
+              const res = await setAvailable(!movie.isAvailable, id);
+              setToggling(false);
+              if (res?.success) {
+                toast.success("Availability updated", {
+                  position: "bottom-right",
+                });
+                movie.isAvailable = !movie.isAvailable;
+                router.refresh();
+              } else {
+                toast.error(res?.error ?? "Failed to update availability");
+              }
+            } catch (err) {
+              setToggling(false);
+              toast.error(err instanceof Error ? err.message : "Error");
+            }
+          }}
+          disabled={toggling}
+        >
+          {toggling
+            ? "Updating..."
+            : movie.isAvailable
+            ? "Mark as Unavailable"
+            : "Mark as Available"}
+        </Button>
       </div>
 
       <div>
