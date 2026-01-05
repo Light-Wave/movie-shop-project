@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PriceDisplay from "@/components/prise-display";
 
-export default async function EditArtistPage(
+export default async function OrderViewPage(
   props: PageProps<"/cart/[orderId]">
 ) {
   const params = await props.params;
