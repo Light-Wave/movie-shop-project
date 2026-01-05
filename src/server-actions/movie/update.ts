@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { ArtistRole, Prisma } from "@/generated/prisma/client";
 import { z } from "zod";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 const updateSchema = updateMovieSchema;
 
@@ -66,4 +67,35 @@ export async function updateMovie(formData: FormData) {
   });
 
   return { success: true, movie };
+}
+export async function setAvailable(available: Boolean, movieId: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  // Add admin role check
+  if (!session) {
+    return {
+      success: false,
+      error: "Unauthorized: Must be logged in to update a movie.",
+    };
+  }
+  if (!session.user || session.user.role !== "admin") {
+    return {
+      success: false,
+      error: "Unauthorized: Must be an admin to update movies.",
+    };
+  }
+  if (
+    available === undefined ||
+    movieId === undefined ||
+    typeof available !== "boolean" ||
+    typeof movieId !== "string"
+  ) {
+    return { success: false, error: "Missing parameters." };
+  }
+  const movie = await prisma.movie.update({
+    where: { id: movieId },
+    data: {
+      isAvailable: available,
+    },
+  });
+  return { success: true };
 }

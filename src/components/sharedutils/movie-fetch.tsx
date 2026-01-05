@@ -55,7 +55,7 @@ export async function getMovieById(
   id: string
 ): Promise<MovieWithDetails | null> {
   return prisma.movie.findUnique({
-    where: { id },
+    where: { id, isAvailable: true },
     include: movieInclude,
   });
 }

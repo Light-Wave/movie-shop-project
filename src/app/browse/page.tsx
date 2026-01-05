@@ -70,6 +70,7 @@ export default async function Dashboard({
           mode: "insensitive",
         },
       }),
+      isAvailable: true,
     },
   });
   const genrePromise = prisma.genre.findMany({
