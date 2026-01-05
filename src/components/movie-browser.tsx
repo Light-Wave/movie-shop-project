@@ -21,6 +21,8 @@ capabilities
 o Include search by director, actor, and genre*/
 
 import * as React from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -33,19 +35,18 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
 
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
+import AddToCartButton from "@/components/cartComponents/addToCartButton";
+import { generateMovieUrl } from "@/components/sharedutils/slug-utils";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -57,12 +58,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Movie } from "@/generated/prisma/client";
 import PriceDisplay from "./prise-display";
 import { HoverCardMovie } from "./movie-hover-details";
 import { MovieWithDetails } from "./types/movie";
+import placeholder from "../../public/placeholders/placeholder.jpg";
 
 const columns: ColumnDef<MovieWithDetails>[] = [
+  {
+    accessorKey: "imageUrl",
+    header: "Poster",
+    cell: ({ row }) => {
+      const imageUrl = row.getValue("imageUrl") as string | null;
+      const title = row.getValue("title") as string;
+      return (
+        <div className="relative h-[60px] w-10 overflow-hidden rounded-md bg-muted">
+          {imageUrl && (
+            <Image
+              src={imageUrl || placeholder}
+              alt={title || "Movie poster"}
+              fill
+              className="object-cover"
+              sizes="40px"
+            />
+          )}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -133,31 +155,16 @@ const columns: ColumnDef<MovieWithDetails>[] = [
     },
   },
   {
-    id: "actions",
-    enableHiding: false,
+    id: "addToCart",
     cell: ({ row }) => {
-      const payment = row.original;
-
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
+          <AddToCartButton
+            movieId={row.original.id}
+            size="sm"
+            className="bg-green-600 hover:bg-green-700 text-white border-none shadow-sm"
+          />
+        </div>
       );
     },
   },
@@ -191,6 +198,8 @@ export function MovieTable({ data }: Params) {
       rowSelection,
     },
   });
+
+  const router = useRouter();
 
   // Sync internal table filter with global search param
   const searchParams = useSearchParams();
@@ -251,9 +260,9 @@ export function MovieTable({ data }: Params) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
@@ -266,6 +275,12 @@ export function MovieTable({ data }: Params) {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="cursor-pointer"
+                  onClick={() =>
+                    router.push(
+                      generateMovieUrl(row.original.id, row.original.title)
+                    )
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

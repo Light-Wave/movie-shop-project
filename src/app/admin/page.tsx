@@ -8,17 +8,25 @@ import { MovieBadge } from "@/components/movie-badge";
 import PriceDisplay from "@/components/prise-display";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import { ChevronsUpDown } from "lucide-react";
+import Link from "next/link";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { prisma } from "@/lib/prisma";
-import { ChevronsUpDown } from "lucide-react";
-import Link from "next/link";
 
 export default async function AdminPage() {
-  //TODO: Check if user is admin
+  const session = await auth.api.getSession({ headers: await headers() });
+  console.log("Admin session object:", session);
+  if ((session?.user as any).role !== "admin") {
+    redirect("/");
+  }
+
   const [artists, genres, products, users, orders] = await Promise.all([
     prisma.artist.findMany(),
     prisma.genre.findMany(),
@@ -42,6 +50,9 @@ export default async function AdminPage() {
         <Button variant="default" className="mx-4" asChild>
           <Link href="/admin/manage-artist/new"> Add New Artist </Link>
         </Button>
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-artist"> Manage Artists </Link>
+        </Button>
         <CollapsibleContent>
           <div className="space-x-1">
             {artists.map((artist) => (
@@ -59,6 +70,9 @@ export default async function AdminPage() {
         <Button variant="default" className="mx-4" asChild>
           <Link href="/admin/manage-genre/new"> Add New Genre </Link>
         </Button>
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-genre"> Manage Genres </Link>
+        </Button>
         <CollapsibleContent>
           <div className="space-x-1">
             {genres.map((genre) => (
@@ -75,6 +89,9 @@ export default async function AdminPage() {
         </Button>
         <Button variant="default" className="mx-4" asChild>
           <Link href="/admin/manage-products/new"> Add New Movie </Link>
+        </Button>
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-products"> Manage Movies </Link>
         </Button>
         <CollapsibleContent>
           <div className="space-x-1">
@@ -95,6 +112,9 @@ export default async function AdminPage() {
             Users <ChevronsUpDown />
           </CollapsibleTrigger>
         </Button>
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-users"> Manage Users </Link>
+        </Button>
         <CollapsibleContent>
           <div className="space-x-1">
             {users.map((user) => (
@@ -110,6 +130,10 @@ export default async function AdminPage() {
           <CollapsibleTrigger>
             Orders <ChevronsUpDown />
           </CollapsibleTrigger>
+        </Button>
+
+        <Button variant="default" className="mx-4" asChild>
+          <Link href="/admin/manage-orders"> Manage Orders </Link>
         </Button>
         <CollapsibleContent>
           <div className="space-x-1">

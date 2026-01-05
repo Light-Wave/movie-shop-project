@@ -29,6 +29,11 @@ model User {
   createGenres   Genre[]
   userData       UserData?
 
+  role       String?
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
   @@unique([email])
   @@map("user")
 }
@@ -43,6 +48,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
 
   @@unique([token])
   @@index([userId])
@@ -80,17 +87,6 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
-
-/**
- * Movies
- * title, description, price, releaseDate, imageUrl, stock, runtime
- * Genre
- * name, description
- * Order
- * userId (reference to Better Auth user), totalAmount, status, orderDate
- * OrderItem
- * orderId, movieId, quantity, priceAtPurchase
- */
 
 enum OrderStatus {
   PENDING

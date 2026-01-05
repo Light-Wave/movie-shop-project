@@ -14,9 +14,14 @@ import { headers } from "next/headers";
 
 export async function createMovie(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return { error: "You must be logged in to create a movie." };
+  // Add admin role check
+  if (!session) {
+    return { error: "Unauthorized: Must be logged in to create a movie." };
+  }
+  if (!session.user || session.user.role !== "admin") {
+    return { error: "Unauthorized: Must be an admin to create movies." };
+  }
   const userId = session.user.id;
-  //TODO: Verify user is admin
 
   const rawData = Object.fromEntries(formData.entries());
 

@@ -33,11 +33,6 @@ const items = [
     url: "/dashboard/history",
     icon: FolderCheck,
   },
-  {
-    title: "Wishlist",
-    url: "/dashboard/wishlist",
-    icon: Star,
-  },
 ];
 
 const accountSettings = [
