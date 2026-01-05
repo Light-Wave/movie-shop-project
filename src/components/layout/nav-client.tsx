@@ -15,9 +15,9 @@ import Image from "next/image";
 import Link from "next/link";
 import teamDelta from "@/../public/team-delta-reversed.svg";
 import { authClient } from "@/lib/auth-client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+
 
 interface NavClientProps {
   cartBadge: React.ReactNode;
