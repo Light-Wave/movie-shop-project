@@ -17,13 +17,9 @@ import teamDelta from "@/../public/team-delta-reversed.svg";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import CartBadge from "../cartComponents/cartBadge";
 
-
-interface NavClientProps {
-  cartBadge: React.ReactNode;
-}
-
-export function NavClient({ cartBadge }: NavClientProps) {
+export function NavClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -134,7 +130,7 @@ export function NavClient({ cartBadge }: NavClientProps) {
             />
           </form>
           <div className="flex items-center gap-2 border-l pl-4 border-muted">
-            {cartBadge}
+            <CartBadge />
             <SignInOrOut />
           </div>
         </div>
@@ -154,7 +150,7 @@ export function NavClient({ cartBadge }: NavClientProps) {
               className="w-full rounded-full bg-secondary/50 border-none pl-9 h-9 text-xs"
             />
           </form>
-          {cartBadge}
+          <CartBadge />
 
           <Sheet>
             <SheetTrigger asChild>
@@ -168,6 +164,7 @@ export function NavClient({ cartBadge }: NavClientProps) {
               </Button>
             </SheetTrigger>
             <SheetContent
+              id="nav-sheet"
               side="right"
               className="w-[300px] sm:w-[350px] border-l bg-background/95 backdrop-blur-xl"
             >
