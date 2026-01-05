@@ -54,8 +54,12 @@ const movieInclude = {
 export async function getMovieById(
   id: string
 ): Promise<MovieWithDetails | null> {
-  return prisma.movie.findUnique({
-    where: { id },
+  return prisma.movie.findFirst({
+    where: {
+      id,
+      isAvailable: true,
+      deletedAt: null,
+    },
     include: movieInclude,
   });
 }
@@ -78,6 +82,8 @@ export async function getMovieByTitle(
         equals: cleanedTitle,
         mode: "insensitive",
       },
+      isAvailable: true,
+      deletedAt: null,
     },
     include: movieInclude,
   });
@@ -89,6 +95,8 @@ export async function getMovieByTitle(
           contains: cleanedTitle,
           mode: "insensitive",
         },
+        isAvailable: true,
+        deletedAt: null,
       },
       include: movieInclude,
     });
