@@ -4,6 +4,7 @@ import { OrderStatus } from "@/generated/prisma/enums";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export type SetOrderStatusResult = { success: boolean; error?: string };
 
@@ -45,5 +46,10 @@ export async function setOrderStatusAction(
   if (!orderId) return { success: false, error: "Missing orderId" };
   if (!status) return { success: false, error: "Missing status" };
 
-  return setOrderStatus(orderId, status);
+  const res = await setOrderStatus(orderId, status);
+  if (res.success) {
+    // Revalidate the order detail page so its SSR content updates
+    revalidatePath(`/admin/manage-orders/${orderId}`);
+  }
+  return res;
 }

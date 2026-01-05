@@ -11,10 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useActionState } from "react";
 import { Check } from "lucide-react";
-import {
-  setOrderStatusAction,
-  SetOrderStatusResult,
-} from "@/server-actions/order/orderStatus";
+import { setOrderStatusAction } from "@/server-actions/order/orderStatus";
 
 export default function OrderStatusEditor({
   orderId,
