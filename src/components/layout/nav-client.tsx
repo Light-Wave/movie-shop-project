@@ -17,6 +17,7 @@ import teamDelta from "@/../public/team-delta-reversed.svg";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 interface NavClientProps {
   cartBadge: React.ReactNode;
@@ -25,6 +26,7 @@ interface NavClientProps {
 export function NavClient({ cartBadge }: NavClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || ""
   );
@@ -37,6 +39,7 @@ export function NavClient({ cartBadge }: NavClientProps) {
     { name: "Home", href: "/", icon: Home },
     { name: "Movies", href: "/browse", icon: Film },
   ];
+  const [activeTab, setActiveTab] = useState<string>("Home");
 
   if (user) {
     if (isAdmin) {
@@ -52,6 +55,19 @@ export function NavClient({ cartBadge }: NavClientProps) {
       icon: LayoutDashboard,
     });
   }
+
+  // Update activeTab and document title based on current route (reactive to client navigation)
+    useEffect(() => {
+        // Find the best matching navLink for the current path
+        let matchedLink = navLinks.find(link => link.href === pathname);
+        if (!matchedLink) {
+            // Try partial match for nested routes
+            matchedLink = navLinks.find(link => pathname.startsWith(link.href) && link.href !== "/");
+        }
+        const tabName = matchedLink ? matchedLink.name : "Home";
+        setActiveTab(tabName);
+        document.title = `${tabName} | Movie Shop`;
+    }, [navLinks, pathname]);
 
   // Handle search submission
   const handleSearch = (e: React.FormEvent | string) => {
