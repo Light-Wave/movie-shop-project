@@ -165,7 +165,7 @@ model OrderItem {
   movieId         String
   movie           Movie    @relation(fields: [movieId], references: [id], onDelete: Restrict)
   quantity        Int
-  priceAtPurchase Decimal  @db.Decimal(10, 2)
+  priceAtPurchase Int
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
