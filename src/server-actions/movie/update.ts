@@ -95,6 +95,7 @@ export async function setAvailable(available: Boolean, movieId: string) {
     where: { id: movieId },
     data: {
       isAvailable: available,
+      deletedAt: available ? null : new Date(),
     },
   });
   return { success: true };
