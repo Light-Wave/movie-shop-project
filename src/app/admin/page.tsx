@@ -22,7 +22,6 @@ import {
 
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  console.log("Admin session object:", session);
   if ((session?.user as any).role !== "admin") {
     redirect("/");
   }
@@ -34,7 +33,6 @@ export default async function AdminPage() {
     prisma.user.findMany(),
     prisma.order.findMany(),
   ]);
-  console.log("Users: ", users.length);
   return (
     <div>
       <h1 className="text-2xl font-bold">Admin Dashboard</h1>
