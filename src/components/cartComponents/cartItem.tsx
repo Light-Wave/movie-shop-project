@@ -9,6 +9,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useActionState } from "react";
+import broadcastCartUpdate from "@/lib/broadcastCartUpdate";
 
 function SubmitButton({
   children,
@@ -56,7 +57,7 @@ export function CartItem({ item }: { item: CartItemWithMovie }) {
         <div className="flex items-center gap-4">
           {/* Quantity */}
           <div className="flex items-center gap-2">
-            <form action={updateAction}>
+            <form action={updateAction} onSubmit={broadcastCartUpdate}>
               <input type="hidden" name="movieId" value={movie.id} />
               <input type="hidden" name="quantity" value={quantity - 1} />
               <SubmitButton disabled={quantity <= 1}>−</SubmitButton>
@@ -64,7 +65,7 @@ export function CartItem({ item }: { item: CartItemWithMovie }) {
 
             <span className="w-6 text-center">{quantity}</span>
 
-            <form action={updateAction}>
+            <form action={updateAction} onSubmit={broadcastCartUpdate}>
               <input type="hidden" name="movieId" value={movie.id} />
               <input type="hidden" name="quantity" value={quantity + 1} />
               <SubmitButton>+</SubmitButton>
@@ -72,7 +73,7 @@ export function CartItem({ item }: { item: CartItemWithMovie }) {
           </div>
 
           {/* Remove */}
-          <form action={removeAction}>
+          <form action={removeAction} onSubmit={broadcastCartUpdate}>
             <input type="hidden" name="movieId" value={movie.id} />
             <Button type="submit" variant="destructive" size="sm">
               Remove

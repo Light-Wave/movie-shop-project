@@ -15,9 +15,34 @@ export default function CartBadge() {
       const cart = await getCart();
       if (mounted) setTotal(getCartTotalItems(cart));
     }
+
     load();
+
+    // Listen for cross-tab or in-page updates
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel("movie_cart");
+      bc.onmessage = () => load();
+    } catch (err) {
+      // fallback: listen for a custom window event
+      const handler = () => load();
+      window.addEventListener("movie_cart:updated", handler);
+      return () => {
+        mounted = false;
+        window.removeEventListener("movie_cart:updated", handler);
+      };
+    }
+
+    const handler = () => load();
+    window.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") load();
+    });
+
     return () => {
       mounted = false;
+      if (bc) {
+        bc.close();
+      }
     };
   }, []);
 

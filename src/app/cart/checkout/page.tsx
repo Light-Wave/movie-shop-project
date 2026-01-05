@@ -1,7 +1,4 @@
-import {
-  checkoutAction,
-  getCartWithMovies,
-} from "@/server-actions/cart/cartActions";
+import { getCartWithMovies } from "@/server-actions/cart/cartActions";
 import { Button } from "@/components/ui/button";
 import PriceDisplay from "@/components/prise-display";
 import CheckoutForm from "./checkoutForm";

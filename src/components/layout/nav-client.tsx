@@ -158,6 +158,7 @@ export function NavClient() {
                 variant="ghost"
                 size="icon"
                 className="hover:bg-secondary rounded-full"
+                aria-controls="nav-sheet"
               >
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle Menu</span>

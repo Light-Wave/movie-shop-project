@@ -166,24 +166,30 @@ export async function getCartWithMovies(): Promise<CartItemWithMovie[]> {
  * - (Optional) Create Order + OrderItem rows and decrement stock.
  * - Clears cart and redirects to success page.
  */
-export async function checkoutAction(formData: CheckoutSchemaValues) {
+export type CheckoutResult =
+  | { success: true; redirect?: string }
+  | { error: string | { field: string; message: string }[] };
+
+export async function checkoutAction(
+  formData: CheckoutSchemaValues
+): Promise<CheckoutResult> {
   const items = await getCartWithMovies();
   if (items.length === 0) {
-    redirect("/cart");
+    return { success: true, redirect: "/cart" };
   }
 
   // Validate
   for (const it of items) {
     if (isNaN(it.quantity)) {
-      throw new Error(`"${it.movie.title}" request count is NaN`);
+      return { error: `"${it.movie.title}" request count is NaN` };
     }
     if (!it.movie.isAvailable) {
-      throw new Error(`"${it.movie.title}" is unavailable.`);
+      return { error: `"${it.movie.title}" is unavailable.` };
     }
     if (it.quantity > it.movie.stock) {
-      throw new Error(
-        `"${it.movie.title}" exceeds stock (requested ${it.quantity}, available ${it.movie.stock}).`
-      );
+      return {
+        error: `"${it.movie.title}" exceeds stock (requested ${it.quantity}, available ${it.movie.stock}).`,
+      };
     }
   }
 
@@ -266,7 +272,7 @@ export async function checkoutAction(formData: CheckoutSchemaValues) {
 
   // Clear cart & success
   await clearCartAction();
-  redirect(`/cart/${order.id}`);
+  return { success: true, redirect: `/cart/${order.id}` };
 }
 
 export async function validateCart() {

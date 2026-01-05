@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTransition, useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,6 +31,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { checkoutAction } from "@/server-actions/cart/cartActions";
+import broadcastCartUpdate from "@/lib/broadcastCartUpdate";
 
 type Params = {
   billingAddress: Address | null | undefined;
@@ -75,7 +77,9 @@ export default function CheckoutForm({
   const [pendingValues, setPendingValues] =
     useState<CheckoutSchemaValues | null>(null);
 
-  function checkAddresses(values: CheckoutSchemaValues) {
+  const router = useRouter();
+
+  async function checkAddresses(values: CheckoutSchemaValues) {
     const addressesChanged =
       email && // if we have an email, a user is logged in
       (!billingAddress ||
@@ -95,14 +99,52 @@ export default function CheckoutForm({
       setShowSaveDialog(true);
       return;
     } else {
-      checkoutAction(values);
-      setPendingValues(null);
+      try {
+        const res = await checkoutAction(values);
+        if (res && "error" in res) {
+          const msg = Array.isArray(res.error)
+            ? JSON.stringify(res.error)
+            : res.error;
+          toast.error("Checkout failed", { description: String(msg) });
+        } else if (res && "success" in res && res.success) {
+          // success — notify other components/tabs and navigate if redirect provided
+          broadcastCartUpdate();
+          if (res.redirect) {
+            router.push(res.redirect);
+          } else {
+            toast.success("Order placed");
+          }
+        }
+      } catch (err) {
+        toast.error("Error during checkout", { description: String(err) });
+      } finally {
+        setPendingValues(null);
+      }
     }
   }
   async function onSubmit() {
     if (!pendingValues) return;
-    checkoutAction(pendingValues);
-    setPendingValues(null);
+    try {
+      const res = await checkoutAction(pendingValues);
+
+      if (res && "error" in res) {
+        const msg = Array.isArray(res.error)
+          ? JSON.stringify(res.error)
+          : res.error;
+        toast.error("Checkout failed", { description: String(msg) });
+      } else if (res && "success" in res && res.success) {
+        broadcastCartUpdate();
+        if (res.redirect) {
+          router.push(res.redirect);
+        } else {
+          toast.success("Order placed");
+        }
+      }
+    } catch (err) {
+      toast.error("Error during checkout", { description: String(err) });
+    } finally {
+      setPendingValues(null);
+    }
   }
 
   return (

@@ -5,6 +5,7 @@ import { useFormStatus } from "react-dom";
 import { addItemAction } from "@/server-actions/cart/cartActions";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import broadcastCartUpdate from "@/lib/broadcastCartUpdate";
 
 type Props = {
   movieId: string;
@@ -38,6 +39,7 @@ export default function AddToCartButton(props: Props) {
       toast.success("Added to cart", {
         position: "bottom-right",
       });
+      broadcastCartUpdate();
     }
   }, [state]);
 
