@@ -10,6 +10,7 @@ import placeholder from "../../../../public/placeholders/placeholder.jpg";
 
 import { Movie, Genre, Artist, MovieArtist } from "@/generated/prisma/client";
 import AddToCartButton from "@/components/cartComponents/addToCartButton";
+import { StockRibbon } from "@/components/stock-ribbon";
 
 export type SimilarMovie = Movie & {
   genres: Genre[];
@@ -40,7 +41,11 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 15vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
-
+          <StockRibbon
+            isAvailable={movie.isAvailable}
+            stock={movie.stock}
+            variant="out-of-stock-only"
+          />
         </div>
 
         <CardContent className="p-2 flex flex-col justify-between gap-2">
@@ -70,6 +75,7 @@ export function SimilarMovieCard({ movie }: SimilarMovieCardProps) {
         </div>
         <AddToCartButton
           movieId={movie.id}
+          disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
           className="text-[10px] h-8 px-3 font-bold transition-all bg-green-600 hover:bg-green-700 text-white border-none shadow-sm"
           size="sm"
         />
