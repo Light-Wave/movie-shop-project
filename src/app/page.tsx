@@ -55,15 +55,10 @@ export default async function Home() {
 
         <div className="space-y-8 pb-8">
           <section>
-            <p className="italic">
-              most sold section, need order data available to populate
-            </p>
-            {/* commented out for now, need order data available to populate */}
-            {/* <MovieDisplay
+            <MovieDisplay
               sectionTitle="Most Popular"
               movieData={topPurchased}
-              isMissingData={topPurchased.length === 0}
-            />*/}
+            />
           </section>
 
           <section>

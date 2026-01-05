@@ -32,6 +32,10 @@ export default function MovieDisplay({
   sectionTitle?: string;
   movieData: MovieWithDetails[];
 }) {
+  if (movieData.length === 0) {
+    return null;
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -62,7 +66,6 @@ export default function MovieDisplay({
                       className="object-cover"
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     />
-
                   </div>
 
                   <div className="px-3 pt-2 flex flex-col flex-1">

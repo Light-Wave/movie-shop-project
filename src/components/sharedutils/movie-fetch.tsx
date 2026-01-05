@@ -150,8 +150,8 @@ export async function getSimilarMoviesByGenres(
 /**
  * Get the top X most purchased movies
  * Currently works based on orderItem count
- * Orders in database is empty so do not currently work
- * TODO - Set up orders in database and doublecheck that this works properly
+ * No order seed currently so yo make it work properly, you have to manually set up a few orders in the shop
+ * if less then ten movies with order above 0 is found, it just fills the list out with the first movies it finds.
  */
 export async function getTopPurchasedMovies(
   limit: number = 5
