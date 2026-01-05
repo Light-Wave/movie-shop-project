@@ -36,8 +36,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} font-sans bg-zinc-50 dark:bg-black dark:text-white`}
       >
         <Nav />
-        <div className="sm:w-9/10 lg:w-full m-auto min-h-screen flex flex-col">
-          <main className="flex-1 px-2 sm:px-6 lg:px-8 pt-1 lg:pt-10 pb-4">
+        <div className="w-full m-auto min-h-screen flex flex-col">
+          <main className="flex-1 px-2 sm:px-2 lg:px-8 pt-1 lg:pt-0 pb-4">
             {children}
           </main>
         </div>
