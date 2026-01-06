@@ -14,19 +14,20 @@ datasource db {
 }
 
 model User {
-  id             String    @id
+  id             String     @id
   name           String
   email          String
-  emailVerified  Boolean   @default(false)
+  emailVerified  Boolean    @default(false)
   image          String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   sessions       Session[]
   accounts       Account[]
   orders         Order[]
   createdMovies  Movie[]
   createdArtists Artist[]
   createGenres   Genre[]
+  wishlists      Wishlist[]
   userData       UserData?
 
   role       String?
@@ -36,6 +37,21 @@ model User {
 
   @@unique([email])
   @@map("user")
+}
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movieId   String
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, movieId])
+  @@index([userId])
+  @@index([movieId])
+  @@map("wishlist")
 }
 
 model Session {
@@ -130,6 +146,7 @@ model Movie {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   movieLinks  MovieArtist[]
+  wishlists   Wishlist[]
   createdById String?
   createdBy   User?         @relation(fields: [createdById], references: [id])
   trailerUrl  String?

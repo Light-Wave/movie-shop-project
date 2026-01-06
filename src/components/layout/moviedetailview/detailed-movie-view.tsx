@@ -21,6 +21,7 @@ import { ArtistBadge } from "@/components/artist-badge";
 import AddToCartButton from "@/components/cartComponents/addToCartButton";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
+import AddToWishlistButton from "@/components/whishlistComponents/addToWishlistButton";
 /**
  * Movie detail page props
  * @param movie movie object to display
@@ -189,7 +190,8 @@ export default function MovieDetailPage({
                 <div className="text-xl sm:text-2xl font-black text-green-700/90 italic">
                   <PriceDisplay price={movie.price} />
                 </div>
-                <div className="flex">
+                <div className="flex gap-2">
+                  <AddToWishlistButton movieId={movie.id} />
                   <AddToCartButton
                     disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
                     movieId={movie.id}
