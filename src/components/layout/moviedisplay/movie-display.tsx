@@ -20,6 +20,7 @@ import PriceDisplay from "@/components/prise-display";
 import { MovieWithDetails } from "@/components/sharedutils/movie-fetch";
 import placeholder from "../../../../public/placeholders/placeholder.jpg";
 import AddToCartButton from "@/components/cartComponents/addToCartButton";
+import { StockRibbon } from "@/components/stock-ribbon";
 
 /**
  * Displays lists of movies under a section title.
@@ -66,6 +67,11 @@ export default function MovieDisplay({
                       className="object-cover"
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     />
+                    <StockRibbon
+                      isAvailable={movie.isAvailable}
+                      stock={movie.stock}
+                      variant="out-of-stock-only"
+                    />
                   </div>
 
                   <div className="px-3 pt-2 flex flex-col flex-1">
@@ -87,6 +93,7 @@ export default function MovieDisplay({
                   </div>
                   <AddToCartButton
                     movieId={movie.id}
+                    disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
                     className="h-9 px-5 rounded-sm hover:bg-green-700 bg-green-600 text-white font-bold transition-all border-none text-xs shadow-md active:scale-95"
                     size="sm"
                   />

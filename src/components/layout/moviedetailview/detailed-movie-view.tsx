@@ -22,6 +22,8 @@ import AddToCartButton from "@/components/cartComponents/addToCartButton";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import AddToWishlistButton from "@/components/whishlistComponents/addToWishlistButton";
+import { StockRibbon } from "@/components/stock-ribbon";
+
 /**
  * Movie detail page props
  * @param movie movie object to display
@@ -101,18 +103,11 @@ export default function MovieDetailPage({
             )}
 
             {/* Diagonal Corner Ribbon */}
-            <div className="absolute -left-8 top-5 z-10 w-32 text-center transform -rotate-45 shadow-lg">
-              <div
-                className={`text-[10px] font-black uppercase tracking-wider px-8 py-1.5 ${movie.isAvailable && (movie.stock ?? 0) > 0
-                  ? "bg-green-600 text-white"
-                  : "bg-red-600 text-white"
-                  }`}
-              >
-                {movie.isAvailable && (movie.stock ?? 0) > 0
-                  ? "In Stock"
-                  : "Out of Stock"}
-              </div>
-            </div>
+            <StockRibbon
+              isAvailable={movie.isAvailable}
+              stock={movie.stock}
+              variant="full"
+            />
           </div>
 
           {/* Content Section "right" */}

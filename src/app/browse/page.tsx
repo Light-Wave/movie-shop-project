@@ -22,6 +22,7 @@ import { ArtistBadge } from "@/components/artist-badge";
 import { GenreBadge } from "@/components/genre-badge";
 import { MovieTable } from "@/components/movie-browser";
 import { Button } from "@/components/ui/button";
+import React from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -70,6 +71,7 @@ export default async function Dashboard({
           mode: "insensitive",
         },
       }),
+      isAvailable: true,
     },
   });
   const genrePromise = prisma.genre.findMany({
@@ -117,7 +119,9 @@ export default async function Dashboard({
         </CollapsibleContent>
       </Collapsible>
 
-      <MovieTable data={movies} />
+      <React.Suspense fallback={<div />}>
+        <MovieTable data={movies} />
+      </React.Suspense>
     </div>
   );
 }

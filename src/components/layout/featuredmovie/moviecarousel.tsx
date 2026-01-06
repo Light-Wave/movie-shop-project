@@ -19,6 +19,8 @@ import Link from "next/link";
 import AddToCartButton from "@/components/cartComponents/addToCartButton";
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { StockRibbon } from "@/components/stock-ribbon";
+
 
 /**
  * Carousel component for featured movies, takes Moviedata[]
@@ -70,6 +72,11 @@ export default function FeaturedCarousel({
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     priority={index === 0}
+                  />
+                  <StockRibbon
+                    isAvailable={movie.isAvailable}
+                    stock={movie.stock}
+                    variant="out-of-stock-only"
                   />
 
                 </div>
@@ -154,6 +161,7 @@ export default function FeaturedCarousel({
                   <div className="w-full flex justify-end mt-4">
                     <AddToCartButton
                       movieId={movie.id}
+                      disabled={!movie.isAvailable || (movie.stock ?? 0) === 0}
                       className="w-auto h-10 px-6 sm:h-12 sm:px-8 rounded-full font-serif font-black bg-green-600 hover:bg-green-700 text-white border-none shadow-2xl transition-all active:scale-95 text-base sm:text-lg"
                       size="default"
                     />

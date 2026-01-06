@@ -62,6 +62,7 @@ import PriceDisplay from "./prise-display";
 import { HoverCardMovie } from "./movie-hover-details";
 import { MovieWithDetails } from "./types/movie";
 import placeholder from "../../public/placeholders/placeholder.jpg";
+import { StockRibbon } from "./stock-ribbon";
 
 const columns: ColumnDef<MovieWithDetails>[] = [
   {
@@ -81,6 +82,12 @@ const columns: ColumnDef<MovieWithDetails>[] = [
               sizes="40px"
             />
           )}
+          <StockRibbon
+            isAvailable={row.original.isAvailable}
+            stock={row.original.stock}
+            variant="out-of-stock-only"
+            className="scale-50 -left-12 top-2"
+          />
         </div>
       );
     },
@@ -161,6 +168,7 @@ const columns: ColumnDef<MovieWithDetails>[] = [
         <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
           <AddToCartButton
             movieId={row.original.id}
+            disabled={!row.original.isAvailable || (row.original.stock ?? 0) === 0}
             size="sm"
             className="bg-green-600 hover:bg-green-700 text-white border-none shadow-sm"
           />
@@ -260,9 +268,9 @@ export function MovieTable({ data }: Params) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

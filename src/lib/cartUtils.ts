@@ -4,7 +4,7 @@ export const COOKIE_NAME = "movie_cart";
 
 export const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: false, // Set to true in production with HTTPS
   sameSite: "lax" as const,
   maxAge: 60 * 60 * 24 * 365, // 1 year
   path: "/",
