@@ -70,7 +70,7 @@ export default function FeaturedCarousel({
                     src={movie.imageUrl || placeholder}
                     alt={`${movie.title} poster`}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover"
                     priority={index === 0}
                   />
                   <StockRibbon

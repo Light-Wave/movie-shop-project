@@ -78,15 +78,15 @@ export default function MovieDetailPage({
       <Card className="shadow-2xl border-none sm:rounded-xl rounded-none overflow-hidden bg-white/50 backdrop-blur-sm p-0">
         <div className="flex flex-col md:flex-row min-h-[600px]">
           {/* Top/Left Section -> Movie Poster */}
-          <div className="w-full aspect-2/3 md:aspect-auto md:w-[400px] xl:w-[450px] 2xl:w-[500px] md:h-auto relative group shrink-0 overflow-hidden">
+          <div className="w-full aspect-2/3 md:w-[400px] xl:w-[450px] 2xl:w-[500px] relative group shrink-0 overflow-hidden">
             {movie.imageUrl ? (
               <Image
                 src={movie.imageUrl}
                 alt={movie.title}
                 fill
                 priority
-                sizes="(max-width: 768px) 100vw, 400px"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 400px, (max-width: 1536px) 450px, 500px"
+                className="object-cover"
               />
             ) : (
               <div className="relative flex items-center justify-center w-full h-full bg-muted">
@@ -95,7 +95,7 @@ export default function MovieDetailPage({
                   alt={movie.title}
                   fill
                   priority
-                  sizes="(max-width: 768px) 100vw, 400px"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 400px, (max-width: 1536px) 450px, 500px"
                   className="object-cover"
                 />
               </div>
