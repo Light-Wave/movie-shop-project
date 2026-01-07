@@ -56,7 +56,9 @@ export default async function ManageOrderDetailPage(
       </div>
       <p>Ordered on: {order.orderDate.toLocaleString()}</p>
       <p>
-        Customer: {order.user?.name} - {order.user?.email}
+        Customer: {order.user?.name}
+        {order.user?.name && " - "}
+        {order.user?.email ?? order.email}
       </p>
 
       <div className="mt-6">
