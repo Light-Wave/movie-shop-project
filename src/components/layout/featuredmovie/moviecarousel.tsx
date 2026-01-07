@@ -65,13 +65,14 @@ export default function FeaturedCarousel({
                 className="flex flex-col h-auto sm:flex-row sm:min-h-[600px] justify-between rounded-none sm:rounded-xl overflow-hidden"
               >
                 {/* Image Section "left" */}
-                <div className="w-full h-[500px] sm:w-[400px] lg:w-[500px] sm:h-auto sm:self-stretch relative group shrink-0 overflow-hidden">
+                <div className="w-full aspect-2/3 sm:w-[400px] lg:w-[500px] relative group shrink-0 overflow-hidden">
                   <Image
                     src={movie.imageUrl || placeholder}
                     alt={`${movie.title} poster`}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover"
                     priority={index === 0}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 400px, 500px"
                   />
                   <StockRibbon
                     isAvailable={movie.isAvailable}
@@ -109,9 +110,9 @@ export default function FeaturedCarousel({
 
                     <div className="flex flex-row gap-3 w-full sm:w-auto justify-center sm:justify-start">
                       <Button
-                        variant="outline"
+                        variant="default"
                         size="default"
-                        className="flex-1 sm:flex-initial sm:h-10 sm:px-7 rounded-full px-3.5 font-bold gap-2 sm:bg-zinc-900 sm:text-white sm:border-none sm:hover:bg-zinc-800 transition-all sm:text-base"
+                        className="flex-1 sm:flex-initial sm:h-10 sm:px-7 rounded-full px-3.5 font-bold gap-2 bg-zinc-900 text-white border-none hover:bg-zinc-700 hover:text-white hover:scale-105 hover:shadow-xl transition-all sm:text-base active:scale-95"
                         asChild
                       >
                         <a
@@ -130,9 +131,9 @@ export default function FeaturedCarousel({
                         </a>
                       </Button>
                       <Button
-                        variant="outline"
+                        variant="default"
                         size="default"
-                        className="flex-1 sm:flex-initial sm:h-10 sm:px-7 rounded-full px-3.5 font-bold sm:bg-zinc-900 sm:text-white sm:border-none sm:hover:bg-zinc-800 transition-all sm:text-base"
+                        className="flex-1 sm:flex-initial sm:h-10 sm:px-7 rounded-full px-3.5 font-bold bg-zinc-900 text-white border-none hover:bg-zinc-700 hover:text-white hover:scale-105 hover:shadow-xl transition-all sm:text-base active:scale-95"
                         asChild
                       >
                         <Link href={`/browse/${movie.id}`}>
