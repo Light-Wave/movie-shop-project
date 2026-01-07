@@ -238,7 +238,7 @@ export function NavClient() {
                     >
                       <button
                         type="button"
-                        onClick={() => handleSuggestionClick(movie)}
+                        onMouseDown={() => handleSuggestionClick(movie)}
                         className="w-full text-left block px-4 py-2 text-sm hover:bg-secondary"
                       >
                         {movie.title}
@@ -284,7 +284,7 @@ export function NavClient() {
                         >
                         <button
                             type="button"
-                            onClick={() => handleSuggestionClick(movie)}
+                            onMouseDown={() => handleSuggestionClick(movie)}
                             className="w-full text-left block px-4 py-2 text-sm hover:bg-secondary"
                         >
                             {movie.title}
