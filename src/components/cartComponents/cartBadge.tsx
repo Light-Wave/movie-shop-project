@@ -51,9 +51,13 @@ export default function CartBadge() {
       asChild
       variant="ghost"
       size="icon"
-      className="relative hover:bg-secondary rounded-full"
+      className={`relative hover:bg-secondary rounded-full ${total === 0 ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+        }`}
+      disabled={total === 0}
     >
-      <Link href="/cart">
+      <Link
+        href={total === 0 ? "#" : "/cart"}
+      >
         <ShoppingCart className="h-5 w-5" />
         {total > 0 && (
           <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
