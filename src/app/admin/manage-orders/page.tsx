@@ -41,7 +41,10 @@ export default async function ManageOrdersPage() {
                 </Link>
               </TableCell>
               <TableCell>
-                {order.user?.name ?? order.user?.email ?? "Unknown"}
+                {order.user?.name ??
+                  order.user?.email ??
+                  order.email ??
+                  "Unknown"}
               </TableCell>
               <TableCell>
                 <PriceDisplay price={order.totalAmount} />

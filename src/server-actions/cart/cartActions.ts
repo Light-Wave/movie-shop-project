@@ -241,7 +241,7 @@ export async function checkoutAction(
 
   const order = await prisma.order.create({
     data: {
-      user: { connect: { id: userId } },
+      ...(userId ? { user: { connect: { id: userId } } } : {}),
       totalAmount: total,
       status: "PROCESSING",
       items: {
