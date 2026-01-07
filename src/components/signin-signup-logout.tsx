@@ -6,6 +6,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 interface SignInOrOutProps extends React.ComponentProps<typeof Button> {
   orientation?: "horizontal" | "vertical";
@@ -20,6 +21,19 @@ export default function SignInOrOut({
 }: SignInOrOutProps) {
   const session = authClient.useSession();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className={cn("hidden md:flex items-center", containerClassName)}>
+        <div className="h-9 w-32 animate-pulse bg-secondary/50 rounded-md" />
+      </div>
+    );
+  }
 
   return (
     <div className={cn("flex items-center", containerClassName)}>
