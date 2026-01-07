@@ -13,6 +13,7 @@ export async function getMovieSuggestions(query: string) {
           contains: query,
           mode: "insensitive",
         },
+        isAvailable: true,
       },
       take: 5,
       select: {
