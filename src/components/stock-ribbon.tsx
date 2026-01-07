@@ -31,13 +31,13 @@ export function StockRibbon({
     return (
         <div
             className={cn(
-                "absolute -left-8 top-5 z-10 w-32 text-center transform -rotate-45 shadow-lg",
+                "absolute -left-10 top-6 z-10 w-40 text-center transform -rotate-45 shadow-lg",
                 className
             )}
         >
             <div
                 className={cn(
-                    "text-[10px] font-black uppercase tracking-wider px-8 py-1.5",
+                    "text-[10px] font-black uppercase tracking-wider px-4 py-1.5 whitespace-nowrap",
                     isInStock ? "bg-green-600 text-white" : "bg-red-600 text-white"
                 )}
             >
