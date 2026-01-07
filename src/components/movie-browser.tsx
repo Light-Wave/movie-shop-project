@@ -43,6 +43,7 @@ import { useEffect } from "react";
 import AddToCartButton from "@/components/cartComponents/addToCartButton";
 import { generateMovieUrl } from "@/components/sharedutils/slug-utils";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -82,12 +83,6 @@ const columns: ColumnDef<MovieWithDetails>[] = [
               sizes="40px"
             />
           )}
-          <StockRibbon
-            isAvailable={row.original.isAvailable}
-            stock={row.original.stock}
-            variant="out-of-stock-only"
-            className="scale-50 -left-12 top-2"
-          />
         </div>
       );
     },
@@ -105,11 +100,21 @@ const columns: ColumnDef<MovieWithDetails>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <HoverCardMovie movie={row.original}>
-        <div className="capitalize">{row.getValue("title")}</div>
-      </HoverCardMovie>
-    ),
+    cell: ({ row }) => {
+      const isOutOfStock = !row.original.isAvailable || (row.original.stock ?? 0) === 0;
+      return (
+        <HoverCardMovie movie={row.original}>
+          <div className="flex items-center gap-2">
+            <span className="capitalize font-medium">{row.getValue("title")}</span>
+            {isOutOfStock && (
+              <Badge variant="destructive" className="text-[10px] uppercase px-1 py-0 h-4 font-bold">
+                Out of Stock
+              </Badge>
+            )}
+          </div>
+        </HoverCardMovie>
+      );
+    },
   },
   {
     accessorKey: "releaseDate",
