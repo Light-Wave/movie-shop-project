@@ -65,13 +65,14 @@ export default function FeaturedCarousel({
                 className="flex flex-col h-auto sm:flex-row sm:min-h-[600px] justify-between rounded-none sm:rounded-xl overflow-hidden"
               >
                 {/* Image Section "left" */}
-                <div className="w-full h-[500px] sm:w-[400px] lg:w-[500px] sm:h-auto sm:self-stretch relative group shrink-0 overflow-hidden">
+                <div className="w-full aspect-2/3 sm:w-[400px] lg:w-[500px] relative group shrink-0 overflow-hidden">
                   <Image
                     src={movie.imageUrl || placeholder}
                     alt={`${movie.title} poster`}
                     fill
                     className="object-cover"
                     priority={index === 0}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 400px, 500px"
                   />
                   <StockRibbon
                     isAvailable={movie.isAvailable}
