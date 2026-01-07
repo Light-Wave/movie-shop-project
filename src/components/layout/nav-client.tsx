@@ -16,8 +16,15 @@ import Link from "next/link";
 import teamDelta from "@/../public/team-delta-reversed.svg";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import CartBadge from "../cartComponents/cartBadge";
+import { getMovieSuggestions } from "@/server-actions/movie/search-movies";
+import { generateMovieUrl } from "@/components/sharedutils/slug-utils";
+
+type MovieSuggestion = {
+  id: string;
+  title: string;
+};
 
 export function NavClient() {
   const router = useRouter();
@@ -26,6 +33,11 @@ export function NavClient() {
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || ""
   );
+  const [suggestions, setSuggestions] = useState<MovieSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
 
   const { data: session } = authClient.useSession();
   const user = session?.user;
@@ -36,6 +48,39 @@ export function NavClient() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Debounce search suggestions
+  useEffect(() => {
+    setActiveIndex(-1);
+    if (searchQuery.trim().length > 1) {
+      const handler = setTimeout(async () => {
+        const result = await getMovieSuggestions(searchQuery);
+        setSuggestions(result);
+        setShowSuggestions(true);
+      }, 300); // 300ms debounce delay
+
+      return () => {
+        clearTimeout(handler);
+      };
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, [searchQuery]);
+
+    // Close suggestions when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [searchContainerRef]);
+
 
   const navLinks = useMemo(() => {
     const links = [
@@ -76,10 +121,21 @@ export function NavClient() {
     document.title = `${tabName} | Movie Shop`;
   }, [navLinks, pathname]);
 
-  // Handle search submission
-  const handleSearch = (e: React.FormEvent | string) => {
-    const query = typeof e === "string" ? e : searchQuery;
-    if (typeof e !== "string") e.preventDefault();
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // If a suggestion is selected with arrow keys, navigate to it
+    if (activeIndex >= 0 && activeIndex < suggestions.length) {
+      const selectedMovie = suggestions[activeIndex];
+      handleSuggestionClick(selectedMovie);
+      return;
+    }
+
+    // Otherwise, perform a general search
+    const query = searchQuery;
+    setShowSuggestions(false);
+    setSearchQuery("");
+    setActiveIndex(-1);
 
     if (query.trim()) {
       router.push(`/browse?search=${encodeURIComponent(query.trim())}`);
@@ -87,6 +143,34 @@ export function NavClient() {
       router.push("/browse");
     }
   };
+
+  const handleSuggestionClick = (movie: MovieSuggestion) => {
+    setSearchQuery("");
+    setShowSuggestions(false);
+    setActiveIndex(-1);
+    router.push(generateMovieUrl(movie.id, movie.title));
+  };
+  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions || suggestions.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((prevIndex) =>
+        prevIndex >= suggestions.length - 1 ? 0 : prevIndex + 1
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((prevIndex) =>
+        prevIndex <= 0 ? suggestions.length - 1 : prevIndex - 1
+      );
+    } else if (e.key === "Escape") {
+      setShowSuggestions(false);
+      setActiveIndex(-1);
+    }
+    // Let the form's onSubmit handle the Enter key
+  };
+
 
   // Keep search input in sync with URL search param if it changes elsewhere
   useEffect(() => {
@@ -130,16 +214,41 @@ export function NavClient() {
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
-          <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search movies..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-[200px] lg:w-[300px] rounded-full bg-secondary/50 border-none pl-10 focus:ring-2 focus:ring-primary/20"
-            />
-          </form>
+          <div ref={searchContainerRef} className="relative">
+            <form onSubmit={handleSearch} className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search movies..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onFocus={() => searchQuery.trim().length > 1 && setShowSuggestions(true)}
+                className="w-[200px] lg:w-[300px] rounded-full bg-secondary/50 border-none pl-10 focus:ring-2 focus:ring-primary/20"
+                autoComplete="off"
+              />
+            </form>
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute top-full mt-2 w-full bg-background border rounded-md shadow-lg z-10">
+                <ul>
+                  {suggestions.map((movie, index) => (
+                    <li key={movie.id}
+                        className={index === activeIndex ? "bg-secondary" : ""}
+                        onMouseEnter={() => setActiveIndex(index)}
+                    >
+                      <button
+                        type="button"
+                        onMouseDown={() => handleSuggestionClick(movie)}
+                        className="w-full text-left block px-4 py-2 text-sm hover:bg-secondary"
+                      >
+                        {movie.title}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-2 border-l pl-4 border-muted">
             <CartBadge />
             <SignInOrOut />
@@ -148,19 +257,44 @@ export function NavClient() {
 
         {/* Mobile Navigation */}
         <div className="flex items-center md:hidden gap-3 flex-1 justify-end">
-          <form
-            onSubmit={handleSearch}
-            className="relative flex-1 max-w-[200px]"
-          >
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full bg-secondary/50 border-none pl-9 h-9 text-xs"
-            />
-          </form>
+          <div ref={searchContainerRef} className="relative flex-1 max-w-[200px]">
+            <form
+              onSubmit={handleSearch}
+              className="relative"
+            >
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onFocus={() => searchQuery.trim().length > 1 && setShowSuggestions(true)}
+                className="w-full rounded-full bg-secondary/50 border-none pl-9 h-9 text-xs"
+                autoComplete="off"
+              />
+            </form>
+            {showSuggestions && suggestions.length > 0 && (
+                 <div className="absolute top-full mt-2 w-full bg-background border rounded-md shadow-lg z-10">
+                 <ul>
+                    {suggestions.map((movie, index) => (
+                        <li key={movie.id}
+                            className={index === activeIndex ? "bg-secondary" : ""}
+                            onMouseEnter={() => setActiveIndex(index)}
+                        >
+                        <button
+                            type="button"
+                            onMouseDown={() => handleSuggestionClick(movie)}
+                            className="w-full text-left block px-4 py-2 text-sm hover:bg-secondary"
+                        >
+                            {movie.title}
+                        </button>
+                        </li>
+                  ))}
+                 </ul>
+               </div>
+            )}
+          </div>
           <CartBadge />
 
           <Sheet>
