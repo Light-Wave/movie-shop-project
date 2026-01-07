@@ -9,9 +9,6 @@ export default function Dashboard() {
   return (
     <div>
       <Button variant="link" asChild>
-        <Link href="/dashboard/account-settings">Account Settings</Link>
-      </Button>
-      <Button variant="link" asChild>
         <Link href="/dashboard/history">Order History</Link>
       </Button>
       <Button variant="link" asChild>
